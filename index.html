@@ -6,128 +6,137 @@
 <title>Engenious · Funil de Aquisição</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📉</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
 <style>
 :root{
-  --bg:#0f0f0f; --surface:#1a1a1a; --border:#2a2a2a; --text:#e8e8e8; --muted:#888;
-  --accent:#6b7bff; --accent-dark:#3d4bd6; --accent-light:#9aa5ff; --accent-deep:#141733;
-  --green:#4ade80; --amber:#fbbf24; --red:#f87171;
-  --mono:'SF Mono','Fira Code',ui-monospace,monospace;
+  --bg:#ffffff; --surface:#ffffff; --sunken:#fafafa;
+  --line:#e6e6e9; --line-soft:#f0f0f2;
+  --ink:#18181b; --ink-2:#3f3f46; --muted:#71717a;
+  --accent:#3d4bd6; --accent-soft:#eef0fd;
+  --alert:#b42318; --alert-soft:#fef4f2;
+  --mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,monospace;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-     font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;font-size:14px;line-height:1.5}
-.app{max-width:1400px;margin:0 auto;padding:0 20px 70px}
-h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.02em}
-.num{font-variant-numeric:tabular-nums}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.55;
+     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     -webkit-font-smoothing:antialiased}
+.app{max-width:1180px;margin:0 auto;padding:0 32px 96px}
+h1,h2{margin:0;font-weight:600;letter-spacing:-.015em}
+h3{margin:0;font-weight:600}
 
-/* topo */
-.top{display:flex;justify-content:space-between;align-items:center;gap:18px;
-     flex-wrap:wrap;padding:22px 0 18px;border-bottom:1px solid var(--border);margin-bottom:18px}
-.brand{display:flex;align-items:center;gap:12px}
-.brand-mark{width:34px;height:34px;border-radius:9px;flex:none;
-     background:linear-gradient(135deg,var(--accent),#c44be0);
-     display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff}
-.brand h1{font-size:1.05rem}
-.brand span{font-size:.72rem;color:var(--muted);display:block;font-weight:500;letter-spacing:0}
+/* ---------- topo ---------- */
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;
+     padding:40px 0 24px}
+.brand h1{font-size:1.75rem;letter-spacing:-.025em}
+.brand p{margin:4px 0 0;font-size:.95rem;color:var(--muted)}
 
-/* filtro */
 .date-filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.df-label{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em}
-.df-input{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:#fff;
-     padding:6px 10px;font-size:.83rem;cursor:pointer;transition:all .15s;font-family:inherit}
-.df-input:hover,.df-input:focus{border-color:var(--accent-light);outline:none}
-.df-input::-webkit-calendar-picker-indicator{filter:invert(.8);cursor:pointer}
-.df-select{font-weight:700}
-.df-select option{background:var(--surface);color:#fff}
-.df-apply{background:var(--accent-dark);border:1px solid var(--accent-light);border-radius:8px;color:#fff;
-     padding:7px 16px;font-size:.83rem;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit}
-.df-apply:hover{background:var(--accent-light)}
-.df-apply.pending{animation:pulse 1.1s ease-in-out infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(107,123,255,.55)}50%{box-shadow:0 0 0 7px rgba(107,123,255,0)}}
-.df-clear{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:#b9bde0;
-     padding:7px 14px;font-size:.83rem;cursor:pointer;transition:all .15s;font-family:inherit}
-.df-clear:hover{border-color:var(--accent-light);color:var(--text)}
-.df-range{font-size:.74rem;color:var(--muted);font-family:var(--mono);margin-left:2px}
+.df-input{background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--ink);
+     padding:8px 12px;font-size:.95rem;font-family:inherit;cursor:pointer;transition:border-color .15s}
+.df-input:hover,.df-input:focus{border-color:var(--accent);outline:none}
+.df-select{font-weight:500}
+.df-apply{background:var(--accent);border:1px solid var(--accent);border-radius:8px;color:#fff;
+     padding:9px 18px;font-size:.95rem;font-weight:600;font-family:inherit;cursor:pointer;
+     transition:opacity .15s}
+.df-apply:hover{opacity:.87}
+.df-apply.pending{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(61,75,214,.4)}50%{box-shadow:0 0 0 6px rgba(61,75,214,0)}}
+.df-clear{background:transparent;border:1px solid var(--line);border-radius:8px;color:var(--ink-2);
+     padding:9px 16px;font-size:.95rem;font-family:inherit;cursor:pointer;transition:border-color .15s}
+.df-clear:hover{border-color:var(--accent);color:var(--accent)}
 
-/* abas */
-.tabs{display:flex;gap:2px;margin-bottom:18px;background:var(--surface);border:1px solid var(--border);
-      border-radius:10px;padding:3px;width:fit-content;flex-wrap:wrap}
-.tab{padding:7px 18px;border-radius:7px;font-size:.83rem;font-weight:600;cursor:pointer;border:none;
-     background:transparent;color:rgba(255,255,255,.5);transition:all .12s;font-family:inherit}
-.tab:hover:not(.active){color:rgba(255,255,255,.85);background:rgba(255,255,255,.05)}
-.tab.active{background:var(--accent-dark);color:#fff}
+/* ---------- abas ---------- */
+.tabs{display:flex;gap:32px;border-bottom:1px solid var(--line);margin-bottom:40px}
+.tab{padding:0 0 14px;background:none;border:none;font-family:inherit;font-size:1rem;font-weight:500;
+     color:var(--muted);cursor:pointer;position:relative;transition:color .15s;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);font-weight:600}
+.tab.active::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent)}
 .pane{display:none}
 .pane.active{display:block}
 
-/* alerta */
-.alert{background:rgba(248,113,113,.09);border:1px solid rgba(248,113,113,.45);border-radius:12px;
-       padding:16px 18px;margin-bottom:16px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
-.alert-ico{width:20px;height:20px;border-radius:50%;border:1.6px solid var(--red);color:var(--red);
-       display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none;margin-top:1px}
-.alert h3{font-size:.9rem;color:var(--red);margin-bottom:3px}
-.alert p{margin:0;font-size:.82rem;color:rgba(232,232,232,.82);max-width:96ch}
+/* ---------- seções ---------- */
+section{margin-bottom:56px}
+section:last-child{margin-bottom:0}
+.sec-hd{margin-bottom:20px}
+.sec-hd h2{font-size:1.2rem}
+.sec-hd p{margin:6px 0 0;font-size:.95rem;color:var(--muted);max-width:74ch}
+.range-note{font-size:.9rem;color:var(--muted);font-family:var(--mono)}
 
-/* kpis */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
-.kpi-l{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-.kpi-v{font-size:1.65rem;font-weight:800;letter-spacing:-.03em;margin:5px 0 2px;line-height:1;
+/* ---------- kpis ---------- */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);
+      border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:56px}
+.kpi{background:var(--surface);padding:22px 24px}
+.kpi-l{font-size:.85rem;color:var(--muted);font-weight:500}
+.kpi-v{font-size:2.1rem;font-weight:600;letter-spacing:-.03em;line-height:1.15;margin:8px 0 4px;
        font-variant-numeric:tabular-nums}
-.kpi-n{font-size:.72rem;color:var(--muted);line-height:1.35}
-.kpi.hi{border-color:rgba(107,123,255,.5);background:linear-gradient(160deg,var(--accent-deep),var(--surface))}
-.kpi.bad .kpi-v{color:var(--red)}
+.kpi-n{font-size:.85rem;color:var(--muted)}
+.kpi.hi .kpi-v{color:var(--accent)}
+.kpi.warn .kpi-v{color:var(--alert)}
+.kpis.four{grid-template-columns:repeat(4,1fr)}
 
-/* cards */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:14px}
-.card-hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:3px}
-.card h2{font-size:.95rem}
-.card-tag{font-size:.68rem;color:var(--muted);font-family:var(--mono)}
-.card-sub{font-size:.79rem;color:var(--muted);margin:0 0 16px;max-width:92ch;line-height:1.5}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.grid2 > .card{margin-bottom:0}
-canvas{max-width:100%}
+/* ---------- alerta ---------- */
+.alert{background:var(--alert-soft);border:1px solid #fbd5ce;border-radius:12px;padding:20px 24px;
+       margin-bottom:40px}
+.alert h3{font-size:1.05rem;color:var(--alert);margin-bottom:6px}
+.alert p{margin:0;font-size:.95rem;color:var(--ink-2);max-width:80ch}
 
-/* funil */
-.fun{display:flex;flex-direction:column;gap:2px}
-.fstep{display:grid;grid-template-columns:168px 1fr 74px;gap:12px;align-items:center;padding:6px 8px;
-       border-radius:7px;transition:background .1s}
-.fstep:hover{background:rgba(107,123,255,.09)}
-.fname{font-size:.82rem;color:rgba(232,232,232,.9)}
-.ftrack{height:24px;background:rgba(255,255,255,.05);border-radius:5px;overflow:hidden}
-.fbar{height:100%;background:linear-gradient(90deg,var(--accent-dark),var(--accent));border-radius:5px}
-.fval{text-align:right;font-family:var(--mono);font-size:.82rem;font-variant-numeric:tabular-nums;font-weight:600}
-.fdrop{font-size:.7rem;color:var(--muted);font-family:var(--mono);padding-left:188px;margin:-3px 0 3px}
+/* ---------- gráfico ---------- */
+.chart-box{position:relative;height:300px;width:100%}
+.chart-box.short{height:240px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:40px}
 
-/* tabela */
-.tbl-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#fff;
-     margin-bottom:9px;display:flex;align-items:center;gap:8px}
-.tbl-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08)}
-.tbl-wrap{overflow-x:auto;border-radius:10px;border:1px solid rgba(107,123,255,.22)}
-table{width:100%;border-collapse:collapse;font-size:.81rem}
-thead tr{background:rgba(107,123,255,.16)}
-thead th{padding:9px 13px;text-align:left;font-size:.66rem;font-weight:700;text-transform:uppercase;
-     letter-spacing:.06em;color:rgba(255,255,255,.62);white-space:nowrap}
+/* ---------- funil ---------- */
+.fun{display:flex;flex-direction:column}
+.fstep{display:grid;grid-template-columns:200px 1fr 90px;gap:20px;align-items:center;
+       padding:14px 0;border-bottom:1px solid var(--line-soft)}
+.fstep:last-child{border-bottom:none}
+.fname{font-size:.98rem;color:var(--ink)}
+.fname small{display:block;font-size:.82rem;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.ftrack{height:10px;background:var(--sunken);border-radius:5px;overflow:hidden}
+.fbar{height:100%;background:var(--accent);border-radius:5px;transition:width .3s ease}
+.fval{text-align:right;font-size:1.05rem;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ---------- tabela ---------- */
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.95rem}
+thead th{padding:0 16px 12px;text-align:left;font-size:.85rem;font-weight:500;color:var(--muted);
+     border-bottom:1px solid var(--line);white-space:nowrap}
+thead th:first-child{padding-left:0}
+thead th:last-child{padding-right:0}
 thead th.n{text-align:right}
-tbody tr{border-top:1px solid rgba(107,123,255,.1);transition:background .1s}
-tbody tr:hover{background:rgba(107,123,255,.08)}
-td{padding:8px 13px;color:var(--text);white-space:nowrap}
-td.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
-td.dim{color:rgba(255,255,255,.6);max-width:320px;overflow:hidden;text-overflow:ellipsis;font-size:.78rem}
+tbody tr{border-bottom:1px solid var(--line-soft)}
+tbody tr:last-child{border-bottom:none}
+td{padding:13px 16px;color:var(--ink)}
+td:first-child{padding-left:0}
+td:last-child{padding-right:0}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.dim{color:var(--muted);font-size:.92rem;max-width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.82rem;font-weight:500;white-space:nowrap}
+.pill.bad{background:var(--alert-soft);color:var(--alert)}
+.pill.mid{background:#fef7e6;color:#93610a}
+.pill.ok{background:#eaf7ee;color:#15803d}
 
-.note{font-size:.75rem;color:var(--muted);margin-top:14px;padding-top:11px;
-      border-top:1px solid rgba(255,255,255,.07);line-height:1.55;max-width:96ch}
-.note b{color:rgba(232,232,232,.9);font-weight:600}
+.note{font-size:.92rem;color:var(--muted);margin:20px 0 0;max-width:80ch}
+.note b{color:var(--ink);font-weight:600}
+code{font-family:var(--mono);font-size:.88em;background:var(--sunken);padding:2px 6px;
+     border-radius:4px;border:1px solid var(--line-soft)}
 
-footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--border);display:flex;
-       justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.7rem;color:var(--muted);font-family:var(--mono)}
+.pending-box{border:1px dashed var(--line);border-radius:12px;padding:24px;background:var(--sunken)}
+.pending-box h3{font-size:1.05rem;margin-bottom:6px}
+.pending-box p{margin:0;font-size:.95rem;color:var(--muted);max-width:80ch}
 
-@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:820px){
-  .kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}
-  .fstep{grid-template-columns:112px 1fr 62px;gap:8px}.fdrop{padding-left:122px}
-  .app{padding:0 13px 50px}
+footer{margin-top:80px;padding-top:24px;border-top:1px solid var(--line);display:flex;
+       justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.88rem;color:var(--muted)}
+
+@media(max-width:1000px){.kpis,.kpis.four{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr;gap:56px}}
+@media(max-width:640px){
+  .app{padding:0 18px 64px}.brand h1{font-size:1.45rem}
+  .kpis,.kpis.four{grid-template-columns:1fr}
+  .fstep{grid-template-columns:1fr 80px;gap:12px}.ftrack{display:none}
+  .tabs{gap:20px;overflow-x:auto}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -137,20 +146,15 @@ footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--border);displ
 
   <div class="top">
     <div class="brand">
-      <div class="brand-mark">E</div>
-      <div>
-        <h1>Funil de Aquisição</h1>
-        <span>Engenious University · PostHog</span>
-      </div>
+      <h1>Funil de Aquisição</h1>
+      <p>Engenious University · dados do PostHog</p>
     </div>
     <div class="date-filter">
-      <span class="df-label">Período</span>
       <select class="df-input df-select" id="mesSel"></select>
       <input type="date" class="df-input" id="dtIni">
       <input type="date" class="df-input" id="dtFim">
       <button class="df-apply" id="btnAplicar">Aplicar</button>
-      <button class="df-clear" id="btnLimpar">Limpar</button>
-      <span class="df-range" id="rangeTxt"></span>
+      <button class="df-clear" id="btnLimpar">Tudo</button>
     </div>
   </div>
 
@@ -165,85 +169,115 @@ footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--border);displ
   <div class="pane active" id="p-geral">
     <div class="kpis" id="kpis"></div>
 
-    <div class="card">
-      <div class="card-hd"><h2>Funil do site</h2><span class="card-tag" id="tagFunil"></span></div>
-      <p class="card-sub">Pessoas únicas por dia, somadas no período. Quem visita em dois dias conta duas vezes — é a leitura padrão para série temporal, e a única que permite filtrar por data.</p>
+    <section>
+      <div class="sec-hd">
+        <h2>Funil do site</h2>
+        <p>Pessoas únicas por dia, somadas no período selecionado — <span class="range-note" id="rangeTxt"></span></p>
+      </div>
       <div class="fun" id="funSite"></div>
-    </div>
+    </section>
 
-    <div class="card">
-      <div class="card-hd"><h2>Movimento diário</h2><span class="card-tag">visitantes e checkouts</span></div>
-      <canvas id="chDia" height="88"></canvas>
-    </div>
+    <section>
+      <div class="grid2">
+        <div>
+          <div class="sec-hd"><h2>Visitantes por dia</h2><p>Pessoas únicas que abriram alguma página.</p></div>
+          <div class="chart-box short"><canvas id="chVis"></canvas></div>
+        </div>
+        <div>
+          <div class="sec-hd"><h2>Checkouts iniciados por dia</h2><p>Escalas muito diferentes, por isso em gráficos separados.</p></div>
+          <div class="chart-box short"><canvas id="chCkt"></canvas></div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <!-- ============ ATRIBUIÇÃO ============ -->
   <div class="pane" id="p-atrib">
     <div class="alert">
-      <div class="alert-ico">!</div>
-      <div><h3>Nenhum visitante da Meta chega identificado</h3><p id="alertTxt"></p></div>
+      <h3>Nenhum visitante da Meta chega identificado</h3>
+      <p id="alertTxt"></p>
     </div>
 
-    <div class="card">
-      <div class="card-hd"><h2>Chegadas da Meta, por dia</h2><span class="card-tag">fbclid na URL</span></div>
-      <p class="card-sub">Pessoas que chegaram com o identificador de clique da Meta. A série clara seria a parcela carregando nossa etiqueta <code>utm_source=meta</code>.</p>
-      <canvas id="chMeta" height="86"></canvas>
-    </div>
+    <section>
+      <div class="sec-hd">
+        <h2>Chegadas da Meta, por dia</h2>
+        <p>Pessoas que chegaram carregando o identificador de clique da Meta na URL.</p>
+      </div>
+      <div class="chart-box"><canvas id="chMeta"></canvas></div>
+      <p class="note" id="metaNote"></p>
+    </section>
 
-    <div class="card">
-      <div class="card-hd"><h2>Origem do tráfego</h2><span class="card-tag">primeira origem por pessoa</span></div>
-      <div class="tbl-wrap"><table id="tbOrig">
+    <section>
+      <div class="sec-hd"><h2>Origem do tráfego</h2><p>Primeira origem registrada por pessoa.</p></div>
+      <div class="tbl"><table id="tbOrig">
         <thead><tr><th>Origem</th><th>Meio</th><th class="n">Pessoas</th><th class="n">Participação</th></tr></thead>
         <tbody></tbody></table></div>
       <p class="note" id="origNote"></p>
-    </div>
+    </section>
   </div>
 
   <!-- ============ BOOSTER ============ -->
   <div class="pane" id="p-booster">
-    <div class="kpis" id="kpisB" style="grid-template-columns:repeat(4,1fr)"></div>
-    <div class="grid2">
-      <div class="card">
-        <div class="card-hd"><h2>Funil da página</h2><span class="card-tag">/paths/career-booster</span></div>
-        <p class="card-sub">O destino do tráfego pago, isolado do resto do site.</p>
-        <div class="fun" id="funBoost"></div>
-        <p class="note" id="boostNote"></p>
-      </div>
-      <div class="card">
-        <div class="card-hd"><h2>Por dispositivo</h2><span class="card-tag">site inteiro</span></div>
-        <p class="card-sub">Percentual de visitantes que chegam a iniciar um checkout.</p>
-        <div class="fun" id="funDisp"></div>
-        <p class="note" id="dispNote"></p>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-hd"><h2>Páginas mais visitadas</h2></div>
-      <div class="tbl-wrap"><table id="tbPag">
+    <div class="kpis four" id="kpisB"></div>
+
+    <section>
+      <div class="sec-hd"><h2>Funil da página do Booster</h2><p>O destino do tráfego pago, isolado do resto do site.</p></div>
+      <div class="fun" id="funBoost"></div>
+      <p class="note" id="boostNote"></p>
+    </section>
+
+    <section>
+      <div class="sec-hd"><h2>Conversão por dispositivo</h2><p>Percentual de visitantes do site que chegam a iniciar um checkout.</p></div>
+      <div class="fun" id="funDisp"></div>
+      <p class="note" id="dispNote"></p>
+    </section>
+
+    <section>
+      <div class="sec-hd"><h2>Páginas mais visitadas</h2></div>
+      <div class="tbl"><table id="tbPag">
         <thead><tr><th>Página</th><th class="n">Pessoas</th></tr></thead><tbody></tbody></table></div>
-    </div>
+    </section>
   </div>
 
   <!-- ============ QUALIDADE ============ -->
   <div class="pane" id="p-qual">
-    <div class="card">
-      <div class="card-hd"><h2>O que confiar, e o que não</h2></div>
-      <p class="card-sub">Toda dash carrega premissas. Estas são as desta, para ninguém tomar decisão em cima de um número que não sustenta.</p>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Achado</th><th>Efeito</th><th>Confiança</th></tr></thead>
+    <section>
+      <div class="sec-hd">
+        <h2>O que confiar, e o que não</h2>
+        <p>Toda dash carrega premissas. Estas são as desta, para ninguém decidir em cima de um número que não sustenta.</p>
+      </div>
+      <div class="tbl"><table>
+        <thead><tr><th>Achado</th><th>Efeito</th><th>Situação</th></tr></thead>
         <tbody>
-          <tr><td>Anúncios sem parâmetro de URL</td><td class="dim">Nenhum tráfego pago é atribuível às campanhas</td><td style="color:var(--red);font-weight:700">Crítico</td></tr>
-          <tr><td><code>purchase_completed</code> vem só por API</td><td class="dim">É o webhook do Stripe, não o navegador — a geolocalização é do servidor, não do comprador</td><td style="color:var(--amber);font-weight:700">Não usar país</td></tr>
-          <tr><td>435 compras em abril e maio geolocalizadas no Brasil</td><td class="dim">Carga histórica ou migração, não venda real</td><td style="color:var(--amber);font-weight:700">Excluir</td></tr>
-          <tr><td>Tipo de dispositivo ausente em ~90% dos eventos</td><td class="dim">A comparação mobile × desktop vale como direção, não como número</td><td style="color:var(--amber);font-weight:700">Parcial</td></tr>
-          <tr><td>Filtro de bot corrigido em 25/08</td><td class="dim">Antes e depois dessa data não são comparáveis</td><td style="color:var(--amber);font-weight:700">Quebra de série</td></tr>
-          <tr><td>Pixel duplicado removido</td><td class="dim">Números da Meta pararam de vir dobrados — correção <code>/2</code> nas análises do Nik ficou obsoleta</td><td style="color:var(--green);font-weight:700">Resolvido</td></tr>
+          <tr><td>Anúncios sem parâmetro de URL</td>
+              <td class="dim">Nenhum tráfego pago é atribuível às campanhas</td>
+              <td><span class="pill bad">Crítico</span></td></tr>
+          <tr><td><code>purchase_completed</code> só via API</td>
+              <td class="dim">É o webhook do Stripe, não o navegador — a geolocalização é do servidor, não do comprador</td>
+              <td><span class="pill mid">Não usar país</span></td></tr>
+          <tr><td>435 compras em abril e maio no Brasil</td>
+              <td class="dim">Carga histórica ou migração, não venda real</td>
+              <td><span class="pill mid">Excluir</span></td></tr>
+          <tr><td>Dispositivo ausente em boa parte dos eventos</td>
+              <td class="dim">Mobile × desktop vale como direção, não como número</td>
+              <td><span class="pill mid">Parcial</span></td></tr>
+          <tr><td>Filtro de bot corrigido em 25/08</td>
+              <td class="dim">Antes e depois dessa data não são comparáveis</td>
+              <td><span class="pill mid">Quebra de série</span></td></tr>
+          <tr><td>Pixel duplicado removido</td>
+              <td class="dim">Números da Meta pararam de vir dobrados — a correção <code>/2</code> nas análises ficou obsoleta</td>
+              <td><span class="pill ok">Resolvido</span></td></tr>
         </tbody></table></div>
-    </div>
+    </section>
 
-    <div class="card" style="border-style:dashed">
-      <div class="card-hd"><h2>Pendente: dados da Meta</h2></div>
-      <p class="card-sub" style="margin-bottom:0">Investimento, impressões, cliques, CPC, CTR e custo por etapa do funil entram assim que a exportação do gerenciador chegar. Sem eles, esta dash mostra comportamento no site mas não mostra custo — e portanto não calcula CAC nem retorno.</p>
-    </div>
+    <section>
+      <div class="pending-box">
+        <h3>Pendente: dados da Meta</h3>
+        <p>Investimento, impressões, cliques, CPC, CTR e custo por etapa entram assim que a exportação
+           do gerenciador chegar. Sem eles, esta dash mostra comportamento no site mas não mostra custo —
+           e portanto não calcula CAC nem retorno.</p>
+      </div>
+    </section>
   </div>
 
   <footer>
@@ -255,108 +289,98 @@ footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--border);displ
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 let D, todasDatas, DMIN, DMAX, ini, fim;
-const A = '#6b7bff', AD = '#3d4bd6', RED = '#f87171', MUT = '#888';
+const ACC = '#3d4bd6', ACC_SOFT = 'rgba(61,75,214,.10)', MUT = '#71717a', LINE = '#ececef';
 const nf = n => (n||0).toLocaleString('pt-BR');
 const pf = (a,b) => b ? (100*a/b).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%' : '—';
 
-/* ---------- período ---------- */
 const dtIni = document.getElementById('dtIni'), dtFim = document.getElementById('dtFim');
-const nomeMes = m => new Date(m+'-02').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+const nomeMes = m => { const s = new Date(m+'-02').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+                       return s.charAt(0).toUpperCase()+s.slice(1); };
 
 function boot(){
   todasDatas = [...new Set(D.site.map(r=>r.d))].sort();
   DMIN = todasDatas[0]; DMAX = todasDatas[todasDatas.length-1];
-  ini = DMIN; fim = DMAX;
   dtIni.min = dtFim.min = DMIN; dtIni.max = dtFim.max = DMAX;
 
   const meses = [...new Set(todasDatas.map(d=>d.slice(0,7)))].sort().reverse();
   document.getElementById('mesSel').innerHTML =
-    `<option value="">Tudo (${todasDatas.length} dias)</option>`
+    '<option value="__30">Últimos 30 dias</option><option value="__7">Últimos 7 dias</option>'
     + meses.map(m=>`<option value="${m}">${nomeMes(m)}</option>`).join('')
-    + `<option value="__30">Últimos 30 dias</option><option value="__7">Últimos 7 dias</option>`;
+    + `<option value="">Período inteiro (${todasDatas.length} dias)</option>`;
 
   const at = new Date(D.atualizado_em);
   document.getElementById('atualizado').textContent =
-    'Atualizado ' + at.toLocaleDateString('pt-BR') + ' ' +
-    at.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) + ' · projeto 34225';
+    'Atualizado em ' + at.toLocaleDateString('pt-BR') + ' às ' +
+    at.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 
-  document.getElementById('mesSel').value = '__30';
   fim = DMAX; ini = todasDatas[Math.max(0,todasDatas.length-30)];
   dtIni.value = ini; dtFim.value = fim;
   render();
 }
 
 const noPeriodo = r => r.d >= ini && r.d <= fim;
-const somaEv = (arr, ev, campo='p') =>
-  arr.filter(r=>noPeriodo(r) && r.e===ev).reduce((s,r)=>s+(r[campo]||0),0);
+const somaEv = (arr, ev) => arr.filter(r=>noPeriodo(r) && r.e===ev).reduce((s,r)=>s+(r.p||0),0);
 
 /* ---------- render ---------- */
 let charts = {};
 function render(){
   document.getElementById('rangeTxt').textContent =
-    ini.split('-').reverse().join('/') + ' — ' + fim.split('-').reverse().join('/');
-  document.getElementById('tagFunil').textContent =
-    ((new Date(fim)-new Date(ini))/864e5 + 1) + ' dias';
+    ini.split('-').reverse().join('/') + ' a ' + fim.split('-').reverse().join('/');
 
-  /* --- KPIs --- */
   const vis = somaEv(D.site,'page_viewed'), cta = somaEv(D.site,'cta_clicked'),
         reg = somaEv(D.site,'registration_started'), ckt = somaEv(D.site,'checkout_started'),
         cmp = somaEv(D.site,'purchase_completed'), lead = somaEv(D.site,'lead_created');
-  document.getElementById('kpis').innerHTML = [
-    {l:'Visitantes', v:nf(vis), n:'pessoas · dia somado'},
+
+  kpis('kpis', [
+    {l:'Visitantes', v:nf(vis), n:'pessoas por dia, somadas'},
     {l:'Cliques em CTA', v:nf(cta), n:pf(cta,vis)+' dos visitantes'},
     {l:'Leads', v:nf(lead), n:pf(lead,vis)+' dos visitantes'},
     {l:'Iniciaram checkout', v:nf(ckt), n:pf(ckt,vis)+' dos visitantes', hi:1},
-    {l:'Visitante → checkout', v:pf(ckt,vis), n:'taxa de conversão', bad:ckt/vis < .02}
-  ].map(k=>`<div class="kpi${k.hi?' hi':''}${k.bad?' bad':''}">
-      <div class="kpi-l">${k.l}</div><div class="kpi-v num">${k.v}</div>
-      <div class="kpi-n">${k.n}</div></div>`).join('');
+    {l:'Visitante → checkout', v:pf(ckt,vis), n:'taxa de conversão', warn:vis && ckt/vis < .02}
+  ]);
 
-  /* --- funil do site --- */
   funil('funSite', [
     ['Visitaram o site', vis], ['Clicaram em CTA', cta], ['Viraram lead', lead],
     ['Iniciaram cadastro', reg], ['Iniciaram checkout', ckt], ['Compraram', cmp]
   ].map(([r,v])=>({r,v})));
 
-  /* --- alerta / meta --- */
+  /* --- atribuição --- */
   const mt = D.meta.filter(noPeriodo);
   const mTot = mt.reduce((s,r)=>s+r.total,0), mTag = mt.reduce((s,r)=>s+r.tag,0);
   document.getElementById('alertTxt').textContent =
     `No período selecionado, ${nf(mTot)} pessoas chegaram ao site vindas do Facebook ou Instagram. `
     + `Destas, ${nf(mTag)} carregavam a etiqueta das nossas campanhas. `
-    + `Enquanto isso não for corrigido, "zero checkouts" não se distingue de "não conseguimos ver os checkouts".`;
+    + `Enquanto isso não for corrigido no campo de parâmetros de URL do gerenciador, `
+    + `"zero checkouts" não se distingue de "não conseguimos ver os checkouts".`;
+  document.getElementById('metaNote').innerHTML = mTag === 0
+    ? 'A série <b>Identificadas como nossas</b> está em zero em todo o período — por isso não aparece no gráfico.'
+    : `<b>${pf(mTag,mTot)}</b> das chegadas da Meta vieram identificadas.`;
 
-  /* --- origens --- */
   const oAgg = {};
-  D.origem.filter(noPeriodo).forEach(r=>{
-    const k = r.src+'|'+r.med; oAgg[k] = (oAgg[k]||0) + r.p;
-  });
-  const oArr = Object.entries(oAgg).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v).slice(0,14);
+  D.origem.filter(noPeriodo).forEach(r=>{ const k = r.src+'|'+r.med; oAgg[k] = (oAgg[k]||0) + r.p; });
   const oTot = Object.values(oAgg).reduce((s,v)=>s+v,0);
-  document.querySelector('#tbOrig tbody').innerHTML = oArr.map(o=>{
-    const [s,m] = o.k.split('|');
-    return `<tr><td>${s}</td><td class="dim">${m||'—'}</td>
-      <td class="n">${nf(o.v)}</td><td class="n">${pf(o.v,oTot)}</td></tr>`;
-  }).join('');
+  document.querySelector('#tbOrig tbody').innerHTML =
+    Object.entries(oAgg).sort((a,b)=>b[1]-a[1]).slice(0,12).map(([k,v])=>{
+      const [s,m] = k.split('|');
+      return `<tr><td>${s}</td><td class="dim">${m||'—'}</td>
+        <td class="n">${nf(v)}</td><td class="n">${pf(v,oTot)}</td></tr>`;
+    }).join('');
   const semTag = oAgg['(sem etiqueta)|'] || 0;
   document.getElementById('origNote').innerHTML =
     `<b>${pf(semTag,oTot)}</b> do tráfego chega sem nenhuma etiqueta de origem. `
-    + `É o mesmo problema que a proposta apontou no início, e ele não se resolve sozinho — `
-    + `depende de convenção de UTM aplicada em todo link, em todo canal.`;
+    + `Não se resolve sozinho: depende de convenção de UTM aplicada em todo link, em todo canal.`;
 
   /* --- booster --- */
   const bv = somaB('page_viewed'), bc = somaB('cta_clicked'),
         br = somaB('registration_started'), bk = somaB('checkout_started');
-  document.getElementById('kpisB').innerHTML = [
-    {l:'Visitantes na página', v:nf(bv), n:'pessoas · dia somado'},
-    {l:'Clicaram em CTA', v:nf(bc), n:pf(bc,bv)},
-    {l:'Iniciaram cadastro', v:nf(br), n:pf(br,bv)},
-    {l:'Iniciaram checkout', v:nf(bk), n:pf(bk,bv), hi:1}
-  ].map(k=>`<div class="kpi${k.hi?' hi':''}">
-      <div class="kpi-l">${k.l}</div><div class="kpi-v num">${k.v}</div>
-      <div class="kpi-n">${k.n}</div></div>`).join('');
+  kpis('kpisB', [
+    {l:'Visitantes na página', v:nf(bv), n:'pessoas por dia, somadas'},
+    {l:'Clicaram em CTA', v:nf(bc), n:pf(bc,bv)+' dos visitantes'},
+    {l:'Iniciaram cadastro', v:nf(br), n:pf(br,bv)+' dos visitantes'},
+    {l:'Iniciaram checkout', v:nf(bk), n:pf(bk,bv)+' dos visitantes', hi:1}
+  ]);
   funil('funBoost', [['Visitaram a página',bv],['Clicaram em CTA',bc],
-    ['Iniciaram cadastro',br],['Iniciaram checkout',bk]].map(([r,v])=>({r,v})), false);
+    ['Iniciaram cadastro',br],['Iniciaram checkout',bk]].map(([r,v])=>({r,v})));
   document.getElementById('boostNote').innerHTML =
     `<b>${pf(bk,bv)}</b> dos visitantes desta página chegam a iniciar um checkout. `
     + `A projeção do plano trabalhava com uma faixa de 2% a 15% para a página de destino.`;
@@ -367,100 +391,128 @@ function render(){
     if(!dAgg[r.tipo]) dAgg[r.tipo] = {vis:0, ckt:0};
     dAgg[r.tipo].vis += r.vis; dAgg[r.tipo].ckt += r.ckt;
   });
-  const dItens = ['Desktop','Mobile','Tablet'].filter(t=>dAgg[t]&&dAgg[t].vis)
-    .map(t=>({r:t, v:100*dAgg[t].ckt/dAgg[t].vis, txt:pf(dAgg[t].ckt,dAgg[t].vis),
-              sub:`${nf(dAgg[t].ckt)} de ${nf(dAgg[t].vis)} visitantes`}));
-  funil('funDisp', dItens, false);
-  const dk = dAgg.Desktop, mb = dAgg.Mobile;
-  document.getElementById('dispNote').innerHTML = (dk&&mb&&mb.vis&&dk.vis)
+  const dItens = ['Desktop','Mobile','Tablet'].filter(t=>dAgg[t]&&dAgg[t].vis).map(t=>({
+    r:t, v:100*dAgg[t].ckt/dAgg[t].vis, txt:pf(dAgg[t].ckt,dAgg[t].vis),
+    sub:`${nf(dAgg[t].ckt)} de ${nf(dAgg[t].vis)} visitantes`}));
+  funil('funDisp', dItens.length ? dItens : [{r:'Sem dado no período', v:0, txt:'—'}]);
+  const dk = dAgg.Desktop, mb = dAgg.Mobile, sd = dAgg['sem dado'];
+  document.getElementById('dispNote').innerHTML = (dk&&mb&&mb.vis&&dk.vis&&mb.ckt)
     ? `Desktop converte <b>${((dk.ckt/dk.vis)/(mb.ckt/mb.vis)).toLocaleString('pt-BR',{maximumFractionDigits:1})}×</b> mais que mobile. `
-      + `O tipo de dispositivo só é registrado em parte dos eventos — ${nf((dAgg['sem dado']||{vis:0}).vis)} visitantes ficaram sem essa informação. Leia como direção.`
-    : 'Sem dado suficiente de dispositivo no período.';
+      + `O tipo de dispositivo só é registrado em parte dos eventos — ${nf(sd?sd.vis:0)} visitantes ficaram sem essa informação, `
+      + `então leia como direção, não como número.`
+    : 'Dado de dispositivo insuficiente no período selecionado.';
 
   /* --- páginas --- */
   const pAgg = {};
   D.pagina.filter(noPeriodo).forEach(r=>{ pAgg[r.pg] = (pAgg[r.pg]||0) + r.p; });
   document.querySelector('#tbPag tbody').innerHTML =
-    Object.entries(pAgg).sort((a,b)=>b[1]-a[1]).slice(0,12)
+    Object.entries(pAgg).sort((a,b)=>b[1]-a[1]).slice(0,10)
       .map(([pg,v])=>`<tr><td class="dim">${pg}</td><td class="n">${nf(v)}</td></tr>`).join('');
 
   desenhaGraficos();
 }
 function somaB(ev){ return D.booster.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+r.p,0); }
 
-function funil(id, itens, queda=true){
+function kpis(id, itens){
+  document.getElementById(id).innerHTML = itens.map(k=>
+    `<div class="kpi${k.hi?' hi':''}${k.warn?' warn':''}">
+       <div class="kpi-l">${k.l}</div>
+       <div class="kpi-v">${k.v}</div>
+       <div class="kpi-n">${k.n}</div>
+     </div>`).join('');
+}
+
+function funil(id, itens){
   const max = Math.max(...itens.map(i=>i.v), 1);
   document.getElementById(id).innerHTML = itens.map((it,i)=>{
-    const w = Math.max(100*it.v/max, it.v>0?1.5:0);
     const prev = i>0 ? itens[i-1].v : null;
-    const sub = it.sub || (queda&&prev ? `${nf(prev)} → ${nf(it.v)} · ficam ${pf(it.v,prev)}` : '');
-    return `<div class="fstep"><span class="fname">${it.r}</span>
-      <span class="ftrack"><span class="fbar" style="width:${w}%"></span></span>
-      <span class="fval">${it.txt||nf(it.v)}</span></div>`
-      + (sub?`<div class="fdrop">${sub}</div>`:'');
+    const sub = it.sub || (prev !== null ? `ficam ${pf(it.v,prev)} da etapa anterior` : '');
+    return `<div class="fstep">
+      <span class="fname">${it.r}${sub?`<small>${sub}</small>`:''}</span>
+      <span class="ftrack"><span class="fbar" style="width:${Math.max(100*it.v/max, it.v>0?1:0)}%"></span></span>
+      <span class="fval">${it.txt||nf(it.v)}</span></div>`;
   }).join('');
 }
 
 /* ---------- gráficos ---------- */
-const eixo = {grid:{color:'rgba(255,255,255,.055)'},ticks:{color:MUT,font:{size:10}},border:{display:false}};
-const baseOpt = {responsive:true, maintainAspectRatio:false,
-  interaction:{mode:'index',intersect:false},
-  plugins:{legend:{labels:{color:'#c8c8c8',boxWidth:11,boxHeight:11,usePointStyle:true,
-                   pointStyle:'rectRounded',font:{size:11}}},
-           tooltip:{backgroundColor:'#000',borderColor:'#333',borderWidth:1,padding:9,
-                    titleFont:{size:11},bodyFont:{size:11}}},
-  scales:{x:eixo, y:{...eixo, beginAtZero:true}}};
+function opcoes(){
+  return {
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index', intersect:false},
+    plugins:{
+      legend:{display:false},
+      tooltip:{backgroundColor:'#18181b', padding:11, cornerRadius:8, displayColors:false,
+               titleFont:{family:'Inter',size:12,weight:'500'},
+               bodyFont:{family:'Inter',size:13,weight:'600'}}
+    },
+    scales:{
+      x:{grid:{display:false}, border:{color:LINE},
+         ticks:{color:MUT, font:{family:'Inter',size:11}, maxRotation:0, autoSkipPadding:22}},
+      y:{beginAtZero:true, grid:{color:LINE}, border:{display:false},
+         ticks:{color:MUT, font:{family:'Inter',size:11}, precision:0, maxTicksLimit:6}}
+    }
+  };
+}
 
 function desenhaGraficos(){
   Object.values(charts).forEach(c=>c.destroy()); charts = {};
   const dias = todasDatas.filter(d=>d>=ini&&d<=fim);
   const rot = dias.map(d=>d.slice(8,10)+'/'+d.slice(5,7));
-  const serie = (arr,ev,campo='p') => dias.map(d=>{
-    const r = arr.find(x=>x.d===d && (ev?x.e===ev:true)); return r ? (r[campo]||0) : 0; });
+  const serie = ev => dias.map(d=>{
+    const r = D.site.find(x=>x.d===d && x.e===ev); return r ? (r.p||0) : 0; });
 
-  charts.dia = new Chart(document.getElementById('chDia'), {
+  charts.vis = new Chart(document.getElementById('chVis'), {
     type:'line',
-    data:{labels:rot, datasets:[
-      {label:'Visitantes', data:serie(D.site,'page_viewed'), borderColor:A, backgroundColor:'rgba(107,123,255,.13)',
-       borderWidth:2, fill:true, tension:.3, pointRadius:0, pointHoverRadius:5, yAxisID:'y'},
-      {label:'Iniciaram checkout', data:serie(D.site,'checkout_started'), borderColor:RED,
-       borderWidth:2, fill:false, tension:.3, pointRadius:0, pointHoverRadius:5, yAxisID:'y'}
-    ]}, options:baseOpt});
+    data:{labels:rot, datasets:[{data:serie('page_viewed'), borderColor:ACC, backgroundColor:ACC_SOFT,
+      borderWidth:2, fill:true, tension:.25, pointRadius:0, pointHoverRadius:5,
+      pointHoverBackgroundColor:ACC, pointHoverBorderColor:'#fff', pointHoverBorderWidth:2}]},
+    options:opcoes()});
 
-  const md = dias.map(d=>{ const r = D.meta.find(x=>x.d===d); return r||{total:0,tag:0}; });
+  charts.ckt = new Chart(document.getElementById('chCkt'), {
+    type:'bar',
+    data:{labels:rot, datasets:[{data:serie('checkout_started'), backgroundColor:ACC,
+      borderRadius:3, borderSkipped:false, maxBarThickness:14}]},
+    options:opcoes()});
+
+  const md = dias.map(d=>D.meta.find(x=>x.d===d) || {total:0,tag:0});
+  const optM = opcoes();
+  optM.plugins.legend = {display:true, position:'top', align:'end',
+    labels:{color:'#3f3f46', boxWidth:10, boxHeight:10, usePointStyle:true,
+            pointStyle:'circle', padding:16, font:{family:'Inter',size:12}}};
+  optM.plugins.tooltip.displayColors = true;
   charts.meta = new Chart(document.getElementById('chMeta'), {
     type:'bar',
     data:{labels:rot, datasets:[
-      {label:'Chegaram da Meta', data:md.map(r=>r.total), backgroundColor:AD, borderRadius:3, borderSkipped:false},
-      {label:'Identificadas como nossas', data:md.map(r=>r.tag), backgroundColor:RED, borderRadius:3, borderSkipped:false}
-    ]}, options:baseOpt});
+      {label:'Chegaram da Meta', data:md.map(r=>r.total), backgroundColor:ACC,
+       borderRadius:3, borderSkipped:false, maxBarThickness:16},
+      {label:'Identificadas como nossas', data:md.map(r=>r.tag), backgroundColor:'#b42318',
+       borderRadius:3, borderSkipped:false, maxBarThickness:16}
+    ]}, options:optM});
 }
 
 /* ---------- controles ---------- */
-document.getElementById('btnAplicar').onclick = ()=>{
+const btnAplicar = document.getElementById('btnAplicar'), mesSel = document.getElementById('mesSel');
+btnAplicar.onclick = ()=>{
   if(dtIni.value) ini = dtIni.value;
   if(dtFim.value) fim = dtFim.value;
   if(ini > fim){ const t = ini; ini = fim; fim = t; }
   dtIni.value = ini; dtFim.value = fim;
-  document.getElementById('btnAplicar').classList.remove('pending');
+  btnAplicar.classList.remove('pending');
   render();
 };
 document.getElementById('btnLimpar').onclick = ()=>{
-  ini = DMIN; fim = DMAX; dtIni.value = dtFim.value = '';
-  document.getElementById('mesSel').value = '';
-  document.getElementById('btnAplicar').classList.remove('pending');
-  render();
+  ini = DMIN; fim = DMAX; dtIni.value = ini; dtFim.value = fim;
+  mesSel.value = ''; btnAplicar.classList.remove('pending'); render();
 };
-[dtIni,dtFim].forEach(el=>el.oninput = ()=>document.getElementById('btnAplicar').classList.add('pending'));
-document.getElementById('mesSel').onchange = e=>{
+[dtIni,dtFim].forEach(el=>el.oninput = ()=>btnAplicar.classList.add('pending'));
+mesSel.onchange = e=>{
   const v = e.target.value;
   if(!v){ ini = DMIN; fim = DMAX; }
   else if(v === '__30'){ fim = DMAX; ini = todasDatas[Math.max(0,todasDatas.length-30)]; }
   else if(v === '__7'){ fim = DMAX; ini = todasDatas[Math.max(0,todasDatas.length-7)]; }
   else { const ds = todasDatas.filter(d=>d.startsWith(v)); ini = ds[0]; fim = ds[ds.length-1]; }
   dtIni.value = ini; dtFim.value = fim;
-  document.getElementById('btnAplicar').classList.remove('pending');
-  render();
+  btnAplicar.classList.remove('pending'); render();
 };
 document.getElementById('tabs').onclick = e=>{
   const b = e.target.closest('.tab'); if(!b) return;
@@ -468,6 +520,7 @@ document.getElementById('tabs').onclick = e=>{
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
   b.classList.add('active');
   document.getElementById('p-'+b.dataset.p).classList.add('active');
+  Object.values(charts).forEach(c=>c.resize());
 };
 
 /* ---------- carga ---------- */
@@ -476,11 +529,9 @@ fetch('data.json?v=' + Date.now())
   .then(d => { D = d; boot(); })
   .catch(e => {
     document.querySelector('.app').insertAdjacentHTML('afterbegin',
-      `<div class="alert"><div class="alert-ico">!</div><div>
-       <h3>Não consegui carregar os dados</h3>
-       <p>O arquivo <code>data.json</code> não respondeu (${e.message}).
-       Se você abriu este arquivo direto do disco, publique-o num servidor —
-       o navegador bloqueia leitura local por segurança.</p></div></div>`);
+      `<div class="alert"><h3>Não consegui carregar os dados</h3>
+       <p>O arquivo <code>data.json</code> não respondeu (${e.message}). Se você abriu este arquivo
+       direto do disco, publique-o num servidor — o navegador bloqueia leitura local por segurança.</p></div>`);
   });
 </script>
 </body>
