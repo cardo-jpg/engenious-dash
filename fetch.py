@@ -150,7 +150,7 @@ brutas = [{
   ORDER BY timestamp LIMIT 50000""")]
 
 # ---------- exclusoes manuais (testes nossos) ----------
-# excluir.json: [{"ts": "2026-08-19T18:25:57Z", "motivo": "teste do Jose"}, ...]
+# excluir.json: [{"ts": "...", "motivo": "...", "motivo_en": "..."}, ...]
 # Casa por ts, por cliente do Stripe ou por fatura - o que estiver preenchido.
 CAMINHO_EXC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "excluir.json")
 regras = []
@@ -169,7 +169,9 @@ o["venda_excluida"] = []
 for v in brutas:
     r = next((x for x in regras if casa(v, x)), None)
     if r:
-        o["venda_excluida"].append({**v, "motivo": r.get("motivo", "excluida manualmente")})
+        o["venda_excluida"].append({**v,
+                                   "motivo": r.get("motivo", "excluida manualmente"),
+                                   "motivo_en": r.get("motivo_en", r.get("motivo", "manually excluded"))})
     else:
         o["venda"].append(v)
 

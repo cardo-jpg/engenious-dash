@@ -1,6 +1,17 @@
 # Engenious · Funil de Aquisição
 
-**No ar:** https://cardo-jpg.github.io/engenious-dash/
+**No ar:**
+- Português — https://cardo-jpg.github.io/engenious-dash/
+- English — https://cardo-jpg.github.io/engenious-dash/en.html
+
+Um arquivo só, com dicionário de idioma. O botão EN/PT no canto da navegação
+troca e guarda a escolha; `?lang=en` força o inglês. `en.html` é só um redirecionamento,
+para ter um link limpo de mandar para o cliente.
+
+**Ao mexer em texto:** edite `index.html` normalmente em português e acrescente
+o par em `i18n_html.py` (HTML) ou no objeto `DIC` dentro de `novo_js.js` (JavaScript),
+depois rode `python montar.py`. O script falha se algum texto ficar sem tradução —
+é de propósito, para não publicar meia dash em inglês.
 
 Duas fontes, dois papéis, sem misturar:
 

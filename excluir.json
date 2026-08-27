@@ -1,5 +1,11 @@
 [
-  {"ts": "2026-08-12T01:41:23", "motivo": "teste do Jose - US$ 1,00, valor nao corresponde a nenhum produto"},
-  {"ts": "2026-08-18T19:13:58", "motivo": "teste do Jose - US$ 199,00, valor nao corresponde a nenhum produto"},
-  {"ts": "2026-08-19T18:25:57", "motivo": "teste do Jose - US$ 1,00, valor nao corresponde a nenhum produto"}
+  {"ts": "2026-08-12T01:41:23",
+   "motivo": "Teste do José — US$ 1,00, valor não corresponde a nenhum produto",
+   "motivo_en": "José's own test — US$1.00, an amount that matches no product"},
+  {"ts": "2026-08-18T19:13:58",
+   "motivo": "Teste do José — US$ 199,00, valor não corresponde a nenhum produto",
+   "motivo_en": "José's own test — US$199.00, an amount that matches no product"},
+  {"ts": "2026-08-19T18:25:57",
+   "motivo": "Teste do José — US$ 1,00, valor não corresponde a nenhum produto",
+   "motivo_en": "José's own test — US$1.00, an amount that matches no product"}
 ]
