@@ -310,12 +310,54 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
 <!-- ================= CRUZAMENTO ================= -->
 <div class="pane" id="p-cruz">
+
   <section class="reveal">
     <div class="shead">
       <div class="shead-top"><span class="rn">01</span><span class="src dois">Meta × PostHog</span></div>
-      <h2 class="disp">Onde as duas fontes divergem</h2>
-      <p>A mesma jornada, medida por quem vende o clique e por quem recebe a visita.
-         Cada etapa está com a fonte que a mede. <b>Quando as duas medem, elas discordam.</b></p>
+      <h2 class="disp">Duas fontes, dois números</h2>
+      <p>A Meta mede o que acontece <b>dentro dela</b>: quem viu, quem clicou, e quantas
+         chegadas ela conseguiu atribuir. O PostHog mede o que acontece <b>dentro do site</b>.
+         Entre uma coisa e outra existe uma fronteira, e é atravessando essa fronteira que
+         o rastro se perde.</p>
+    </div>
+    <div class="stats" id="statsCruz"></div>
+    <div class="stats" id="statsCruz2"></div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">02</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">São duas perdas, não uma</h2>
+      <p>Elas têm causas diferentes e se resolvem de formas diferentes. Vale separar
+         antes de tentar consertar.</p>
+    </div>
+    <div class="grid2">
+      <div class="call bad" id="perda1"></div>
+      <div class="call wn" id="perda2"></div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">03</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">Dia a dia</h2>
+      <p>Se a diferença fosse só forma de contar, a proporção seria estável.
+         <b>Ela oscila muito</b> — e isso indica perda de verdade, não critério.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-hd"><h3>Chegadas na página do Booster</h3>
+        <span class="src dois">as duas fontes</span></div>
+      <div class="chart-box"><canvas id="chCruz"></canvas></div>
+    </div>
+    <p class="note" id="cruzDiaNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">04</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">Etapa por etapa</h2>
+      <p>Cada linha traz a fonte que mede aquela etapa. Onde as duas medem, a diferença
+         está explicitada.</p>
     </div>
     <div class="board"><table id="tbCruz">
       <thead><tr><th>Etapa</th><th class="n m">Meta diz</th><th class="n p">PostHog diz</th>
@@ -326,7 +368,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
   <section class="reveal">
     <div class="shead">
-      <div class="shead-top"><span class="rn">02</span><span class="src dois">Meta × PostHog</span></div>
+      <div class="shead-top"><span class="rn">05</span><span class="src dois">Meta × PostHog</span></div>
       <h2 class="disp">O buraco na atribuição</h2>
     </div>
     <div class="call bad" id="reconcilia"></div>
@@ -334,10 +376,48 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
   <section class="reveal">
     <div class="shead">
-      <div class="shead-top"><span class="rn">03</span><span class="src ph">Fonte · PostHog</span></div>
+      <div class="shead-top"><span class="rn">06</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">Por que elas nunca vão bater exatamente</h2>
+      <p>Parte da diferença é esperada e não tem conserto. A outra parte tem, e é
+         nela que vale trabalhar.</p>
+    </div>
+    <div class="board"><table>
+      <thead><tr><th>Motivo</th><th>Tem conserto?</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td>Anúncios sem parâmetro de URL</td>
+            <td><span class="st gd">Sim, hoje</span></td>
+            <td class="dim">Preencher o campo de parâmetros de URL no gerenciador. Sem isso
+                nenhuma venda pode ser ligada a uma campanha, por nenhuma das duas fontes.</td></tr>
+        <tr><td>Identificador de clique perdido na navegação</td>
+            <td><span class="st gd">Sim</span></td>
+            <td class="dim">O site é uma aplicação de página única. Se o roteador reescreve
+                a URL antes do PostHog registrar, o <code>fbclid</code> some. Vale o dev conferir
+                a ordem entre roteador e captura.</td></tr>
+        <tr><td>Consentimento recusado</td>
+            <td><span class="st wn">Parcial</span></td>
+            <td class="dim">Sem consentimento o PostHog não registra nada. A Meta registra
+                o clique de qualquer forma. Essa diferença é estrutural.</td></tr>
+        <tr><td>Saída antes do script carregar</td>
+            <td><span class="st wn">Parcial</span></td>
+            <td class="dim">Quem fecha a página em menos de 1 ou 2 segundos conta como clique
+                para a Meta e não conta como visita para o PostHog. Depende da velocidade da página.</td></tr>
+        <tr><td>Bloqueador de anúncio e rastreamento</td>
+            <td><span class="st bad">Não</span></td>
+            <td class="dim">Público técnico, de QA e desenvolvimento, usa bloqueador acima da média.
+                É esperado que a perda aqui seja maior que num público comum.</td></tr>
+        <tr><td>Critério de contagem diferente</td>
+            <td><span class="st bad">Não</span></td>
+            <td class="dim">A Meta conta clique e atribui por janela própria; o PostHog conta pessoa
+                única por dia. Uma diferença de base sempre existe.</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">07</span><span class="src ph">Fonte · PostHog</span></div>
       <h2 class="disp">Chegadas da Meta vistas pelo site</h2>
-      <p>Quem chegou com o identificador de clique da Meta na URL. A série clara seria
-         a parcela carregando <b>a nossa etiqueta de campanha</b>.</p>
+      <p>Quem chegou com o identificador de clique na URL. A série clara seria a parcela
+         carregando <b>a nossa etiqueta de campanha</b>.</p>
     </div>
     <div class="panel">
       <div class="panel-hd"><h3>fbclid × utm_source</h3><span class="src ph">PostHog</span></div>
@@ -348,7 +428,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
   <section class="reveal">
     <div class="shead">
-      <div class="shead-top"><span class="rn">04</span><span class="src ph">Fonte · PostHog</span></div>
+      <div class="shead-top"><span class="rn">08</span><span class="src ph">Fonte · PostHog</span></div>
       <h2 class="disp">De onde vem o tráfego</h2>
     </div>
     <div class="board"><table id="tbOrig">
@@ -636,79 +716,133 @@ function renderCruz(){
   const t=totMidia();
   const bVis=somaB('page_viewed'), bCkt=somaB('checkout_started');
   const temM = M && M.dia.some(noPeriodo);
+  const mt=D.meta.filter(noPeriodo);
+  const fbclid=mt.reduce((s,r)=>s+r.total,0), comTag=mt.reduce((s,r)=>s+r.tag,0);
 
-  const cel=(v,cls)=> v===null ? '<td class="n dim">não mede</td>' : `<td class="n ${cls}">${v}</td>`;
-  const dif=(a,b)=> (a===null||b===null) ? '<td class="n dim">—</td>'
-    : `<td class="n">${a===b?'igual':(b>a?'+':'−')+nf(Math.abs(b-a))}</td>`;
+  /* numeros de topo */
+  document.getElementById('statsCruz').innerHTML=[
+    {k:'Cliques · Meta', n:temM?nf(Math.round(t.clk)):'—', d:'a Meta cobrou por estes', c:'br'},
+    {k:'Chegadas atribuídas · Meta', n:temM?nf(Math.round(t.vis)):'—', d:'ela diz ter entregue', c:'br'},
+    {k:'Visitas na página · PostHog', n:nf(bVis), d:'o site registrou', c:'pp'},
+    {k:'Com fbclid · PostHog', n:nf(fbclid), d:'carregavam identificador de clique', c:'pp'}
+  ].map(cardStat).join('');
 
+  const perdaA = temM ? raz(fbclid, t.clk) : null;
+  const perdaB = temM ? raz(bVis, t.vis) : null;
+  document.getElementById('statsCruz2').innerHTML=[
+    {k:'Clique vira visita rastreada', n:perdaA===null?'—':pf(fbclid,t.clk),
+     d:'dos cliques da Meta chegam com rastro', c:(perdaA!==null&&perdaA<.5)?'bad':''},
+    {k:'Chegada vira visita medida', n:perdaB===null?'—':pf(bVis,t.vis),
+     d:'do que a Meta atribui o site enxerga', c:(perdaB!==null&&perdaB<.5)?'bad':''},
+    {k:'Checkouts · Meta', n:temM?nf(Math.round(t.ckt)):'—', d:'atribuídos à campanha',
+     c:(temM&&t.ckt)?'br':'bad'},
+    {k:'Checkouts · PostHog', n:nf(bCkt), d:'registrados na página', c:bCkt?'pp':'bad'}
+  ].map(cardStat).join('');
+
+  /* as duas perdas */
+  document.getElementById('perda1').innerHTML = !temM
+    ? '<span class="tag">Sem dado</span><h3>Escolha um período com mídia</h3><p>A comparação precisa dos dois lados.</p>'
+    : '<span class="tag">Perda 1 · atravessar a fronteira</span>'
+      + '<h3>' + pf(bVis,t.vis) + ' das chegadas viram visita medida</h3>'
+      + '<p>A Meta diz ter entregue <b>' + nf(Math.round(t.vis)) + '</b> chegadas na página. '
+      + 'O site registrou <b>' + nf(bVis) + '</b>. Some gente entre o clique e o primeiro evento: '
+      + 'quem recusa consentimento, quem usa bloqueador, quem sai antes do script carregar. '
+      + '<b>Essa perda a gente reduz, não elimina.</b></p>';
+
+  document.getElementById('perda2').innerHTML = !temM
+    ? '<span class="tag">Sem dado</span><h3>—</h3><p>Escolha um período com mídia.</p>'
+    : '<span class="tag">Perda 2 · o rastro dentro do site</span>'
+      + '<h3>Só ' + nf(fbclid) + ' de ' + nf(bVis) + ' visitas guardam de onde vieram</h3>'
+      + '<p>Entre as pessoas que o site <b>conseguiu registrar</b>, boa parte já não carrega '
+      + 'o <code>fbclid</code>. Isso não é consentimento nem bloqueador — é o identificador '
+      + 'se perdendo na navegação, provavelmente porque o roteador da aplicação reescreve a URL '
+      + 'antes da captura. <b>Essa perda tem conserto, e é do lado do site.</b></p>';
+
+  /* tabela etapa a etapa */
+  const cel=(v,cls)=> v===null ? '<td class="n dim">não mede</td>' : '<td class="n '+cls+'">'+v+'</td>';
   const linhas=[
-    {et:'Impressões', m:temM?nf(Math.round(t.imp)):null, p:null,
+    {et:'Impressões', mn:temM?t.imp:null, pn:null,
      obs:'Só a Meta mede — o site não sabe quem viu o anúncio.'},
-    {et:'Cliques no anúncio', m:temM?nf(Math.round(t.clk)):null, p:null,
+    {et:'Cliques no anúncio', mn:temM?t.clk:null, pn:null,
      obs:'Só a Meta mede — o clique acontece dentro do app dela.'},
     {et:'Chegada na página', mn:temM?t.vis:null, pn:bVis,
      obs:'As duas medem, e é aqui que a conta não fecha.'},
+    {et:'Chegada com fbclid', mn:null, pn:fbclid,
+     obs:'Só o site mede — é o que sobra do rastro depois da navegação.'},
+    {et:'Chegada com a nossa etiqueta', mn:null, pn:comTag,
+     obs:'Zero enquanto o campo de parâmetros de URL do gerenciador estiver vazio.'},
     {et:'Checkout iniciado', mn:temM?t.ckt:null, pn:bCkt,
-     obs:'O site registra, a Meta não recebe ou não atribui.'},
+     obs:'O site registra, a Meta não recebia. Corrigido pelo dev em 27/08.'},
     {et:'Venda do Career Booster', mn:temM?t.vendas:null, pn:nVend(BOOSTER),
-     obs:'Assinatura de US$299 — vem do evento subscription_started, não de purchase_completed.'}
+     obs:'Assinatura de US$299 — vem de subscription_started, não de purchase_completed.'}
   ];
-
-  document.querySelector('#tbCruz tbody').innerHTML = linhas.map(l=>{
-    const mv = l.mn!==undefined ? (l.mn===null?null:nf(Math.round(l.mn))) : l.m;
-    const pv = l.pn!==undefined ? (l.pn===null?null:nf(l.pn)) : l.p;
-    return `<tr><td>${l.et}</td>${cel(mv,'m')}${cel(pv,'p')}`
-      + (l.mn!==undefined&&l.mn!==null ? dif(l.mn,l.pn) : '<td class="n dim">—</td>')
-      + `<td class="dim">${l.obs}</td></tr>`;
+  document.querySelector('#tbCruz tbody').innerHTML = linhas.map(function(l){
+    const mv = l.mn===null?null:nf(Math.round(l.mn));
+    const pv = l.pn===null?null:nf(l.pn);
+    const dif = (l.mn===null||l.pn===null) ? '<td class="n dim">—</td>'
+      : '<td class="n">' + (Math.round(l.mn)===l.pn ? 'igual'
+          : (l.pn>l.mn?'+':'−') + nf(Math.abs(Math.round(l.mn)-l.pn))) + '</td>';
+    return '<tr><td>'+l.et+'</td>'+cel(mv,'m')+cel(pv,'p')+dif+'<td class="dim">'+l.obs+'</td></tr>';
   }).join('');
 
   document.getElementById('cruzNote').innerHTML = temM
-    ? `A Meta cobra por <b>${nf(Math.round(t.clk))} cliques</b> e diz ter entregue
-       <b>${nf(Math.round(t.vis))} visitas</b> na página. O site registra <b>${nf(bVis)} pessoas</b>
-       nessa mesma página no mesmo período. A diferença tem três explicações possíveis, e nenhuma
-       foi descartada ainda: quem sai antes do script carregar, quem recusa o consentimento,
-       e contagem mais generosa do lado da Meta. <b>Enquanto os anúncios não carregarem
-       parâmetro de URL, não dá para separar as três.</b>`
+    ? 'A Meta cobra por <b>' + nf(Math.round(t.clk)) + ' cliques</b>. Dessas pessoas, o site '
+      + 'consegue identificar a origem de <b>' + nf(fbclid) + '</b> — ' + pf(fbclid,t.clk) + '. '
+      + '<b>Enquanto os anúncios não carregarem parâmetro de URL, nenhuma venda pode ser ligada '
+      + 'a uma campanha por nenhuma das duas fontes.</b>'
     : 'Escolha um período a partir de 19/08 para comparar as duas fontes.';
 
+  /* nota do dia a dia */
+  const dm = temM ? M.dia.filter(noPeriodo) : [];
+  const razoes = dm.filter(function(r){return r.vis>0;}).map(function(r){
+    const b=D.booster.find(function(x){return x.d===r.d && x.e==='page_viewed';});
+    return 100*((b?b.p:0)/r.vis);
+  });
+  document.getElementById('cruzDiaNote').innerHTML = razoes.length
+    ? 'A proporção varia de <b>' + Math.min.apply(null,razoes).toFixed(0) + '%</b> a <b>'
+      + Math.max.apply(null,razoes).toFixed(0) + '%</b> entre os dias do período. '
+      + 'Diferença só de critério de contagem produziria uma proporção estável. Essa oscilação '
+      + 'indica <b>perda real, variando com o tipo de tráfego de cada dia</b>.'
+    : 'Sem dado suficiente para comparar dia a dia.';
+
+  /* callout de atribuicao */
   const rec=document.getElementById('reconcilia');
   const ok = temM && t.ckt>0;
   rec.className='call '+(ok?'gd':'bad');
   rec.innerHTML = !temM
-    ? `<span class="tag">Sem dado</span><h3>Nada a reconciliar neste período</h3>
-       <p>A camada de mídia só existe a partir de ${M?br(M.corte):'19/08'}.</p>`
+    ? '<span class="tag">Sem dado</span><h3>Nada a reconciliar neste período</h3>'
+      + '<p>A camada de mídia só existe a partir de ' + (M?br(M.corte):'19/08') + '.</p>'
     : ok
-    ? `<span class="tag">Conferido</span><h3>As duas fontes concordam</h3>
-       <p>A Meta registrou <b>${nf(Math.round(t.ckt))}</b> checkouts atribuídos e o site
-       registrou <b>${nf(bCkt)}</b> na página do Booster.</p>`
-    : `<span class="tag">Divergência</span><h3>A Meta não vê os checkouts que o site registra</h3>
-       <p>No período, a Meta reporta <b>zero</b> checkouts atribuídos à campanha.
-       O PostHog registra <b>${nf(bCkt)}</b> checkouts iniciados nessa mesma página, e
-       <b>${nf(nVend(BOOSTER))}</b> venda${nVend(BOOSTER)===1?'':'s'} do Career Booster no site inteiro.
-       Os checkouts estão acontecendo — a Meta é que não está recebendo ou não está atribuindo.
-       Com ${din(t.inv)} investidos, é a diferença entre "não funciona" e "não dá para saber".</p>`;
+    ? '<span class="tag">Conferido</span><h3>As duas fontes concordam nos checkouts</h3>'
+      + '<p>A Meta registrou <b>' + nf(Math.round(t.ckt)) + '</b> checkouts atribuídos e o site '
+      + 'registrou <b>' + nf(bCkt) + '</b> na página do Booster.</p>'
+    : '<span class="tag">Divergência</span><h3>A Meta não vê os checkouts que o site registra</h3>'
+      + '<p>No período, a Meta reporta <b>zero</b> checkouts atribuídos à campanha, enquanto o '
+      + 'PostHog registra <b>' + nf(bCkt) + '</b> na mesma página. O dev encontrou e corrigiu a '
+      + 'causa em 27/08 — de lá para frente essa linha deve começar a fechar. <b>O período '
+      + 'anterior à correção não serve para julgar a campanha</b>, porque o resultado não '
+      + 'estava sendo medido.</p>';
 
   /* origens */
   const oAgg={};
-  D.origem.filter(noPeriodo).forEach(r=>{const k=r.src+'|'+r.med; oAgg[k]=(oAgg[k]||0)+r.p;});
-  const oTot=Object.values(oAgg).reduce((s,v)=>s+v,0);
+  D.origem.filter(noPeriodo).forEach(function(r){
+    const k=r.src+'|'+r.med; oAgg[k]=(oAgg[k]||0)+r.p; });
+  const oTot=Object.values(oAgg).reduce(function(s,v){return s+v;},0);
   document.querySelector('#tbOrig tbody').innerHTML =
-    Object.entries(oAgg).sort((a,b)=>b[1]-a[1]).slice(0,12).map(([k,v])=>{
-      const [s,m]=k.split('|');
-      return `<tr><td class="mono">${s}</td><td class="dim">${m||'—'}</td>
-        <td class="n">${nf(v)}</td><td class="n">${pf(v,oTot)}</td></tr>`;}).join('')
-    || '<tr><td colspan="4" class="dim">Sem dado no período.</td></tr>';
+    Object.entries(oAgg).sort(function(a,b){return b[1]-a[1];}).slice(0,12).map(function(e){
+      const p=e[0].split('|');
+      return '<tr><td class="mono">'+p[0]+'</td><td class="dim">'+(p[1]||'—')+'</td>'
+        + '<td class="n">'+nf(e[1])+'</td><td class="n">'+pf(e[1],oTot)+'</td></tr>';
+    }).join('') || '<tr><td colspan="4" class="dim">Sem dado no período.</td></tr>';
   const semTag=oAgg['(sem etiqueta)|']||0;
   document.getElementById('origNote').innerHTML =
-    `<b>${pf(semTag,oTot)}</b> do tráfego chega sem nenhuma etiqueta de origem. `
-    + `Não se resolve sozinho: depende de convenção de UTM aplicada em todo link, em todo canal.`;
+    '<b>' + pf(semTag,oTot) + '</b> do tráfego chega sem nenhuma etiqueta de origem. '
+    + 'Não se resolve sozinho: depende de convenção de UTM aplicada em todo link, em todo canal.';
 
-  const mt=D.meta.filter(noPeriodo);
-  const mTag=mt.reduce((s,r)=>s+r.tag,0), mTot=mt.reduce((s,r)=>s+r.total,0);
-  document.getElementById('metaNote').innerHTML = mTag===0
-    ? `<b>${nf(mTot)}</b> pessoas chegaram com identificador de clique da Meta e <b>nenhuma</b>
-       carregava a nossa etiqueta. Por isso a série clara não aparece no gráfico.`
-    : `<b>${pf(mTag,mTot)}</b> das chegadas da Meta vieram identificadas.`;
+  document.getElementById('metaNote').innerHTML = comTag===0
+    ? '<b>' + nf(fbclid) + '</b> pessoas chegaram com identificador de clique da Meta e '
+      + '<b>nenhuma</b> carregava a nossa etiqueta. Por isso a série clara não aparece no gráfico.'
+    : '<b>' + pf(comTag,fbclid) + '</b> das chegadas da Meta vieram identificadas.';
 }
 
 /* ---------- descarte ---------- */
@@ -899,6 +1033,26 @@ function desenhaGraficos(){
     charts.clk=new Chart(document.getElementById('chClk'),{type:'bar',
       data:{labels:rm,datasets:[{data:dm.map(r=>r.clk),backgroundColor:'#8E97E9',
         borderRadius:3,borderSkipped:false,maxBarThickness:26}]},options:opcoes()});
+  }
+
+  /* comparativo Meta x PostHog na pagina do Booster */
+  if(M){
+    const dm=M.dia.filter(noPeriodo);
+    const rc=dm.map(r=>r.d.slice(8,10)+'/'+r.d.slice(5,7));
+    const phDia=dm.map(r=>{
+      const b=D.booster.find(x=>x.d===r.d && x.e==='page_viewed'); return b?b.p:0; });
+    const oc=opcoes();
+    oc.plugins.legend={display:true,position:'top',align:'end',
+      labels:{color:'#4B5678',boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'circle',
+              padding:16,font:{family:"'Inter',sans-serif",size:11}}};
+    oc.plugins.tooltip.displayColors=true;
+    charts.cruz=new Chart(document.getElementById('chCruz'),{type:'bar',
+      data:{labels:rc,datasets:[
+        {label:'Meta diz ter entregue',data:dm.map(r=>r.vis),backgroundColor:BRAND,
+         borderRadius:3,borderSkipped:false,maxBarThickness:22},
+        {label:'O site registrou',data:phDia,backgroundColor:PH,
+         borderRadius:3,borderSkipped:false,maxBarThickness:22}
+      ]},options:oc});
   }
 
   const md=dias.map(d=>D.meta.find(x=>x.d===d)||{total:0,tag:0});
