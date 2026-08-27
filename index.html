@@ -393,6 +393,23 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
   <section class="reveal">
     <div class="shead">
       <div class="shead-top"><span class="rn">03</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Cada venda, com produto e origem</h2>
+      <p>A Engenious vende <b>dois produtos por caminhos diferentes</b>. Nossa campanha vende
+         só o Career Booster, de US$299, que é assinatura e chega pelo evento
+         <code>subscription_started</code>. O AI Career Accelerator, de US$2.497 a US$3.997,
+         é curso avulso e vem por <code>purchase_completed</code> — <b>está fora do nosso escopo</b>.
+         Somar os dois num número só inventa resultado que não é nosso.</p>
+    </div>
+    <div class="board"><table id="tbVenda">
+      <thead><tr><th>Produto</th><th>Origem</th><th>Evento</th>
+        <th class="n">Vendas</th><th class="n">Receita</th></tr></thead>
+      <tbody></tbody></table></div>
+    <p class="note" id="vendaNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">04</span><span class="src ph">Fonte · PostHog</span></div>
       <h2 class="disp">Páginas mais visitadas</h2>
     </div>
     <div class="board"><table id="tbPag">
@@ -459,6 +476,11 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
             <td><span class="src dois">Ambas</span></td>
             <td class="dim">Ou o evento não chega na Meta, ou ela não consegue atribuir</td>
             <td><span class="st bad">Crítico</span></td></tr>
+        <tr><td>Venda do Booster não usa o mesmo evento do outro produto</td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">Booster é assinatura (<code>subscription_started</code>), Accelerator é curso avulso
+                (<code>purchase_completed</code>). Contar só um dos dois zera o produto que anunciamos</td>
+            <td><span class="st gd">Corrigido aqui</span></td></tr>
         <tr><td>Ambiente de desenvolvimento escreve no mesmo projeto</td>
             <td><span class="src ph">PostHog</span></td>
             <td class="dim">Compras de teste do Stripe apareciam como venda real</td>
@@ -510,6 +532,10 @@ const nomeMes = m => { const s=new Date(m+'-02').toLocaleDateString('pt-BR',{mon
 const noPeriodo = r => r.d>=ini && r.d<=fim;
 const somaEv = (arr,ev) => arr.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+(r.p||0),0);
 const somaB  = ev => D.booster.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+r.p,0);
+const BOOSTER = 'Career Booster';
+const vendasDe = prod => (D.venda||[]).filter(r=>noPeriodo(r) && (!prod || r.produto===prod));
+const nVend = prod => vendasDe(prod).reduce((s,r)=>s+r.n,0);
+const vVend = prod => vendasDe(prod).reduce((s,r)=>s+r.valor,0);
 
 function boot(){
   todasDatas=[...new Set(D.site.map(r=>r.d))].sort();
@@ -606,7 +632,6 @@ function renderMidia(){
 function renderCruz(){
   const t=totMidia();
   const bVis=somaB('page_viewed'), bCkt=somaB('checkout_started');
-  const compras=D.compra.filter(noPeriodo).reduce((s,r)=>s+r.n,0);
   const temM = M && M.dia.some(noPeriodo);
 
   const cel=(v,cls)=> v===null ? '<td class="n dim">não mede</td>' : `<td class="n ${cls}">${v}</td>`;
@@ -622,8 +647,8 @@ function renderCruz(){
      obs:'As duas medem, e é aqui que a conta não fecha.'},
     {et:'Checkout iniciado', mn:temM?t.ckt:null, pn:bCkt,
      obs:'O site registra, a Meta não recebe ou não atribui.'},
-    {et:'Compra concluída', mn:temM?t.vendas:null, pn:compras,
-     obs:'Webhook do Stripe, só produção e sessão ao vivo.'}
+    {et:'Venda do Career Booster', mn:temM?t.vendas:null, pn:nVend(BOOSTER),
+     obs:'Assinatura de US$299 — vem do evento subscription_started, não de purchase_completed.'}
   ];
 
   document.querySelector('#tbCruz tbody').innerHTML = linhas.map(l=>{
@@ -656,7 +681,7 @@ function renderCruz(){
     : `<span class="tag">Divergência</span><h3>A Meta não vê os checkouts que o site registra</h3>
        <p>No período, a Meta reporta <b>zero</b> checkouts atribuídos à campanha.
        O PostHog registra <b>${nf(bCkt)}</b> checkouts iniciados nessa mesma página, e
-       <b>${nf(compras)}</b> compra${compras===1?'':'s'} concluída${compras===1?'':'s'} no site inteiro.
+       <b>${nf(nVend(BOOSTER))}</b> venda${nVend(BOOSTER)===1?'':'s'} do Career Booster no site inteiro.
        Os checkouts estão acontecendo — a Meta é que não está recebendo ou não está atribuindo.
        Com ${din(t.inv)} investidos, é a diferença entre "não funciona" e "não dá para saber".</p>`;
 
@@ -714,8 +739,8 @@ function render(){
   const vis=somaEv(D.site,'page_viewed'), cta=somaEv(D.site,'cta_clicked'),
         lead=somaEv(D.site,'lead_created'), reg=somaEv(D.site,'registration_started'),
         ckt=somaEv(D.site,'checkout_started');
-  const compras=D.compra.filter(noPeriodo).reduce((s,r)=>s+r.n,0);
-  const valor=D.compra.filter(noPeriodo).reduce((s,r)=>s+(r.valor||0),0);
+  const vBoost=nVend(BOOSTER), rBoost=vVend(BOOSTER);
+  const vTodas=nVend(null), rTodas=vVend(null);
   const t=totMidia();
   const temM = M && M.dia.some(noPeriodo);
 
@@ -725,8 +750,9 @@ function render(){
     {c:'m', k:'Cliques', n:temM?nf(Math.round(t.clk)):'—', d:temM?'CPC '+din(raz(t.inv,t.clk)):'', cl:'br'},
     {c:'p', k:'Visitantes no site', n:nf(vis), d:'só produção', cl:'pp'},
     {c:'p', k:'Checkouts iniciados', n:nf(ckt), d:'registrados pelo site', cl:'pp'},
-    {c:'p', k:'Compras', n:nf(compras), d:valor?din(valor)+' em receita':'nenhuma no período',
-     cl:compras?'gd':'bad'}
+    {c:'p', k:'Vendas do Booster', n:nf(vBoost),
+     d:vBoost?din(rBoost)+' · o produto que anunciamos':'nenhuma no período',
+     cl:vBoost?'gd':'bad'}
   ].map(g=>`<div class="g ${g.c}"><div class="k">${g.k}</div>
       <div class="n ${g.cl}">${g.n}</div><div class="d">${g.d}</div></div>`).join('');
 
@@ -736,14 +762,17 @@ function render(){
     {k:'Cliques em CTA', n:nf(cta), d:pf(cta,vis)+' dos visitantes'},
     {k:'Iniciaram cadastro', n:nf(reg), d:pf(reg,vis)+' dos visitantes'},
     {k:'Iniciaram checkout', n:nf(ckt), d:pf(ckt,vis)+' dos visitantes', c:'pp'},
-    {k:'Compras', n:nf(compras), d:valor?din(valor):'—', c:compras?'gd':'bad'}
+    {k:'Vendas do Booster', n:nf(vBoost), d:vBoost?din(rBoost):'—', c:vBoost?'gd':'bad'}
   ].map(cardStat).join('');
   funil('funSite',[['Visitaram o site',vis],['Clicaram em CTA',cta],['Viraram lead',lead],
-    ['Iniciaram cadastro',reg],['Iniciaram checkout',ckt],['Compraram',compras]].map(([r,v])=>({r,v})));
+    ['Iniciaram cadastro',reg],['Iniciaram checkout',ckt],['Compraram o Booster',vBoost]].map(([r,v])=>({r,v})));
   document.getElementById('siteNote').innerHTML =
     `De cada 100 pessoas que abrem o site, <b>${(100*ckt/(vis||1)).toLocaleString('pt-BR',{maximumFractionDigits:1})}</b> `
     + `chegam a iniciar um checkout. Números de <b>produção apenas</b>: evento de servidor, robô `
-    + `e ambiente de desenvolvimento estão fora — veja a aba Qualidade do dado.`;
+    + `e ambiente de desenvolvimento estão fora — veja a aba Qualidade do dado.`
+    + (vTodas>vBoost ? ` No período houve <b>${nf(vTodas)}</b> venda${vTodas===1?'':'s'} no total `
+       + `(${din(rTodas)}), mas só <b>${nf(vBoost)}</b> ${vBoost===1?'é':'são'} do Career Booster — `
+       + `o resto é de outro produto, que não está no nosso escopo.` : '');
 
   /* booster */
   const bv=somaB('page_viewed'), bc=somaB('cta_clicked'),
@@ -784,6 +813,29 @@ function render(){
     Object.entries(pAgg).sort((a,b)=>b[1]-a[1]).slice(0,10)
       .map(([pg,v])=>`<tr><td class="mono">${pg}</td><td class="n">${nf(v)}</td></tr>`).join('')
     || '<tr><td colspan="2" class="dim">Sem dado no período.</td></tr>';
+
+  /* vendas por produto e origem */
+  const vAgg={};
+  vendasDe(null).forEach(r=>{
+    const k=[r.produto, r.origem+(r.meio?' / '+r.meio:''), r.ev].join('|');
+    if(!vAgg[k]) vAgg[k]={n:0,v:0};
+    vAgg[k].n+=r.n; vAgg[k].v+=r.valor;
+  });
+  document.querySelector('#tbVenda tbody').innerHTML =
+    Object.entries(vAgg).sort((a,b)=>b[1].v-a[1].v).map(([k,x])=>{
+      const [prod,orig,ev]=k.split('|');
+      const nosso = prod===BOOSTER;
+      return `<tr><td class="${nosso?'p':'dim'}">${prod}</td><td class="mono">${orig}</td>
+        <td class="dim mono">${ev}</td><td class="n">${nf(x.n)}</td>
+        <td class="n">${din(x.v)}</td></tr>`;
+    }).join('') || '<tr><td colspan="5" class="dim">Nenhuma venda no período.</td></tr>';
+  const semTagV = vendasDe(BOOSTER).filter(r=>r.origem==='(sem etiqueta)').reduce((a,r)=>a+r.n,0);
+  document.getElementById('vendaNote').innerHTML = vBoost
+    ? `<b>${nf(vBoost)}</b> venda${vBoost===1?'':'s'} do Career Booster no período, `
+      + `${din(rBoost)} em receita. ${semTagV?`<b>${nf(semTagV)}</b> ${semTagV===1?'chegou':'chegaram'} sem etiqueta de origem, `
+      + `então não dá para dizer de onde ${semTagV===1?'veio':'vieram'}.`:''} `
+      + `Nenhuma venda até agora carrega etiqueta de mídia paga.`
+    : `Nenhuma venda do Career Booster no período selecionado.`;
 
   renderMidia(); renderCruz(); renderDescarte(); desenhaGraficos();
 }

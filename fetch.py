@@ -16,6 +16,7 @@ O que fica de fora, e por que:
   - dev.university.engenious.io -> ambiente de desenvolvimento do time deles
   - environment = local / develop / posthog-dashboard-fixture -> teste e carga historica
   - sessao Stripe cs_test_* -> compra em modo de teste, nao vendeu nada
+  - venda com valor zero -> evento incompleto, sem sessao e sem status
 """
 import datetime
 import json
@@ -37,7 +38,7 @@ EVENTOS = ("'page_viewed','cta_clicked','registration_started','checkout_started
 SO_PROD = f"properties.$host = '{PROD}'"
 # so compra de verdade: ambiente de producao e sessao Stripe ao vivo
 SO_VENDA = ("properties.environment = 'production' AND NOT "
-            "startsWith(toString(properties.stripe_checkout_session_id), 'cs_test_')")
+            "startsWith(coalesce(toString(properties.stripe_checkout_session_id), ''), 'cs_test_')")
 
 if not KEY:
     print("POSTHOG_API_KEY nao definida", file=sys.stderr)
@@ -113,12 +114,33 @@ o["pagina"] = [{"d": str(r[0]), "pg": r[1] or "/", "p": r[2]} for r in q(f"""
   FROM events WHERE event = 'page_viewed' AND {JANELA} AND {SO_PROD}
   GROUP BY d, pg HAVING p >= 2 ORDER BY d LIMIT 50000""")]
 
-# ---------- compras de verdade ----------
-o["compra"] = [{"d": str(r[0]), "n": r[1], "valor": round(r[2] or 0, 2)} for r in q(f"""
-  SELECT toDate(timestamp) AS d, count() AS n,
+# ---------- vendas de verdade ----------
+# Sao DOIS eventos, nao um:
+#   purchase_completed  -> curso avulso (AI Career Accelerator, 2.497 a 3.997)
+#   subscription_started -> assinatura, e e ai que mora o Career Booster (299)
+# Contar so purchase_completed mostra zero venda do produto que a gente anuncia.
+# Eventos com valor zero sao lixo e ficam de fora.
+PRODUTO = """multiIf(
+  toString(properties.product_key) = 'career_booster', 'Career Booster',
+  toString(properties.product_key) = 'ai_accelerator', 'AI Career Accelerator',
+  toFloat64OrNull(toString(properties.amount)) BETWEEN 100 AND 500, 'Career Booster',
+  toFloat64OrNull(toString(properties.amount)) >= 1000, 'AI Career Accelerator',
+  'outro')"""
+
+o["venda"] = [{"d": str(r[0]), "ev": r[1], "produto": r[2],
+               "origem": r[3] or "(sem etiqueta)", "meio": r[4] or "",
+               "n": r[5], "valor": round(r[6] or 0, 2)} for r in q(f"""
+  SELECT toDate(timestamp) AS d, event, {PRODUTO} AS produto,
+         properties.latest_utm_source AS origem,
+         properties.latest_utm_medium AS meio,
+         count() AS n,
          sum(toFloat64OrNull(toString(properties.amount))) AS valor
-  FROM events WHERE event = 'purchase_completed' AND {JANELA} AND {SO_VENDA}
-  GROUP BY d ORDER BY d LIMIT 50000""")]
+  FROM events
+  WHERE {JANELA} AND event IN ('purchase_completed','subscription_started')
+    AND properties.environment = 'production'
+    AND toFloat64OrNull(toString(properties.amount)) > 0
+    AND NOT startsWith(coalesce(toString(properties.stripe_checkout_session_id), ''), 'cs_test_')
+  GROUP BY d, event, produto, origem, meio ORDER BY d LIMIT 50000""")]
 
 # ---------- consentimento: quanto do trafego o PostHog chega a ver ----------
 o["consentimento"] = [{"d": str(r[0]), "viu": r[1], "optin": r[2]} for r in q(f"""
@@ -142,10 +164,19 @@ o["descarte"] = [{"d": str(r[0]), "motivo": r[1], "n": r[2]} for r in q(f"""
 
 o["compra_descartada"] = [{"d": str(r[0]), "motivo": r[1], "n": r[2]} for r in q(f"""
   SELECT toDate(timestamp) AS d,
-         concat('ambiente ', coalesce(toString(properties.environment), 'sem etiqueta')) AS motivo,
+         multiIf(
+           toFloat64OrNull(toString(properties.amount)) = 0 OR isNull(properties.amount),
+             'evento de venda com valor zero',
+           startsWith(coalesce(toString(properties.stripe_checkout_session_id), ''), 'cs_test_'),
+             'sessao Stripe em modo de teste',
+           concat('ambiente ', coalesce(toString(properties.environment), 'sem etiqueta'))
+         ) AS motivo,
          count() AS n
   FROM events
-  WHERE event = 'purchase_completed' AND {JANELA} AND NOT ({SO_VENDA})
+  WHERE {JANELA} AND event IN ('purchase_completed','subscription_started')
+    AND NOT (properties.environment = 'production'
+             AND toFloat64OrNull(toString(properties.amount)) > 0
+             AND NOT startsWith(coalesce(toString(properties.stripe_checkout_session_id), ''), 'cs_test_'))
   GROUP BY d, motivo ORDER BY d LIMIT 50000""")]
 
 o["atualizado_em"] = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
