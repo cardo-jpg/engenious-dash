@@ -23,6 +23,21 @@ por isso trocar de data é instantâneo.
 
 O GitHub Actions roda às 8h de Brasília e só commita se o dado mudou.
 
+## Excluir uma venda de teste
+
+Vendas de teste nossas saem por lista explicita em `excluir.json`, nunca por regra
+automatica — assim da para auditar o que foi tirado:
+
+```json
+[{"ts": "2026-08-19T18:25:57", "motivo": "teste do Jose"}]
+```
+
+Casa por `ts`, `cliente` (id do Stripe), `fatura` ou `sessao` — o que estiver
+preenchido, por prefixo. O que sai aparece na aba "Qualidade do dado" com o motivo.
+
+Nao da para identificar teste por geolocalizacao: todo evento de venda chega do
+servidor deles na AWS, entao tudo geolocaliza em Columbus, Ohio.
+
 ## Segredos
 
 Em **Settings → Secrets → Actions**:

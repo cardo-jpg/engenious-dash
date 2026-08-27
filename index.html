@@ -454,7 +454,10 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
     <div class="board"><table id="tbDescarte">
       <thead><tr><th>O que foi descartado</th><th class="n">Volume no período</th><th>Por quê</th></tr></thead>
       <tbody></tbody></table></div>
-    <p class="note">As compras, especificamente, vêm do evento <code>purchase_completed</code> —
+    <p class="note">Vendas marcadas como teste nosso saem por lista explícita em
+       <code>excluir.json</code>, não por regra automática — assim dá para conferir uma a uma
+       o que foi tirado e por quê.</p>
+    <p class="note">As vendas, especificamente, vêm de <code>purchase_completed</code> —
        o webhook do Stripe, disparado pelo servidor deles. Só entram as que têm
        <code>environment = production</code> e sessão Stripe ao vivo. Tudo que é
        <code>cs_test_</code>, <code>develop</code>, <code>local</code> ou
@@ -534,7 +537,7 @@ const somaEv = (arr,ev) => arr.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s
 const somaB  = ev => D.booster.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+r.p,0);
 const BOOSTER = 'Career Booster';
 const vendasDe = prod => (D.venda||[]).filter(r=>noPeriodo(r) && (!prod || r.produto===prod));
-const nVend = prod => vendasDe(prod).reduce((s,r)=>s+r.n,0);
+const nVend = prod => vendasDe(prod).length;
 const vVend = prod => vendasDe(prod).reduce((s,r)=>s+r.valor,0);
 
 function boot(){
@@ -729,6 +732,10 @@ function renderDescarte(){
        <td class="n">${nf(n)} compra${n===1?'':'s'}</td>
        <td class="dim">Fora de produção ou com sessão Stripe em modo de teste. Nenhuma cobrou de ninguém.</td></tr>`)
   ];
+  (D.venda_excluida||[]).filter(noPeriodo).forEach(v=>{
+    linhas.push(`<tr><td>Venda de ${br(v.d)}, ${din(v.valor)}</td>
+      <td class="n">1 venda</td><td class="dim">${v.motivo}</td></tr>`);
+  });
   document.querySelector('#tbDescarte tbody').innerHTML =
     linhas.join('') || '<tr><td colspan="3" class="dim">Nada foi descartado neste período.</td></tr>';
 }
@@ -819,7 +826,7 @@ function render(){
   vendasDe(null).forEach(r=>{
     const k=[r.produto, r.origem+(r.meio?' / '+r.meio:''), r.ev].join('|');
     if(!vAgg[k]) vAgg[k]={n:0,v:0};
-    vAgg[k].n+=r.n; vAgg[k].v+=r.valor;
+    vAgg[k].n+=1; vAgg[k].v+=r.valor;
   });
   document.querySelector('#tbVenda tbody').innerHTML =
     Object.entries(vAgg).sort((a,b)=>b[1].v-a[1].v).map(([k,x])=>{
@@ -829,7 +836,7 @@ function render(){
         <td class="dim mono">${ev}</td><td class="n">${nf(x.n)}</td>
         <td class="n">${din(x.v)}</td></tr>`;
     }).join('') || '<tr><td colspan="5" class="dim">Nenhuma venda no período.</td></tr>';
-  const semTagV = vendasDe(BOOSTER).filter(r=>r.origem==='(sem etiqueta)').reduce((a,r)=>a+r.n,0);
+  const semTagV = vendasDe(BOOSTER).filter(r=>r.origem==='(sem etiqueta)').length;
   document.getElementById('vendaNote').innerHTML = vBoost
     ? `<b>${nf(vBoost)}</b> venda${vBoost===1?'':'s'} do Career Booster no período, `
       + `${din(rBoost)} em receita. ${semTagV?`<b>${nf(semTagV)}</b> ${semTagV===1?'chegou':'chegaram'} sem etiqueta de origem, `

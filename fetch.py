@@ -116,10 +116,12 @@ o["pagina"] = [{"d": str(r[0]), "pg": r[1] or "/", "p": r[2]} for r in q(f"""
 
 # ---------- vendas de verdade ----------
 # Sao DOIS eventos, nao um:
-#   purchase_completed  -> curso avulso (AI Career Accelerator, 2.497 a 3.997)
+#   purchase_completed   -> curso avulso (AI Career Accelerator, 2.497 a 3.997)
 #   subscription_started -> assinatura, e e ai que mora o Career Booster (299)
 # Contar so purchase_completed mostra zero venda do produto que a gente anuncia.
-# Eventos com valor zero sao lixo e ficam de fora.
+#
+# Guardamos venda por venda, nao somada: sao poucas dezenas, e assim da para
+# excluir uma especifica em excluir.json sem refazer consulta.
 PRODUTO = """multiIf(
   toString(properties.product_key) = 'career_booster', 'Career Booster',
   toString(properties.product_key) = 'ai_accelerator', 'AI Career Accelerator',
@@ -127,20 +129,54 @@ PRODUTO = """multiIf(
   toFloat64OrNull(toString(properties.amount)) >= 1000, 'AI Career Accelerator',
   'outro')"""
 
-o["venda"] = [{"d": str(r[0]), "ev": r[1], "produto": r[2],
-               "origem": r[3] or "(sem etiqueta)", "meio": r[4] or "",
-               "n": r[5], "valor": round(r[6] or 0, 2)} for r in q(f"""
-  SELECT toDate(timestamp) AS d, event, {PRODUTO} AS produto,
+brutas = [{
+    "ts": str(r[0]), "d": str(r[0])[:10], "ev": r[1], "produto": r[2],
+    "valor": round(float(r[3] or 0), 2),
+    "origem": r[4] or "(sem etiqueta)", "meio": r[5] or "",
+    "cliente": r[6] or "", "fatura": r[7] or "", "sessao": r[8] or "",
+} for r in q(f"""
+  SELECT timestamp, event, {PRODUTO} AS produto,
+         toFloat64OrNull(toString(properties.amount)) AS valor,
          properties.latest_utm_source AS origem,
          properties.latest_utm_medium AS meio,
-         count() AS n,
-         sum(toFloat64OrNull(toString(properties.amount))) AS valor
+         properties.stripe_customer_id AS cliente,
+         properties.stripe_invoice_id AS fatura,
+         properties.stripe_checkout_session_id AS sessao
   FROM events
   WHERE {JANELA} AND event IN ('purchase_completed','subscription_started')
     AND properties.environment = 'production'
     AND toFloat64OrNull(toString(properties.amount)) > 0
     AND NOT startsWith(coalesce(toString(properties.stripe_checkout_session_id), ''), 'cs_test_')
-  GROUP BY d, event, produto, origem, meio ORDER BY d LIMIT 50000""")]
+  ORDER BY timestamp LIMIT 50000""")]
+
+# ---------- exclusoes manuais (testes nossos) ----------
+# excluir.json: [{"ts": "2026-08-19T18:25:57Z", "motivo": "teste do Jose"}, ...]
+# Casa por ts, por cliente do Stripe ou por fatura - o que estiver preenchido.
+CAMINHO_EXC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "excluir.json")
+regras = []
+if os.path.exists(CAMINHO_EXC):
+    regras = json.load(open(CAMINHO_EXC, encoding="utf-8"))
+
+def casa(v, regra):
+    for campo in ("ts", "cliente", "fatura", "sessao"):
+        alvo = regra.get(campo)
+        if alvo and v.get(campo, "").startswith(alvo):
+            return True
+    return False
+
+o["venda"] = []
+o["venda_excluida"] = []
+for v in brutas:
+    r = next((x for x in regras if casa(v, x)), None)
+    if r:
+        o["venda_excluida"].append({**v, "motivo": r.get("motivo", "excluida manualmente")})
+    else:
+        o["venda"].append(v)
+
+print(f"vendas: {len(o['venda'])} contadas, {len(o['venda_excluida'])} excluidas manualmente",
+      file=sys.stderr)
+for v in o["venda_excluida"]:
+    print(f"    fora: {v['ts']} {v['produto']} US$ {v['valor']} - {v['motivo']}", file=sys.stderr)
 
 # ---------- consentimento: quanto do trafego o PostHog chega a ver ----------
 o["consentimento"] = [{"d": str(r[0]), "viu": r[1], "optin": r[2]} for r in q(f"""
