@@ -513,16 +513,6 @@ function render(){
   const t=totMidia();
   const temM = M && M.dia.some(noPeriodo);
 
-  document.getElementById('glance').innerHTML=[
-    {c:'m', k:T.gInvestido, n:temM?din(t.inv):'—', d:T.gdGerenciador, cl:'br'},
-    {c:'m', k:T.gCliques, n:temM?nf(Math.round(t.clk)):'—', d:temM?'CPC '+din(raz(t.inv,t.clk)):'', cl:'br'},
-    {c:'p', k:T.gVisitantes, n:nf(vis), d:T.gdSoProd, cl:'pp'},
-    {c:'p', k:T.gCkt, n:nf(ckt), d:T.gdRegistrados, cl:'pp'},
-    {c:'p', k:T.gVendasB, n:nf(vBoost), d:vBoost?T.gdProdutoNosso(din(rBoost)):T.gdNenhuma,
-     cl:vBoost?'gd':'bad'}
-  ].map(g=>'<div class="g '+g.c+'"><div class="k">'+g.k+'</div>'
-      +'<div class="n '+g.cl+'">'+g.n+'</div><div class="d">'+g.d+'</div></div>').join('');
-
   document.getElementById('statsSite').innerHTML=[
     {k:T.kVisitantes, n:nf(vis), d:T.dPessoasDia},
     {k:T.kCta, n:nf(cta), d:T.dDosVisitantes(pf(cta,vis))},
@@ -707,7 +697,7 @@ mesSel.onchange=function(e){
   dtIni.value=ini; dtFim.value=fim;
   btnAplicar.classList.remove('pending'); render();
 };
-document.querySelector('.nav .inner').onclick=function(e){
+document.querySelector('.topo').onclick=function(e){
   const b=e.target.closest('.tab'); if(!b) return;
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));

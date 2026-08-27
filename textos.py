@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
-"""Marca os blocos de texto do HTML com data-t e monta o dicionario EN."""
-import io
-import json
-import re
-import sys
+"""Textos da dash: (chave, portugues, ingles).
 
-F = r"C:/Users/eleut/AppData/Local/Temp/claude/c--Users-eleut-claudinho/31a0d411-af2b-4ecc-bf81-605d93b1f84c/scratchpad/repo-dash/index.html"
-s = open(F, encoding="utf-8").read()
+Fonte unica dos textos fixos do HTML. O portugues aqui tem que ser identico ao
+que esta em index.src.html, incluindo quebra de linha e indentacao - montar.py
+casa por texto exato e falha se algum nao bater.
+"""
 
-# (chave, trecho PT exato no HTML, traducao EN)
-# O trecho PT e o innerHTML completo do elemento, com as tags internas.
 M = [
+
 ("heroLede",
- "Duas fontes, dois papéis. Todo número aqui carrega o selo de onde veio,\n       porque <b>elas não concordam</b> — e a discordância é o achado mais importante deste período.",
- "Two sources, two jobs. Every number here carries a badge saying where it came from, because <b>they don't agree</b> — and that disagreement is the most important finding of this period."),
+ "Duas fontes, dois papéis. Todo número desta dash carrega o selo de onde veio,\n       porque <b>elas não concordam</b> — e a discordância é o achado mais importante deste período.",
+ "Two sources, two jobs. Every number on this dashboard carries a badge saying where it came from, because <b>they don't agree</b> — and that disagreement is the most important finding of this period."),
+
+("q0h", "As duas fontes", "The two sources"),
+("identH1", "Funil de Aquisição", "Acquisition Funnel"),
+("identSub", "Engenious University", "Engenious University"),
 
 ("fonteMeta",
  "Exportação do <b>gerenciador de anúncios</b>. Manda em tudo que é campanha:\n           investimento, impressões, cliques, e o que a Meta consegue atribuir aos anúncios.\n           Começa em <b id=\"corteTxt\">19/08</b>, quando o gatilho de checkout mudou.",
@@ -157,7 +158,7 @@ M = [
 ("f5b","Servidor ou robô. Inflavam a contagem de visitantes em cerca de 8×","Server or bot. They inflated the visitor count by roughly 8×"),
 ("f5c","Filtrado aqui","Filtered here"),
 ("f6a","Carga histórica marcada como <code>fixture</code>","Historical seed data labelled <code>fixture</code>"),
-("f6b","240 \"compras\" do Brazil em abril e maio que nunca existiram","240 \"purchases\" from Brazil in April and May that never existed"),
+("f6b","240 \"compras\" do Brasil em abril e maio que nunca existiram","240 \"purchases\" from Brazil in April and May that never existed"),
 ("f6c","Filtrado aqui","Filtered here"),
 ("f7a","Tipo de aparelho ausente em boa parte dos eventos","Device type missing on a large share of events"),
 ("f7b","Mobile × desktop vale como direção, não como número","Mobile × desktop is directional, not a hard number"),
@@ -168,28 +169,3 @@ M = [
 
 ("rodape","Cardô Marketing · Engenious University","Cardô Marketing · Engenious University"),
 ]
-
-# 240 "compras" do Brasil -> o texto real usa "Brasil"
-M = [(k, pt.replace('do Brazil', 'do Brasil'), en) for k, pt, en in M]
-
-dic = {}
-faltou = []
-for chave, pt, en in M:
-    if pt not in s:
-        faltou.append((chave, pt[:70]))
-        continue
-    s = s.replace(pt, '<span data-t="%s">%s</span>' % (chave, pt)
-                  if False else pt, 1)  # marcacao feita abaixo
-    dic[chave] = en
-
-if faltou:
-    print("NAO ENCONTRADOS NO HTML (%d):" % len(faltou), file=sys.stderr)
-    for k, t in faltou:
-        print("   %-14s %s" % (k, " ".join(t.split())), file=sys.stderr)
-    sys.exit(1)
-
-print("todos os %d trechos localizados no HTML" % len(dic))
-json.dump({k: v for k, v in dic.items()}, open(
-    r"C:/Users/eleut/AppData/Local/Temp/claude/c--Users-eleut-claudinho/31a0d411-af2b-4ecc-bf81-605d93b1f84c/scratchpad/dic_en.json",
-    "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-print("dicionario gravado em dic_en.json")

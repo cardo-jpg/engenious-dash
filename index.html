@@ -46,50 +46,28 @@ body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size
 .src.dois{background:var(--surface-3);color:var(--ink-2)}
 .src.dois::before{background:linear-gradient(90deg,var(--brand) 50%,var(--ph) 50%)}
 
-/* ---------- HERO ---------- */
-.hero{position:relative;padding:72px 0 48px;overflow:hidden}
-.hero::before{content:"";position:absolute;top:-190px;right:-150px;width:560px;height:560px;
-   border-radius:50%;background:radial-gradient(circle,rgba(47,61,218,.09),transparent 68%);pointer-events:none}
-.hero .eyebrow{display:inline-block;margin-bottom:20px}
-.hero h1{font-size:clamp(2.6rem,7vw,4.6rem)}
-.hero h1 .grad{display:block;background:linear-gradient(96deg,var(--brand) 8%,var(--ph) 92%);
-   -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero .lede{max-width:62ch;margin-top:22px;font-size:1.05rem;color:var(--ink-2)}
-.hero .lede b{color:var(--ink);font-weight:600}
+/* ---------- TOPO FIXO ---------- */
+.topo{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);
+      backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topo .inner{max-width:var(--mw);margin:0 auto;padding:0 28px;
+             display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.topo .linha1{padding-top:14px;padding-bottom:12px}
+.topo .linha2{padding-bottom:2px;border-top:1px solid var(--line-soft)}
+.ident{margin-right:auto;min-width:0}
+.ident h1{font-family:var(--disp);font-weight:800;font-size:1.35rem;letter-spacing:-.025em;
+          line-height:1.15}
+.ident span{display:block;font-size:.76rem;color:var(--ink-3);margin-top:1px}
 
-.fontes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px;max-width:900px}
-.fonte{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--surface-2)}
-.fonte p{margin-top:8px;font-size:.82rem;color:var(--ink-2)}
-.fonte p b{color:var(--ink);font-weight:600}
+.tabs{display:flex;gap:26px;flex-wrap:wrap}
+.tab{font-family:var(--sans);font-size:.86rem;font-weight:500;color:var(--ink-3);background:none;
+     border:none;padding:11px 0;cursor:pointer;position:relative;transition:color .15s;
+     white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--brand);font-weight:600}
+.tab.active::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;
+                   background:var(--brand);border-radius:2px}
 
-.glance{display:flex;flex-wrap:wrap;margin-top:32px;border:1px solid var(--line);
-        border-radius:16px;overflow:hidden;background:var(--surface-2)}
-.glance .g{flex:1 1 160px;padding:18px 22px;border-right:1px solid var(--line-soft)}
-.glance .g:last-child{border-right:none}
-.glance .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
-           color:var(--ink-3);display:flex;align-items:center;gap:6px}
-.glance .k::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--ink-3);flex:none}
-.glance .g.m .k::before{background:var(--brand)} .glance .g.p .k::before{background:var(--ph)}
-.glance .n{font-family:var(--disp);font-weight:800;font-size:1.85rem;margin-top:6px;
-           font-variant-numeric:tabular-nums;line-height:1.05}
-.glance .d{font-size:.75rem;color:var(--ink-3);margin-top:2px}
-.glance .n.br{color:var(--brand)} .glance .n.bad{color:var(--fail)} .glance .n.gd{color:var(--pass)}
-.glance .n.pp{color:var(--ph)}
-
-/* ---------- NAV ---------- */
-.nav{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
-     border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line)}
-.nav .inner{max-width:var(--mw);margin:0 auto;padding:11px 28px;
-            display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.nav .mark{font-family:var(--disp);font-weight:800;font-size:.92rem;letter-spacing:-.01em;
-           padding-right:14px;border-right:1px solid var(--line);line-height:1.9}
-.nav .tabs{display:flex;gap:2px;flex-wrap:wrap}
-.tab{font-family:var(--sans);font-size:.79rem;font-weight:500;color:var(--ink-2);background:none;
-     border:none;padding:7px 14px;border-radius:20px;cursor:pointer;transition:.15s;white-space:nowrap}
-.tab:hover{background:var(--brand-wash);color:var(--brand)}
-.tab.active{background:var(--brand);color:#fff;font-weight:600}
-
-.period{display:flex;align-items:stretch;margin-left:auto;
+.period{display:flex;align-items:stretch;
         border:1px solid var(--line);border-radius:22px;background:var(--surface);overflow:hidden}
 .period > *{font-family:var(--sans);font-size:.76rem;color:var(--ink);background:transparent;
      border:none;padding:8px 13px;cursor:pointer;transition:background .15s;outline:none}
@@ -105,14 +83,19 @@ body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size
 
 .btlang{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.1em;
    background:var(--surface);border:1px solid var(--line);border-radius:20px;color:var(--ink-2);
-   padding:8px 13px;cursor:pointer;transition:.15s;margin-left:8px}
+   padding:8px 13px;cursor:pointer;transition:.15s}
 .btlang:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-wash)}
-@media(max-width:640px){.btlang{margin-left:0;order:1}}
+
+.fontes{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:900px}
+.fonte{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--surface-2)}
+.fonte p{margin-top:8px;font-size:.85rem;color:var(--ink-2)}
+.fonte p b{color:var(--ink);font-weight:600}
 
 /* ---------- SEÇÕES ---------- */
 .pane{display:none}
 .pane.active{display:block}
-section{padding:60px 0;border-bottom:1px solid var(--line-soft)}
+section{padding:52px 0;border-bottom:1px solid var(--line-soft)}
+.pane > section:first-child{padding-top:40px}
 section:last-child{border-bottom:none;padding-bottom:40px}
 .shead{max-width:72ch;margin-bottom:30px}
 .shead-top{display:flex;align-items:center;gap:12px;margin-bottom:9px;flex-wrap:wrap}
@@ -200,51 +183,22 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 @media(max-width:640px){
   html{font-size:118%}
   .wrap,.nav .inner{padding-left:18px;padding-right:18px}
-  .glance .g{flex:1 1 50%;border-bottom:1px solid var(--line-soft)}
-  .nav .inner{gap:10px} .nav .mark{display:none}
-  .nav .tabs{order:2;width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}
-  .period{margin-left:0;order:1;width:100%} .period > *{flex:1;text-align:center}
+  .topo .inner{padding-left:18px;padding-right:18px;gap:10px}
+  .ident h1{font-size:1.1rem} .ident span{display:none}
+  .period{order:3;width:100%} .period > *{flex:1;text-align:center;padding:8px 6px}
+  .tabs{gap:18px;overflow-x:auto;flex-wrap:nowrap;width:100%}
+  .tab{font-size:.8rem}
   .panel{padding:18px 16px}
 }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <span class="eyebrow">Cardô Marketing · Dashboard</span>
-    <h1 class="disp">Funil de<span class="grad">Aquisição</span></h1>
-    <p class="lede"><span data-t="heroLede">Duas fontes, dois papéis. Todo número aqui carrega o selo de onde veio,
-       porque <b>elas não concordam</b> — e a discordância é o achado mais importante deste período.</span></p>
-
-    <div class="fontes">
-      <div class="fonte">
-        <span class="src meta">Meta</span>
-        <p><span data-t="fonteMeta">Exportação do <b>gerenciador de anúncios</b>. Manda em tudo que é campanha:
-           investimento, impressões, cliques, e o que a Meta consegue atribuir aos anúncios.
-           Começa em <b id="corteTxt">19/08</b>, quando o gatilho de checkout mudou.</span></p>
-      </div>
-      <div class="fonte">
-        <span class="src ph">PostHog</span>
-        <p><span data-t="fontePh">Instrumentação do <b>site</b>. Manda em tudo que é comportamento: quem visitou,
-           clicou, se cadastrou, comprou. Só <b>produção</b> — ambiente de teste e evento
-           de servidor ficam de fora.</span></p>
-      </div>
-    </div>
-
-    <div class="glance" id="glance"></div>
-  </div>
-</header>
-
-<nav class="nav">
-  <div class="inner">
-    <span class="mark">Engenious</span>
-    <div class="tabs">
-      <button class="tab active" data-p="midia"><span data-t="tabMidia">Mídia</span></button>
-      <button class="tab" data-p="cruz"><span data-t="tabCruz">Meta × PostHog</span></button>
-      <button class="tab" data-p="site"><span data-t="tabSite">Site</span></button>
-      <button class="tab" data-p="booster"><span data-t="tabBoost">Booster</span></button>
-      <button class="tab" data-p="qual"><span data-t="tabQual">Qualidade do dado</span></button>
+<header class="topo">
+  <div class="inner linha1">
+    <div class="ident">
+      <h1><span data-t="identH1">Funil de Aquisição</span></h1>
+      <span><span data-t="identSub">Engenious University</span></span>
     </div>
     <div class="period">
       <select id="mesSel" aria-label="Período"></select>
@@ -254,7 +208,16 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
     </div>
     <button class="btlang" id="btLang">EN</button>
   </div>
-</nav>
+  <div class="inner linha2">
+    <div class="tabs">
+      <button class="tab active" data-p="midia"><span data-t="tabMidia">Mídia</span></button>
+      <button class="tab" data-p="cruz"><span data-t="tabCruz">Meta × PostHog</span></button>
+      <button class="tab" data-p="site"><span data-t="tabSite">Site</span></button>
+      <button class="tab" data-p="booster"><span data-t="tabBoost">Booster</span></button>
+      <button class="tab" data-p="qual"><span data-t="tabQual">Qualidade do dado</span></button>
+    </div>
+  </div>
+</header>
 
 <div class="wrap">
 
@@ -532,7 +495,30 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 <div class="pane" id="p-qual">
   <section class="reveal">
     <div class="shead">
-      <div class="shead-top"><span class="rn">01</span><span class="src ph">Fonte · PostHog</span></div>
+      <div class="shead-top"><span class="rn">01</span><span class="src dois"><span data-t="tabCruz">Meta × PostHog</span></span></div>
+      <h2 class="disp"><span data-t="q0h">As duas fontes</span></h2>
+      <p><span data-t="heroLede">Duas fontes, dois papéis. Todo número desta dash carrega o selo de onde veio,
+       porque <b>elas não concordam</b> — e a discordância é o achado mais importante deste período.</span></p>
+    </div>
+    <div class="fontes">
+      <div class="fonte">
+        <span class="src meta">Meta</span>
+        <p><span data-t="fonteMeta">Exportação do <b>gerenciador de anúncios</b>. Manda em tudo que é campanha:
+           investimento, impressões, cliques, e o que a Meta consegue atribuir aos anúncios.
+           Começa em <b id="corteTxt">19/08</b>, quando o gatilho de checkout mudou.</span></p>
+      </div>
+      <div class="fonte">
+        <span class="src ph">PostHog</span>
+        <p><span data-t="fontePh">Instrumentação do <b>site</b>. Manda em tudo que é comportamento: quem visitou,
+           clicou, se cadastrou, comprou. Só <b>produção</b> — ambiente de teste e evento
+           de servidor ficam de fora.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">02</span><span class="src ph">Fonte · PostHog</span></div>
       <h2 class="disp"><span data-t="q1h">O que foi jogado fora, e por quê</span></h2>
       <p><span data-t="q1p">O projeto do PostHog recebe eventos de várias origens misturadas. Estes <b>não entram
          em nenhum número desta dash</b> — mas ficam registrados, porque esconder lixo é pior
@@ -553,7 +539,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
   <section class="reveal">
     <div class="shead">
-      <div class="shead-top"><span class="rn">02</span><span class="src dois"><span data-t="tabCruz">Meta × PostHog</span></span></div>
+      <div class="shead-top"><span class="rn">03</span><span class="src dois"><span data-t="tabCruz">Meta × PostHog</span></span></div>
       <h2 class="disp"><span data-t="q2h">O que confiar, e o que não</span></h2>
     </div>
     <div class="board"><table>
@@ -604,7 +590,10 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 const TXT = {
-"heroLede": "Two sources, two jobs. Every number here carries a badge saying where it came from, because <b>they don't agree</b> — and that disagreement is the most important finding of this period.",
+"heroLede": "Two sources, two jobs. Every number on this dashboard carries a badge saying where it came from, because <b>they don't agree</b> — and that disagreement is the most important finding of this period.",
+"q0h": "The two sources",
+"identH1": "Acquisition Funnel",
+"identSub": "Engenious University",
 "fonteMeta": "Export from the <b>ads manager</b>. It owns everything campaign-related: spend, impressions, clicks, and whatever Meta manages to attribute to the ads. Starts on <b id=\"corteTxt\">Aug 19</b>, when the checkout trigger changed.",
 "fontePh": "The <b>site's</b> instrumentation. It owns everything behavioural: who visited, clicked, signed up, bought. <b>Production only</b> — test environments and server-side events are excluded.",
 "tabMidia": "Media",
@@ -1240,16 +1229,6 @@ function render(){
   const t=totMidia();
   const temM = M && M.dia.some(noPeriodo);
 
-  document.getElementById('glance').innerHTML=[
-    {c:'m', k:T.gInvestido, n:temM?din(t.inv):'—', d:T.gdGerenciador, cl:'br'},
-    {c:'m', k:T.gCliques, n:temM?nf(Math.round(t.clk)):'—', d:temM?'CPC '+din(raz(t.inv,t.clk)):'', cl:'br'},
-    {c:'p', k:T.gVisitantes, n:nf(vis), d:T.gdSoProd, cl:'pp'},
-    {c:'p', k:T.gCkt, n:nf(ckt), d:T.gdRegistrados, cl:'pp'},
-    {c:'p', k:T.gVendasB, n:nf(vBoost), d:vBoost?T.gdProdutoNosso(din(rBoost)):T.gdNenhuma,
-     cl:vBoost?'gd':'bad'}
-  ].map(g=>'<div class="g '+g.c+'"><div class="k">'+g.k+'</div>'
-      +'<div class="n '+g.cl+'">'+g.n+'</div><div class="d">'+g.d+'</div></div>').join('');
-
   document.getElementById('statsSite').innerHTML=[
     {k:T.kVisitantes, n:nf(vis), d:T.dPessoasDia},
     {k:T.kCta, n:nf(cta), d:T.dDosVisitantes(pf(cta,vis))},
@@ -1434,7 +1413,7 @@ mesSel.onchange=function(e){
   dtIni.value=ini; dtFim.value=fim;
   btnAplicar.classList.remove('pending'); render();
 };
-document.querySelector('.nav .inner').onclick=function(e){
+document.querySelector('.topo').onclick=function(e){
   const b=e.target.closest('.tab'); if(!b) return;
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));

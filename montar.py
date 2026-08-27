@@ -10,14 +10,12 @@ import json
 import sys
 
 BASE = r"C:/Users/eleut/AppData/Local/Temp/claude/c--Users-eleut-claudinho/31a0d411-af2b-4ecc-bf81-605d93b1f84c/scratchpad"
-F = BASE + "/repo-dash/index.html"
+ORIGEM  = BASE + "/repo-dash/index.src.html"   # fonte, em portugues
+DESTINO = BASE + "/repo-dash/index.html"       # gerado, com os dois idiomas
 
-spec = importlib.util.spec_from_file_location("i18n", BASE + "/i18n_html.py")
+spec = importlib.util.spec_from_file_location("textos", BASE + "/textos.py")
 mod = importlib.util.module_from_spec(spec)
-try:
-    spec.loader.exec_module(mod)
-except SystemExit:
-    pass
+spec.loader.exec_module(mod)
 
 # dedup por texto PT: chaves diferentes com o mesmo texto viram uma so
 vistos, PARES = {}, []
@@ -29,7 +27,7 @@ for chave, pt, en in mod.M:
     vistos[pt] = en
     PARES.append((chave, pt, en))
 
-s = open(F, encoding="utf-8").read()
+s = open(ORIGEM, encoding="utf-8").read()
 
 dic, faltou, relatorio = {}, [], []
 for chave, pt, en in PARES:
@@ -54,26 +52,11 @@ if multiplos:
     for k, n in multiplos:
         print("   %-14s %dx" % (k, n))
 
-# botao de idioma na nav
-assert '<button class="df-apply" id="btnAplicar">' in s, "botao aplicar intacto?"
-antes = '</div>\n  </div>\n</nav>'
-assert antes in s
-s = s.replace(antes, '</div>\n    <button class="btlang" id="btLang">EN</button>\n  </div>\n</nav>', 1)
-
-s = s.replace('/* ---------- SEÇÕES ---------- */',
-""".btlang{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.1em;
-   background:var(--surface);border:1px solid var(--line);border-radius:20px;color:var(--ink-2);
-   padding:8px 13px;cursor:pointer;transition:.15s;margin-left:8px}
-.btlang:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-wash)}
-@media(max-width:640px){.btlang{margin-left:0;order:1}}
-
-/* ---------- SEÇÕES ---------- */""", 1)
-
 js = open(BASE + "/novo_js.js", encoding="utf-8").read()
 ini = s.rindex("<script>")
 fim = s.rindex("</script>")
 s = s[:ini] + "<script>\nconst TXT = " + json.dumps(dic, ensure_ascii=False, indent=0) + ";\n\n" \
     + js + "\n" + s[fim:]
 
-open(F, "w", encoding="utf-8").write(s)
+open(DESTINO, "w", encoding="utf-8").write(s)
 print("montado: %d chaves, %d bytes" % (len(dic), len(s)))

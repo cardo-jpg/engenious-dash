@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engenious · Funil de Aquisição</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+<style>
+:root{
+  color-scheme:light;
+  --ground:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F9FE; --surface-3:#EDF1FB;
+  --line:#CFD8EF; --line-soft:#DFE5F4;
+  --brand:#2F3DDA; --brand-deep:#1A22A6; --brand-soft:#8E97E9; --brand-wash:#F1F3FE;
+  --ph:#A21CAF; --ph-soft:#D4A0DE; --ph-wash:#FBF2FD;
+  --ink:#111838; --ink-2:#4B5678; --ink-3:#7B86A6;
+  --pass:#0B8F58; --fail:#CE2244; --warn:#9E6600;
+  --pass-bg:rgba(11,143,88,.08); --fail-bg:rgba(206,34,68,.07); --warn-bg:rgba(158,102,0,.08);
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --disp:'Bricolage Grotesque','Inter',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --mw:1280px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;font-size:130%}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:1rem;
+     line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--mw);margin:0 auto;padding:0 28px}
+.disp{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;line-height:1.04;text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:.68rem;font-weight:500;letter-spacing:.22em;
+         text-transform:uppercase;color:var(--brand)}
+::selection{background:var(--brand);color:#fff}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:4px}
+
+/* ---------- SELO DE FONTE ---------- */
+.src{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.6rem;
+     letter-spacing:.11em;text-transform:uppercase;font-weight:700;padding:4px 11px;
+     border-radius:20px;white-space:nowrap;vertical-align:middle}
+.src::before{content:'';width:6px;height:6px;border-radius:50%;flex:none}
+.src.meta{background:var(--brand-wash);color:var(--brand)}
+.src.meta::before{background:var(--brand)}
+.src.ph{background:var(--ph-wash);color:var(--ph)}
+.src.ph::before{background:var(--ph)}
+.src.dois{background:var(--surface-3);color:var(--ink-2)}
+.src.dois::before{background:linear-gradient(90deg,var(--brand) 50%,var(--ph) 50%)}
+
+/* ---------- TOPO FIXO ---------- */
+.topo{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.94);
+      backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topo .inner{max-width:var(--mw);margin:0 auto;padding:0 28px;
+             display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.topo .linha1{padding-top:14px;padding-bottom:12px}
+.topo .linha2{padding-bottom:2px;border-top:1px solid var(--line-soft)}
+.ident{margin-right:auto;min-width:0}
+.ident h1{font-family:var(--disp);font-weight:800;font-size:1.35rem;letter-spacing:-.025em;
+          line-height:1.15}
+.ident span{display:block;font-size:.76rem;color:var(--ink-3);margin-top:1px}
+
+.tabs{display:flex;gap:26px;flex-wrap:wrap}
+.tab{font-family:var(--sans);font-size:.86rem;font-weight:500;color:var(--ink-3);background:none;
+     border:none;padding:11px 0;cursor:pointer;position:relative;transition:color .15s;
+     white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--brand);font-weight:600}
+.tab.active::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;
+                   background:var(--brand);border-radius:2px}
+
+.period{display:flex;align-items:stretch;
+        border:1px solid var(--line);border-radius:22px;background:var(--surface);overflow:hidden}
+.period > *{font-family:var(--sans);font-size:.76rem;color:var(--ink);background:transparent;
+     border:none;padding:8px 13px;cursor:pointer;transition:background .15s;outline:none}
+.period > * + *{border-left:1px solid var(--line-soft)}
+.period > *:hover{background:var(--brand-wash)}
+.period select{font-weight:500;padding-right:8px}
+.period input[type=date]{font-family:var(--mono);font-size:.72rem;color:var(--ink-2)}
+.period input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.4;margin-left:2px}
+.df-apply{font-weight:600;color:var(--ink-3)!important;padding:8px 15px!important}
+.df-apply.pending{background:var(--ink)!important;color:#fff!important;
+                  animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(47,61,218,.35)}50%{box-shadow:0 0 0 5px rgba(47,61,218,0)}}
+
+.btlang{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.1em;
+   background:var(--surface);border:1px solid var(--line);border-radius:20px;color:var(--ink-2);
+   padding:8px 13px;cursor:pointer;transition:.15s}
+.btlang:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-wash)}
+
+.fontes{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:900px}
+.fonte{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--surface-2)}
+.fonte p{margin-top:8px;font-size:.85rem;color:var(--ink-2)}
+.fonte p b{color:var(--ink);font-weight:600}
+
+/* ---------- SEÇÕES ---------- */
+.pane{display:none}
+.pane.active{display:block}
+section{padding:52px 0;border-bottom:1px solid var(--line-soft)}
+.pane > section:first-child{padding-top:40px}
+section:last-child{border-bottom:none;padding-bottom:40px}
+.shead{max-width:72ch;margin-bottom:30px}
+.shead-top{display:flex;align-items:center;gap:12px;margin-bottom:9px;flex-wrap:wrap}
+.shead .rn{font-family:var(--mono);font-size:.72rem;color:var(--ink-3);letter-spacing:.1em}
+.shead h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.7rem,3.6vw,2.4rem);
+          letter-spacing:-.02em;line-height:1.1}
+.shead p{margin-top:12px;font-size:.96rem;color:var(--ink-2)}
+.shead p b{color:var(--ink);font-weight:600}
+
+.reveal{opacity:0;transform:translateY(20px);
+        transition:opacity .6s cubic-bezier(.2,.6,.2,1),transform .6s cubic-bezier(.2,.6,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* ---------- STATS ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+       border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface-2)}
+.stats + .stats{margin-top:14px}
+.stat{padding:22px 24px;border-right:1px solid var(--line-soft)}
+.stat:last-child{border-right:none}
+.stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.stat .n{font-family:var(--disp);font-weight:800;font-size:2.2rem;margin-top:8px;line-height:1;
+         font-variant-numeric:tabular-nums}
+.stat .d{font-size:.78rem;color:var(--ink-3);margin-top:7px}
+.stat .n.br{color:var(--brand)} .stat .n.pp{color:var(--ph)}
+.stat .n.bad{color:var(--fail)} .stat .n.gd{color:var(--pass)}
+
+/* ---------- FUNIL ---------- */
+.funnel{display:flex;flex-direction:column;gap:9px}
+.fstep .lab{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+            font-size:.82rem;margin-bottom:5px}
+.fstep .lab .nmm{color:var(--ink-2)}
+.fstep .lab .rt{font-family:var(--mono);font-size:.7rem;color:var(--ink-3);white-space:nowrap}
+.ftrack{height:32px;background:var(--surface-3);border-radius:9px;overflow:hidden}
+.fbar{height:100%;display:flex;align-items:center;padding-left:13px;color:#fff;border-radius:9px;
+      font-family:var(--mono);font-weight:700;font-size:.82rem;min-width:52px;white-space:nowrap;
+      transition:width .4s cubic-bezier(.2,.6,.2,1)}
+
+/* ---------- PAINEL ---------- */
+.panel{border:1px solid var(--line);border-radius:18px;background:var(--surface-2);padding:22px 24px}
+.panel-hd{display:flex;justify-content:space-between;align-items:center;gap:14px;
+          flex-wrap:wrap;margin-bottom:18px}
+.panel-hd h3{font-family:var(--disp);font-weight:700;font-size:1.1rem;letter-spacing:-.01em}
+.chart-box{position:relative;height:270px;width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* ---------- CALLOUT ---------- */
+.call{padding:22px 26px;border-radius:16px;border:1px solid var(--line);background:var(--surface-2)}
+.call .tag{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.call h3{font-family:var(--disp);font-weight:700;font-size:1.18rem;margin-top:7px;letter-spacing:-.01em}
+.call p{margin-top:9px;font-size:.93rem;color:var(--ink-2)} .call p b{color:var(--ink);font-weight:600}
+.call.bad{border-color:rgba(206,34,68,.32);background:var(--fail-bg)} .call.bad .tag{color:var(--fail)}
+.call.wn{border-color:rgba(158,102,0,.32);background:var(--warn-bg)} .call.wn .tag{color:var(--warn)}
+.call.gd{border-color:rgba(11,143,88,.3);background:var(--pass-bg)} .call.gd .tag{color:var(--pass)}
+
+/* ---------- TABELA ---------- */
+.board{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface-2)}
+.board table{width:100%;border-collapse:collapse;font-size:.87rem}
+.board thead tr{background:var(--surface-3)}
+.board thead th{padding:12px 20px;text-align:left;font-family:var(--mono);font-size:.61rem;
+     font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.board thead th.n{text-align:right}
+.board thead th.m{color:var(--brand)} .board thead th.p{color:var(--ph)}
+.board tbody tr{border-top:1px solid var(--line-soft);transition:background .15s}
+.board tbody tr:hover{background:var(--brand-wash)}
+.board td{padding:13px 20px;color:var(--ink);vertical-align:top}
+.board td.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.board td.dim{color:var(--ink-2);font-size:.85rem}
+.board td.mono{font-family:var(--mono);font-size:.81rem}
+.board td.m{color:var(--brand);font-weight:600} .board td.p{color:var(--ph);font-weight:600}
+.st{display:inline-block;font-family:var(--mono);font-size:.61rem;letter-spacing:.08em;
+    text-transform:uppercase;font-weight:700;padding:5px 11px;border-radius:20px;white-space:nowrap}
+.st.bad{background:var(--fail-bg);color:var(--fail)}
+.st.wn{background:var(--warn-bg);color:var(--warn)}
+.st.gd{background:var(--pass-bg);color:var(--pass)}
+
+.note{font-size:.87rem;color:var(--ink-2);margin-top:18px;max-width:82ch}
+.note b{color:var(--ink);font-weight:600}
+code{font-family:var(--mono);font-size:.85em;background:var(--surface-3);padding:2px 7px;border-radius:5px}
+
+footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify-content:space-between;
+       gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:.67rem;color:var(--ink-3)}
+
+@media(max-width:900px){.grid2,.fontes{grid-template-columns:1fr}}
+@media(max-width:640px){
+  html{font-size:118%}
+  .wrap,.nav .inner{padding-left:18px;padding-right:18px}
+  .topo .inner{padding-left:18px;padding-right:18px;gap:10px}
+  .ident h1{font-size:1.1rem} .ident span{display:none}
+  .period{order:3;width:100%} .period > *{flex:1;text-align:center;padding:8px 6px}
+  .tabs{gap:18px;overflow-x:auto;flex-wrap:nowrap;width:100%}
+  .tab{font-size:.8rem}
+  .panel{padding:18px 16px}
+}
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="inner linha1">
+    <div class="ident">
+      <h1>Funil de Aquisição</h1>
+      <span>Engenious University</span>
+    </div>
+    <div class="period">
+      <select id="mesSel" aria-label="Período"></select>
+      <input type="date" id="dtIni" aria-label="Data inicial">
+      <input type="date" id="dtFim" aria-label="Data final">
+      <button class="df-apply" id="btnAplicar">Aplicar</button>
+    </div>
+    <button class="btlang" id="btLang">EN</button>
+  </div>
+  <div class="inner linha2">
+    <div class="tabs">
+      <button class="tab active" data-p="midia">Mídia</button>
+      <button class="tab" data-p="cruz">Meta × PostHog</button>
+      <button class="tab" data-p="site">Site</button>
+      <button class="tab" data-p="booster">Booster</button>
+      <button class="tab" data-p="qual">Qualidade do dado</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ================= MÍDIA ================= -->
+<div class="pane active" id="p-midia">
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">01</span><span class="src meta">Fonte · Meta</span></div>
+      <h2 class="disp">O que a campanha entregou</h2>
+      <p>Tudo nesta aba vem <b>direto do gerenciador</b>. Nenhum número aqui passou pelo site.</p>
+    </div>
+    <div class="stats" id="statsMidia"></div>
+    <div class="stats" id="statsMidia2"></div>
+    <p class="note" id="midiaNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">02</span><span class="src meta">Fonte · Meta</span></div>
+      <h2 class="disp">Investimento e cliques por dia</h2>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-hd"><h3>Investimento</h3><span class="src meta" id="moedaTag">USD</span></div>
+        <div class="chart-box"><canvas id="chInv"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><h3>Cliques no link</h3><span class="src meta">Meta</span></div>
+        <div class="chart-box"><canvas id="chClk"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">03</span><span class="src meta">Fonte · Meta</span></div>
+      <h2 class="disp">Por criativo</h2>
+      <p>Ordenado por investimento. O custo por visita separa criativo que trabalha
+         de criativo que só gasta.</p>
+    </div>
+    <div class="board"><table id="tbCri">
+      <thead><tr><th>Criativo</th><th class="n">Investido</th><th class="n">Impressões</th>
+        <th class="n">Cliques</th><th class="n">CTR</th><th class="n">CPC</th>
+        <th class="n">Visitas</th><th class="n">Custo/visita</th></tr></thead>
+      <tbody></tbody></table></div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">04</span><span class="src meta">Fonte · Meta</span></div>
+      <h2 class="disp">Por público</h2>
+    </div>
+    <div class="board"><table id="tbPub">
+      <thead><tr><th>Público</th><th class="n">Investido</th><th class="n">Impressões</th>
+        <th class="n">Cliques</th><th class="n">CTR</th><th class="n">CPC</th>
+        <th class="n">Visitas</th><th class="n">Custo/visita</th></tr></thead>
+      <tbody></tbody></table></div>
+  </section>
+</div>
+
+<!-- ================= CRUZAMENTO ================= -->
+<div class="pane" id="p-cruz">
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">01</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">Duas fontes, dois números</h2>
+      <p>A Meta mede o que acontece <b>dentro dela</b>: quem viu, quem clicou, e quantas
+         chegadas ela conseguiu atribuir. O PostHog mede o que acontece <b>dentro do site</b>.
+         Entre uma coisa e outra existe uma fronteira, e é atravessando essa fronteira que
+         o rastro se perde.</p>
+    </div>
+    <div class="stats" id="statsCruz"></div>
+    <div class="stats" id="statsCruz2"></div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">02</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">São duas perdas, não uma</h2>
+      <p>Elas têm causas diferentes e se resolvem de formas diferentes. Vale separar
+         antes de tentar consertar.</p>
+    </div>
+    <div class="grid2">
+      <div class="call bad" id="perda1"></div>
+      <div class="call wn" id="perda2"></div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">03</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">Dia a dia</h2>
+      <p>Se a diferença fosse só forma de contar, a proporção seria estável.
+         <b>Ela oscila muito</b> — e isso indica perda de verdade, não critério.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-hd"><h3>Chegadas na página do Booster</h3>
+        <span class="src dois">as duas fontes</span></div>
+      <div class="chart-box"><canvas id="chCruz"></canvas></div>
+    </div>
+    <p class="note" id="cruzDiaNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">04</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">Etapa por etapa</h2>
+      <p>Cada linha traz a fonte que mede aquela etapa. Onde as duas medem, a diferença
+         está explicitada.</p>
+    </div>
+    <div class="board"><table id="tbCruz">
+      <thead><tr><th>Etapa</th><th class="n m">Meta diz</th><th class="n p">PostHog diz</th>
+        <th class="n">Diferença</th><th>O que isso significa</th></tr></thead>
+      <tbody></tbody></table></div>
+    <p class="note" id="cruzNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">05</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">O buraco na atribuição</h2>
+    </div>
+    <div class="call bad" id="reconcilia"></div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">06</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">Por que elas nunca vão bater exatamente</h2>
+      <p>Parte da diferença é esperada e não tem conserto. A outra parte tem, e é
+         nela que vale trabalhar.</p>
+    </div>
+    <div class="board"><table>
+      <thead><tr><th>Motivo</th><th>Tem conserto?</th><th>O que fazer</th></tr></thead>
+      <tbody>
+        <tr><td>Anúncios sem parâmetro de URL</td>
+            <td><span class="st gd">Sim, hoje</span></td>
+            <td class="dim">Preencher o campo de parâmetros de URL no gerenciador. Sem isso
+                nenhuma venda pode ser ligada a uma campanha, por nenhuma das duas fontes.</td></tr>
+        <tr><td>Identificador de clique perdido na navegação</td>
+            <td><span class="st gd">Sim</span></td>
+            <td class="dim">O site é uma aplicação de página única. Se o roteador reescreve
+                a URL antes do PostHog registrar, o <code>fbclid</code> some. Vale o dev conferir
+                a ordem entre roteador e captura.</td></tr>
+        <tr><td>Consentimento recusado</td>
+            <td><span class="st wn">Parcial</span></td>
+            <td class="dim">Sem consentimento o PostHog não registra nada. A Meta registra
+                o clique de qualquer forma. Essa diferença é estrutural.</td></tr>
+        <tr><td>Saída antes do script carregar</td>
+            <td><span class="st wn">Parcial</span></td>
+            <td class="dim">Quem fecha a página em menos de 1 ou 2 segundos conta como clique
+                para a Meta e não conta como visita para o PostHog. Depende da velocidade da página.</td></tr>
+        <tr><td>Bloqueador de anúncio e rastreamento</td>
+            <td><span class="st bad">Não</span></td>
+            <td class="dim">Público técnico, de QA e desenvolvimento, usa bloqueador acima da média.
+                É esperado que a perda aqui seja maior que num público comum.</td></tr>
+        <tr><td>Critério de contagem diferente</td>
+            <td><span class="st bad">Não</span></td>
+            <td class="dim">A Meta conta clique e atribui por janela própria; o PostHog conta pessoa
+                única por dia. Uma diferença de base sempre existe.</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">07</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Chegadas da Meta vistas pelo site</h2>
+      <p>Quem chegou com o identificador de clique na URL. A série clara seria a parcela
+         carregando <b>a nossa etiqueta de campanha</b>.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-hd"><h3>fbclid × utm_source</h3><span class="src ph">PostHog</span></div>
+      <div class="chart-box"><canvas id="chMeta"></canvas></div>
+    </div>
+    <p class="note" id="metaNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">08</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">De onde vem o tráfego</h2>
+    </div>
+    <div class="board"><table id="tbOrig">
+      <thead><tr><th>Origem</th><th>Meio</th><th class="n">Pessoas</th><th class="n">Participação</th></tr></thead>
+      <tbody></tbody></table></div>
+    <p class="note" id="origNote"></p>
+  </section>
+</div>
+
+<!-- ================= SITE ================= -->
+<div class="pane" id="p-site">
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">01</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Onde as pessoas param</h2>
+      <p>Site inteiro, <b>só produção</b>. Pessoas únicas por dia, somadas no período.
+         A taxa à direita é quanto sobrevive da etapa anterior.</p>
+    </div>
+    <div class="stats" id="statsSite"></div>
+    <div class="funnel" id="funSite" style="margin-top:28px"></div>
+    <p class="note" id="siteNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">02</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Movimento no tempo</h2>
+      <p>Visitantes e checkouts vivem em escalas diferentes, por isso em gráficos separados.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-hd"><h3>Visitantes por dia</h3><span class="src ph">PostHog</span></div>
+        <div class="chart-box"><canvas id="chVis"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><h3>Checkouts iniciados</h3><span class="src ph">PostHog</span></div>
+        <div class="chart-box"><canvas id="chCkt"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">03</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Cada venda, com produto e origem</h2>
+      <p>A Engenious vende <b>dois produtos por caminhos diferentes</b>. Nossa campanha vende
+         só o Career Booster, de US$299, que é assinatura e chega pelo evento
+         <code>subscription_started</code>. O AI Career Accelerator, de US$2.497 a US$3.997,
+         é curso avulso e vem por <code>purchase_completed</code> — <b>está fora do nosso escopo</b>.
+         Somar os dois num número só inventa resultado que não é nosso.</p>
+    </div>
+    <div class="board"><table id="tbVenda">
+      <thead><tr><th>Produto</th><th>Origem</th><th>Evento</th>
+        <th class="n">Vendas</th><th class="n">Receita</th></tr></thead>
+      <tbody></tbody></table></div>
+    <p class="note" id="vendaNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">04</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Páginas mais visitadas</h2>
+    </div>
+    <div class="board"><table id="tbPag">
+      <thead><tr><th>Página</th><th class="n">Pessoas</th></tr></thead><tbody></tbody></table></div>
+  </section>
+</div>
+
+<!-- ================= BOOSTER ================= -->
+<div class="pane" id="p-booster">
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">01</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">A página que recebe a mídia</h2>
+      <p>O funil de <code>/paths/career-booster</code>, isolado do resto do site. É aqui que o dinheiro cai.</p>
+    </div>
+    <div class="stats" id="statsB"></div>
+    <div class="funnel" id="funBoost" style="margin-top:28px"></div>
+    <p class="note" id="boostNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">02</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Desktop contra mobile</h2>
+      <p>Percentual de visitantes do site que chegam a iniciar um checkout, por tipo de aparelho.</p>
+    </div>
+    <div class="funnel" id="funDisp"></div>
+    <p class="note" id="dispNote"></p>
+  </section>
+</div>
+
+<!-- ================= QUALIDADE ================= -->
+<div class="pane" id="p-qual">
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">01</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">As duas fontes</h2>
+      <p>Duas fontes, dois papéis. Todo número desta dash carrega o selo de onde veio,
+       porque <b>elas não concordam</b> — e a discordância é o achado mais importante deste período.</p>
+    </div>
+    <div class="fontes">
+      <div class="fonte">
+        <span class="src meta">Meta</span>
+        <p>Exportação do <b>gerenciador de anúncios</b>. Manda em tudo que é campanha:
+           investimento, impressões, cliques, e o que a Meta consegue atribuir aos anúncios.
+           Começa em <b id="corteTxt">19/08</b>, quando o gatilho de checkout mudou.</p>
+      </div>
+      <div class="fonte">
+        <span class="src ph">PostHog</span>
+        <p>Instrumentação do <b>site</b>. Manda em tudo que é comportamento: quem visitou,
+           clicou, se cadastrou, comprou. Só <b>produção</b> — ambiente de teste e evento
+           de servidor ficam de fora.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">02</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">O que foi jogado fora, e por quê</h2>
+      <p>O projeto do PostHog recebe eventos de várias origens misturadas. Estes <b>não entram
+         em nenhum número desta dash</b> — mas ficam registrados, porque esconder lixo é pior
+         que mostrar.</p>
+    </div>
+    <div class="board"><table id="tbDescarte">
+      <thead><tr><th>O que foi descartado</th><th class="n">Volume no período</th><th>Por quê</th></tr></thead>
+      <tbody></tbody></table></div>
+    <p class="note">Vendas marcadas como teste nosso saem por lista explícita em
+       <code>excluir.json</code>, não por regra automática — assim dá para conferir uma a uma
+       o que foi tirado e por quê.</p>
+    <p class="note">As vendas, especificamente, vêm de <code>purchase_completed</code> —
+       o webhook do Stripe, disparado pelo servidor deles. Só entram as que têm
+       <code>environment = production</code> e sessão Stripe ao vivo. Tudo que é
+       <code>cs_test_</code>, <code>develop</code>, <code>local</code> ou
+       <code>posthog-dashboard-fixture</code> fica de fora.</p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">03</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">O que confiar, e o que não</h2>
+    </div>
+    <div class="board"><table>
+      <thead><tr><th>Achado</th><th>Fonte</th><th>Efeito</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Anúncios sem parâmetro de URL</td><td><span class="src meta">Meta</span></td>
+            <td class="dim">Nenhum tráfego pago é atribuível às campanhas</td>
+            <td><span class="st bad">Crítico</span></td></tr>
+        <tr><td>Meta reporta zero checkout onde o site registra checkout</td>
+            <td><span class="src dois">Ambas</span></td>
+            <td class="dim">Ou o evento não chega na Meta, ou ela não consegue atribuir</td>
+            <td><span class="st bad">Crítico</span></td></tr>
+        <tr><td>Venda do Booster não usa o mesmo evento do outro produto</td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">Booster é assinatura (<code>subscription_started</code>), Accelerator é curso avulso
+                (<code>purchase_completed</code>). Contar só um dos dois zera o produto que anunciamos</td>
+            <td><span class="st gd">Corrigido aqui</span></td></tr>
+        <tr><td>Ambiente de desenvolvimento escreve no mesmo projeto</td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">Compras de teste do Stripe apareciam como venda real</td>
+            <td><span class="st wn">Filtrado aqui</span></td></tr>
+        <tr><td>Eventos sem host, sem lib e sem geolocalização</td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">Servidor ou robô. Inflavam a contagem de visitantes em cerca de 8×</td>
+            <td><span class="st wn">Filtrado aqui</span></td></tr>
+        <tr><td>Carga histórica marcada como <code>fixture</code></td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">240 "compras" do Brasil em abril e maio que nunca existiram</td>
+            <td><span class="st wn">Filtrado aqui</span></td></tr>
+        <tr><td>Tipo de aparelho ausente em boa parte dos eventos</td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">Mobile × desktop vale como direção, não como número</td>
+            <td><span class="st wn">Parcial</span></td></tr>
+        <tr><td>Pixel duplicado removido</td><td><span class="src meta">Meta</span></td>
+            <td class="dim">Números pararam de vir dobrados — a correção <code>/2</code> ficou obsoleta</td>
+            <td><span class="st gd">Resolvido</span></td></tr>
+      </tbody></table></div>
+  </section>
+</div>
+
+</div>
+
+<footer class="wrap">
+  <span>Cardô Marketing · Engenious University</span>
+  <span id="atualizado"></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+let D, M, todasDatas, DMIN, DMAX, ini, fim;
+const BRAND='#2F3DDA', BRAND_W='rgba(47,61,218,.10)', PH='#A21CAF', PH_W='rgba(162,28,175,.10)',
+      INK3='#7B86A6', LINE='#DFE5F4';
+const RAMP=['#8E97E9','#7A85E5','#616EE1','#4855DD','#2F3DDA','#1A22A6'];
+const nf = n => (n||0).toLocaleString('pt-BR');
+const pf = (a,b) => b ? (100*a/b).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%' : '—';
+const br = d => d.split('-').reverse().join('/');
+const din = v => (v===null||v===undefined) ? '—'
+  : '$'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const raz = (a,b) => b ? a/b : null;
+
+const dtIni=document.getElementById('dtIni'), dtFim=document.getElementById('dtFim');
+const btnAplicar=document.getElementById('btnAplicar'), mesSel=document.getElementById('mesSel');
+const nomeMes = m => { const s=new Date(m+'-02').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+                       return s.charAt(0).toUpperCase()+s.slice(1); };
+
+const noPeriodo = r => r.d>=ini && r.d<=fim;
+const somaEv = (arr,ev) => arr.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+(r.p||0),0);
+const somaB  = ev => D.booster.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+r.p,0);
+const BOOSTER = 'Career Booster';
+const vendasDe = prod => (D.venda||[]).filter(r=>noPeriodo(r) && (!prod || r.produto===prod));
+const nVend = prod => vendasDe(prod).length;
+const vVend = prod => vendasDe(prod).reduce((s,r)=>s+r.valor,0);
+
+function boot(){
+  todasDatas=[...new Set(D.site.map(r=>r.d))].sort();
+  DMIN=todasDatas[0]; DMAX=todasDatas[todasDatas.length-1];
+  dtIni.min=dtFim.min=DMIN; dtIni.max=dtFim.max=DMAX;
+
+  const meses=[...new Set(todasDatas.map(d=>d.slice(0,7)))].sort().reverse();
+  mesSel.innerHTML = (M&&M.corte ? `<option value="__midia">Desde ${br(M.corte)} · com mídia</option>` : '')
+    +'<option value="__30">Últimos 30 dias</option><option value="__7">Últimos 7 dias</option>'
+    + meses.map(m=>`<option value="${m}">${nomeMes(m)}</option>`).join('')
+    +`<option value="">Período inteiro (${todasDatas.length} dias)</option>`;
+
+  const at=new Date(D.atualizado_em);
+  document.getElementById('atualizado').textContent =
+    'Atualizado em '+at.toLocaleDateString('pt-BR')+' às '+
+    at.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(M) document.getElementById('corteTxt').textContent = br(M.corte);
+
+  fim=DMAX;
+  const temMidia = M && M.corte && M.corte<=DMAX;
+  ini = temMidia ? M.corte : todasDatas[Math.max(0,todasDatas.length-30)];
+  if(temMidia) mesSel.value='__midia';
+  dtIni.value=ini; dtFim.value=fim;
+  render(); observaReveal();
+}
+
+/* ---------- mídia (Meta) ---------- */
+function totMidia(){
+  const t={inv:0,imp:0,clk:0,vis:0,ckt:0,vendas:0,fat:0,dias:0};
+  if(!M) return t;
+  M.dia.filter(noPeriodo).forEach(r=>{
+    t.dias++; for(const k in t) if(k!=='dias') t[k]+=r[k]||0; });
+  return t;
+}
+function agrupaMidia(linhas, chave){
+  const a={};
+  linhas.filter(noPeriodo).forEach(r=>{
+    const k=r[chave]||'—';
+    if(!a[k]) a[k]={inv:0,imp:0,clk:0,vis:0,ckt:0};
+    for(const c in a[k]) a[k][c]+=r[c]||0;
+  });
+  return Object.entries(a).sort((x,y)=>y[1].inv-x[1].inv);
+}
+const linhaMidia = (nome,t) => `<tr><td class="mono">${nome}</td>
+  <td class="n">${din(t.inv)}</td><td class="n">${nf(Math.round(t.imp))}</td>
+  <td class="n">${nf(Math.round(t.clk))}</td><td class="n">${pf(t.clk,t.imp)}</td>
+  <td class="n">${din(raz(t.inv,t.clk))}</td><td class="n">${nf(Math.round(t.vis))}</td>
+  <td class="n">${din(raz(t.inv,t.vis))}</td></tr>`;
+
+const cardStat = s => `<div class="stat"><div class="k">${s.k}</div>
+  <div class="n${s.c?' '+s.c:''}">${s.n}</div><div class="d">${s.d}</div></div>`;
+
+function renderMidia(){
+  const temM = M && M.dia.some(noPeriodo);
+  if(M) document.getElementById('moedaTag').textContent = M.moeda;
+
+  if(!temM){
+    const aviso = `<div class="stat" style="grid-column:1/-1"><div class="k">Sem dado de mídia</div>
+      <div class="n" style="font-size:1.3rem">—</div>
+      <div class="d">A exportação da Meta começa em ${M?br(M.corte):'19/08'}.</div></div>`;
+    document.getElementById('statsMidia').innerHTML = aviso;
+    document.getElementById('statsMidia2').innerHTML = '';
+    document.getElementById('midiaNote').textContent = '';
+    document.querySelector('#tbCri tbody').innerHTML='<tr><td colspan="8" class="dim">Sem dado no período.</td></tr>';
+    document.querySelector('#tbPub tbody').innerHTML='<tr><td colspan="8" class="dim">Sem dado no período.</td></tr>';
+    return;
+  }
+
+  const t=totMidia();
+  document.getElementById('statsMidia').innerHTML=[
+    {k:'Investimento', n:din(t.inv), d:`${t.dias} dia${t.dias>1?'s':''} · ${din(t.inv/t.dias)}/dia`, c:'br'},
+    {k:'Impressões', n:nf(Math.round(t.imp)), d:'CPM '+din(raz(t.inv*1000,t.imp))},
+    {k:'Cliques no link', n:nf(Math.round(t.clk)), d:'CTR '+pf(t.clk,t.imp)},
+    {k:'Custo por clique', n:din(raz(t.inv,t.clk)), d:'CPC médio'}
+  ].map(cardStat).join('');
+  document.getElementById('statsMidia2').innerHTML=[
+    {k:'Visitas na página', n:nf(Math.round(t.vis)), d:pf(t.vis,t.clk)+' dos cliques chegaram'},
+    {k:'Custo por visita', n:din(raz(t.inv,t.vis)), d:'o que custa trazer uma pessoa'},
+    {k:'Checkouts (Meta)', n:nf(Math.round(t.ckt)), d:'atribuídos à campanha', c:t.ckt?'br':'bad'},
+    {k:'Vendas (Meta)', n:nf(Math.round(t.vendas)), d:'atribuídas à campanha', c:t.vendas?'gd':'bad'}
+  ].map(cardStat).join('');
+  document.getElementById('midiaNote').innerHTML =
+    `Campanha ${M.campanhas.map(c=>'<code>'+c+'</code>').join(', ')}, valores em <b>${M.moeda}</b>. `
+    + `Clique e visita são coisas diferentes: o clique é a Meta que registra, a visita só conta `
+    + `quando a página carrega — a distância entre os dois é abandono na chegada.`;
+
+  document.querySelector('#tbCri tbody').innerHTML =
+    agrupaMidia(M.criativo,'cri').map(([n,x])=>linhaMidia(n,x)).join('');
+  document.querySelector('#tbPub tbody').innerHTML =
+    agrupaMidia(M.publico,'pub').map(([n,x])=>linhaMidia(n,x)).join('');
+}
+
+/* ---------- cruzamento ---------- */
+function renderCruz(){
+  const t=totMidia();
+  const bVis=somaB('page_viewed'), bCkt=somaB('checkout_started');
+  const temM = M && M.dia.some(noPeriodo);
+  const mt=D.meta.filter(noPeriodo);
+  const fbclid=mt.reduce((s,r)=>s+r.total,0), comTag=mt.reduce((s,r)=>s+r.tag,0);
+
+  /* numeros de topo */
+  document.getElementById('statsCruz').innerHTML=[
+    {k:'Cliques · Meta', n:temM?nf(Math.round(t.clk)):'—', d:'a Meta cobrou por estes', c:'br'},
+    {k:'Chegadas atribuídas · Meta', n:temM?nf(Math.round(t.vis)):'—', d:'ela diz ter entregue', c:'br'},
+    {k:'Visitas na página · PostHog', n:nf(bVis), d:'o site registrou', c:'pp'},
+    {k:'Com fbclid · PostHog', n:nf(fbclid), d:'carregavam identificador de clique', c:'pp'}
+  ].map(cardStat).join('');
+
+  const perdaA = temM ? raz(fbclid, t.clk) : null;
+  const perdaB = temM ? raz(bVis, t.vis) : null;
+  document.getElementById('statsCruz2').innerHTML=[
+    {k:'Clique vira visita rastreada', n:perdaA===null?'—':pf(fbclid,t.clk),
+     d:'dos cliques da Meta chegam com rastro', c:(perdaA!==null&&perdaA<.5)?'bad':''},
+    {k:'Chegada vira visita medida', n:perdaB===null?'—':pf(bVis,t.vis),
+     d:'do que a Meta atribui o site enxerga', c:(perdaB!==null&&perdaB<.5)?'bad':''},
+    {k:'Checkouts · Meta', n:temM?nf(Math.round(t.ckt)):'—', d:'atribuídos à campanha',
+     c:(temM&&t.ckt)?'br':'bad'},
+    {k:'Checkouts · PostHog', n:nf(bCkt), d:'registrados na página', c:bCkt?'pp':'bad'}
+  ].map(cardStat).join('');
+
+  /* as duas perdas */
+  document.getElementById('perda1').innerHTML = !temM
+    ? '<span class="tag">Sem dado</span><h3>Escolha um período com mídia</h3><p>A comparação precisa dos dois lados.</p>'
+    : '<span class="tag">Perda 1 · atravessar a fronteira</span>'
+      + '<h3>' + pf(bVis,t.vis) + ' das chegadas viram visita medida</h3>'
+      + '<p>A Meta diz ter entregue <b>' + nf(Math.round(t.vis)) + '</b> chegadas na página. '
+      + 'O site registrou <b>' + nf(bVis) + '</b>. Some gente entre o clique e o primeiro evento: '
+      + 'quem recusa consentimento, quem usa bloqueador, quem sai antes do script carregar. '
+      + '<b>Essa perda a gente reduz, não elimina.</b></p>';
+
+  document.getElementById('perda2').innerHTML = !temM
+    ? '<span class="tag">Sem dado</span><h3>—</h3><p>Escolha um período com mídia.</p>'
+    : '<span class="tag">Perda 2 · o rastro dentro do site</span>'
+      + '<h3>Só ' + nf(fbclid) + ' de ' + nf(bVis) + ' visitas guardam de onde vieram</h3>'
+      + '<p>Entre as pessoas que o site <b>conseguiu registrar</b>, boa parte já não carrega '
+      + 'o <code>fbclid</code>. Isso não é consentimento nem bloqueador — é o identificador '
+      + 'se perdendo na navegação, provavelmente porque o roteador da aplicação reescreve a URL '
+      + 'antes da captura. <b>Essa perda tem conserto, e é do lado do site.</b></p>';
+
+  /* tabela etapa a etapa */
+  const cel=(v,cls)=> v===null ? '<td class="n dim">não mede</td>' : '<td class="n '+cls+'">'+v+'</td>';
+  const linhas=[
+    {et:'Impressões', mn:temM?t.imp:null, pn:null,
+     obs:'Só a Meta mede — o site não sabe quem viu o anúncio.'},
+    {et:'Cliques no anúncio', mn:temM?t.clk:null, pn:null,
+     obs:'Só a Meta mede — o clique acontece dentro do app dela.'},
+    {et:'Chegada na página', mn:temM?t.vis:null, pn:bVis,
+     obs:'As duas medem, e é aqui que a conta não fecha.'},
+    {et:'Chegada com fbclid', mn:null, pn:fbclid,
+     obs:'Só o site mede — é o que sobra do rastro depois da navegação.'},
+    {et:'Chegada com a nossa etiqueta', mn:null, pn:comTag,
+     obs:'Zero enquanto o campo de parâmetros de URL do gerenciador estiver vazio.'},
+    {et:'Checkout iniciado', mn:temM?t.ckt:null, pn:bCkt,
+     obs:'O site registra, a Meta não recebia. Corrigido pelo dev em 27/08.'},
+    {et:'Venda do Career Booster', mn:temM?t.vendas:null, pn:nVend(BOOSTER),
+     obs:'Assinatura de US$299 — vem de subscription_started, não de purchase_completed.'}
+  ];
+  document.querySelector('#tbCruz tbody').innerHTML = linhas.map(function(l){
+    const mv = l.mn===null?null:nf(Math.round(l.mn));
+    const pv = l.pn===null?null:nf(l.pn);
+    const dif = (l.mn===null||l.pn===null) ? '<td class="n dim">—</td>'
+      : '<td class="n">' + (Math.round(l.mn)===l.pn ? 'igual'
+          : (l.pn>l.mn?'+':'−') + nf(Math.abs(Math.round(l.mn)-l.pn))) + '</td>';
+    return '<tr><td>'+l.et+'</td>'+cel(mv,'m')+cel(pv,'p')+dif+'<td class="dim">'+l.obs+'</td></tr>';
+  }).join('');
+
+  document.getElementById('cruzNote').innerHTML = temM
+    ? 'A Meta cobra por <b>' + nf(Math.round(t.clk)) + ' cliques</b>. Dessas pessoas, o site '
+      + 'consegue identificar a origem de <b>' + nf(fbclid) + '</b> — ' + pf(fbclid,t.clk) + '. '
+      + '<b>Enquanto os anúncios não carregarem parâmetro de URL, nenhuma venda pode ser ligada '
+      + 'a uma campanha por nenhuma das duas fontes.</b>'
+    : 'Escolha um período a partir de 19/08 para comparar as duas fontes.';
+
+  /* nota do dia a dia */
+  const dm = temM ? M.dia.filter(noPeriodo) : [];
+  const razoes = dm.filter(function(r){return r.vis>0;}).map(function(r){
+    const b=D.booster.find(function(x){return x.d===r.d && x.e==='page_viewed';});
+    return 100*((b?b.p:0)/r.vis);
+  });
+  document.getElementById('cruzDiaNote').innerHTML = razoes.length
+    ? 'A proporção varia de <b>' + Math.min.apply(null,razoes).toFixed(0) + '%</b> a <b>'
+      + Math.max.apply(null,razoes).toFixed(0) + '%</b> entre os dias do período. '
+      + 'Diferença só de critério de contagem produziria uma proporção estável. Essa oscilação '
+      + 'indica <b>perda real, variando com o tipo de tráfego de cada dia</b>.'
+    : 'Sem dado suficiente para comparar dia a dia.';
+
+  /* callout de atribuicao */
+  const rec=document.getElementById('reconcilia');
+  const ok = temM && t.ckt>0;
+  rec.className='call '+(ok?'gd':'bad');
+  rec.innerHTML = !temM
+    ? '<span class="tag">Sem dado</span><h3>Nada a reconciliar neste período</h3>'
+      + '<p>A camada de mídia só existe a partir de ' + (M?br(M.corte):'19/08') + '.</p>'
+    : ok
+    ? '<span class="tag">Conferido</span><h3>As duas fontes concordam nos checkouts</h3>'
+      + '<p>A Meta registrou <b>' + nf(Math.round(t.ckt)) + '</b> checkouts atribuídos e o site '
+      + 'registrou <b>' + nf(bCkt) + '</b> na página do Booster.</p>'
+    : '<span class="tag">Divergência</span><h3>A Meta não vê os checkouts que o site registra</h3>'
+      + '<p>No período, a Meta reporta <b>zero</b> checkouts atribuídos à campanha, enquanto o '
+      + 'PostHog registra <b>' + nf(bCkt) + '</b> na mesma página. O dev encontrou e corrigiu a '
+      + 'causa em 27/08 — de lá para frente essa linha deve começar a fechar. <b>O período '
+      + 'anterior à correção não serve para julgar a campanha</b>, porque o resultado não '
+      + 'estava sendo medido.</p>';
+
+  /* origens */
+  const oAgg={};
+  D.origem.filter(noPeriodo).forEach(function(r){
+    const k=r.src+'|'+r.med; oAgg[k]=(oAgg[k]||0)+r.p; });
+  const oTot=Object.values(oAgg).reduce(function(s,v){return s+v;},0);
+  document.querySelector('#tbOrig tbody').innerHTML =
+    Object.entries(oAgg).sort(function(a,b){return b[1]-a[1];}).slice(0,12).map(function(e){
+      const p=e[0].split('|');
+      return '<tr><td class="mono">'+p[0]+'</td><td class="dim">'+(p[1]||'—')+'</td>'
+        + '<td class="n">'+nf(e[1])+'</td><td class="n">'+pf(e[1],oTot)+'</td></tr>';
+    }).join('') || '<tr><td colspan="4" class="dim">Sem dado no período.</td></tr>';
+  const semTag=oAgg['(sem etiqueta)|']||0;
+  document.getElementById('origNote').innerHTML =
+    '<b>' + pf(semTag,oTot) + '</b> do tráfego chega sem nenhuma etiqueta de origem. '
+    + 'Não se resolve sozinho: depende de convenção de UTM aplicada em todo link, em todo canal.';
+
+  document.getElementById('metaNote').innerHTML = comTag===0
+    ? '<b>' + nf(fbclid) + '</b> pessoas chegaram com identificador de clique da Meta e '
+      + '<b>nenhuma</b> carregava a nossa etiqueta. Por isso a série clara não aparece no gráfico.'
+    : '<b>' + pf(comTag,fbclid) + '</b> das chegadas da Meta vieram identificadas.';
+}
+
+/* ---------- descarte ---------- */
+function renderDescarte(){
+  const por={};
+  (D.descarte||[]).filter(noPeriodo).forEach(r=>{ por[r.motivo]=(por[r.motivo]||0)+r.n; });
+  const compras={};
+  (D.compra_descartada||[]).filter(noPeriodo).forEach(r=>{ compras[r.motivo]=(compras[r.motivo]||0)+r.n; });
+
+  const explica={
+    'sem host (servidor ou robo)':'Não têm host, nem biblioteca, nem geolocalização. São requisição de servidor ou robô, não pessoa.',
+    'ambiente de desenvolvimento':'Vieram de <code>dev.university.engenious.io</code> — o ambiente de teste do time deles.',
+    'outro':'Fora do host de produção.'
+  };
+  const linhas=[
+    ...Object.entries(por).sort((a,b)=>b[1]-a[1]).map(([m,n])=>
+      `<tr><td>${m}</td><td class="n">${nf(n)} pageviews</td>
+       <td class="dim">${explica[m]||'Fora do host de produção.'}</td></tr>`),
+    ...Object.entries(compras).sort((a,b)=>b[1]-a[1]).map(([m,n])=>
+      `<tr><td>Compras de <code>${m.replace('ambiente ','')}</code></td>
+       <td class="n">${nf(n)} compra${n===1?'':'s'}</td>
+       <td class="dim">Fora de produção ou com sessão Stripe em modo de teste. Nenhuma cobrou de ninguém.</td></tr>`)
+  ];
+  (D.venda_excluida||[]).filter(noPeriodo).forEach(v=>{
+    linhas.push(`<tr><td>Venda de ${br(v.d)}, ${din(v.valor)}</td>
+      <td class="n">1 venda</td><td class="dim">${v.motivo}</td></tr>`);
+  });
+  document.querySelector('#tbDescarte tbody').innerHTML =
+    linhas.join('') || '<tr><td colspan="3" class="dim">Nada foi descartado neste período.</td></tr>';
+}
+
+/* ---------- render ---------- */
+let charts={};
+function render(){
+  const vis=somaEv(D.site,'page_viewed'), cta=somaEv(D.site,'cta_clicked'),
+        lead=somaEv(D.site,'lead_created'), reg=somaEv(D.site,'registration_started'),
+        ckt=somaEv(D.site,'checkout_started');
+  const vBoost=nVend(BOOSTER), rBoost=vVend(BOOSTER);
+  const vTodas=nVend(null), rTodas=vVend(null);
+  const t=totMidia();
+  const temM = M && M.dia.some(noPeriodo);
+
+  /* faixa do topo: metade Meta, metade PostHog */
+  document.getElementById('glance').innerHTML=[
+    {c:'m', k:'Investido', n:temM?din(t.inv):'—', d:'gerenciador da Meta', cl:'br'},
+    {c:'m', k:'Cliques', n:temM?nf(Math.round(t.clk)):'—', d:temM?'CPC '+din(raz(t.inv,t.clk)):'', cl:'br'},
+    {c:'p', k:'Visitantes no site', n:nf(vis), d:'só produção', cl:'pp'},
+    {c:'p', k:'Checkouts iniciados', n:nf(ckt), d:'registrados pelo site', cl:'pp'},
+    {c:'p', k:'Vendas do Booster', n:nf(vBoost),
+     d:vBoost?din(rBoost)+' · o produto que anunciamos':'nenhuma no período',
+     cl:vBoost?'gd':'bad'}
+  ].map(g=>`<div class="g ${g.c}"><div class="k">${g.k}</div>
+      <div class="n ${g.cl}">${g.n}</div><div class="d">${g.d}</div></div>`).join('');
+
+  /* site */
+  document.getElementById('statsSite').innerHTML=[
+    {k:'Visitantes', n:nf(vis), d:'pessoas por dia, somadas'},
+    {k:'Cliques em CTA', n:nf(cta), d:pf(cta,vis)+' dos visitantes'},
+    {k:'Iniciaram cadastro', n:nf(reg), d:pf(reg,vis)+' dos visitantes'},
+    {k:'Iniciaram checkout', n:nf(ckt), d:pf(ckt,vis)+' dos visitantes', c:'pp'},
+    {k:'Vendas do Booster', n:nf(vBoost), d:vBoost?din(rBoost):'—', c:vBoost?'gd':'bad'}
+  ].map(cardStat).join('');
+  funil('funSite',[['Visitaram o site',vis],['Clicaram em CTA',cta],['Viraram lead',lead],
+    ['Iniciaram cadastro',reg],['Iniciaram checkout',ckt],['Compraram o Booster',vBoost]].map(([r,v])=>({r,v})));
+  document.getElementById('siteNote').innerHTML =
+    `De cada 100 pessoas que abrem o site, <b>${(100*ckt/(vis||1)).toLocaleString('pt-BR',{maximumFractionDigits:1})}</b> `
+    + `chegam a iniciar um checkout. Números de <b>produção apenas</b>: evento de servidor, robô `
+    + `e ambiente de desenvolvimento estão fora — veja a aba Qualidade do dado.`
+    + (vTodas>vBoost ? ` No período houve <b>${nf(vTodas)}</b> venda${vTodas===1?'':'s'} no total `
+       + `(${din(rTodas)}), mas só <b>${nf(vBoost)}</b> ${vBoost===1?'é':'são'} do Career Booster — `
+       + `o resto é de outro produto, que não está no nosso escopo.` : '');
+
+  /* booster */
+  const bv=somaB('page_viewed'), bc=somaB('cta_clicked'),
+        brg=somaB('registration_started'), bk=somaB('checkout_started');
+  document.getElementById('statsB').innerHTML=[
+    {k:'Visitantes na página', n:nf(bv), d:'pessoas por dia, somadas'},
+    {k:'Clicaram em CTA', n:nf(bc), d:pf(bc,bv)+' dos visitantes'},
+    {k:'Iniciaram cadastro', n:nf(brg), d:pf(brg,bv)+' dos visitantes'},
+    {k:'Iniciaram checkout', n:nf(bk), d:pf(bk,bv)+' dos visitantes', c:'pp'}
+  ].map(cardStat).join('');
+  funil('funBoost',[['Visitaram a página',bv],['Clicaram em CTA',bc],
+    ['Iniciaram cadastro',brg],['Iniciaram checkout',bk]].map(([r,v])=>({r,v})));
+  document.getElementById('boostNote').innerHTML =
+    `<b>${pf(bk,bv)}</b> dos visitantes desta página chegam a iniciar um checkout. `
+    + (temM ? `A Meta diz ter mandado <b>${nf(Math.round(t.vis))}</b> visitas para cá no mesmo período — `
+            + `compare na aba Meta × PostHog.` : '');
+
+  /* dispositivo */
+  const dAgg={};
+  D.disp.filter(noPeriodo).forEach(r=>{
+    if(!dAgg[r.tipo]) dAgg[r.tipo]={vis:0,ckt:0};
+    dAgg[r.tipo].vis+=r.vis; dAgg[r.tipo].ckt+=r.ckt;});
+  const dIt=['Desktop','Mobile','Tablet'].filter(x=>dAgg[x]&&dAgg[x].vis).map(x=>({
+    r:x, v:100*dAgg[x].ckt/dAgg[x].vis, txt:pf(dAgg[x].ckt,dAgg[x].vis),
+    rt:`${nf(dAgg[x].ckt)} de ${nf(dAgg[x].vis)} visitantes`}));
+  funil('funDisp', dIt.length?dIt:[{r:'Sem dado de aparelho no período',v:0,txt:'—',rt:''}]);
+  const dk=dAgg.Desktop, mb=dAgg.Mobile, sd=dAgg['sem dado'];
+  document.getElementById('dispNote').innerHTML = (dk&&mb&&mb.vis&&dk.vis&&mb.ckt)
+    ? `Desktop converte <b>${((dk.ckt/dk.vis)/(mb.ckt/mb.vis)).toLocaleString('pt-BR',{maximumFractionDigits:1})}×</b> mais que mobile. `
+      + `O aparelho só é registrado em parte dos eventos — ${nf(sd?sd.vis:0)} visitantes ficaram sem `
+      + `essa informação, então leia como direção, não como número absoluto.`
+    : 'Dado de aparelho insuficiente no período selecionado.';
+
+  /* páginas */
+  const pAgg={};
+  D.pagina.filter(noPeriodo).forEach(r=>{pAgg[r.pg]=(pAgg[r.pg]||0)+r.p;});
+  document.querySelector('#tbPag tbody').innerHTML =
+    Object.entries(pAgg).sort((a,b)=>b[1]-a[1]).slice(0,10)
+      .map(([pg,v])=>`<tr><td class="mono">${pg}</td><td class="n">${nf(v)}</td></tr>`).join('')
+    || '<tr><td colspan="2" class="dim">Sem dado no período.</td></tr>';
+
+  /* vendas por produto e origem */
+  const vAgg={};
+  vendasDe(null).forEach(r=>{
+    const k=[r.produto, r.origem+(r.meio?' / '+r.meio:''), r.ev].join('|');
+    if(!vAgg[k]) vAgg[k]={n:0,v:0};
+    vAgg[k].n+=1; vAgg[k].v+=r.valor;
+  });
+  document.querySelector('#tbVenda tbody').innerHTML =
+    Object.entries(vAgg).sort((a,b)=>b[1].v-a[1].v).map(([k,x])=>{
+      const [prod,orig,ev]=k.split('|');
+      const nosso = prod===BOOSTER;
+      return `<tr><td class="${nosso?'p':'dim'}">${prod}</td><td class="mono">${orig}</td>
+        <td class="dim mono">${ev}</td><td class="n">${nf(x.n)}</td>
+        <td class="n">${din(x.v)}</td></tr>`;
+    }).join('') || '<tr><td colspan="5" class="dim">Nenhuma venda no período.</td></tr>';
+  const semTagV = vendasDe(BOOSTER).filter(r=>r.origem==='(sem etiqueta)').length;
+  document.getElementById('vendaNote').innerHTML = vBoost
+    ? `<b>${nf(vBoost)}</b> venda${vBoost===1?'':'s'} do Career Booster no período, `
+      + `${din(rBoost)} em receita. ${semTagV?`<b>${nf(semTagV)}</b> ${semTagV===1?'chegou':'chegaram'} sem etiqueta de origem, `
+      + `então não dá para dizer de onde ${semTagV===1?'veio':'vieram'}.`:''} `
+      + `Nenhuma venda até agora carrega etiqueta de mídia paga.`
+    : `Nenhuma venda do Career Booster no período selecionado.`;
+
+  renderMidia(); renderCruz(); renderDescarte(); desenhaGraficos();
+}
+
+function funil(id, itens){
+  const max=Math.max(...itens.map(i=>i.v),1);
+  document.getElementById(id).innerHTML=itens.map((it,i)=>{
+    const prev=i>0?itens[i-1].v:null;
+    const rt = it.rt!==undefined ? it.rt
+      : (prev!==null ? `ficam ${pf(it.v,prev)} da etapa anterior` : 'topo do funil');
+    const w=Math.max(100*it.v/max, it.v>0?6:0);
+    return `<div class="fstep">
+      <div class="lab"><span class="nmm">${it.r}</span><span class="rt">${rt}</span></div>
+      <div class="ftrack"><div class="fbar" style="width:${w}%;background:${RAMP[Math.min(i,RAMP.length-1)]}">${it.txt||nf(it.v)}</div></div>
+    </div>`;}).join('');
+}
+
+/* ---------- gráficos ---------- */
+function opcoes(){
+  return {responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false},
+      tooltip:{backgroundColor:'#111838',padding:11,cornerRadius:9,displayColors:false,
+        titleFont:{family:"'JetBrains Mono',monospace",size:11,weight:'400'},
+        bodyFont:{family:"'Inter',sans-serif",size:13,weight:'600'}}},
+    scales:{
+      x:{grid:{display:false},border:{color:LINE},
+         ticks:{color:INK3,font:{family:"'JetBrains Mono',monospace",size:10},maxRotation:0,autoSkipPadding:24}},
+      y:{beginAtZero:true,grid:{color:LINE},border:{display:false},
+         ticks:{color:INK3,font:{family:"'JetBrains Mono',monospace",size:10},precision:0,maxTicksLimit:6}}}};
+}
+function desenhaGraficos(){
+  Object.values(charts).forEach(c=>c.destroy()); charts={};
+  const dias=todasDatas.filter(d=>d>=ini&&d<=fim);
+  const rot=dias.map(d=>d.slice(8,10)+'/'+d.slice(5,7));
+  const serie=ev=>dias.map(d=>{const r=D.site.find(x=>x.d===d&&x.e===ev); return r?(r.p||0):0;});
+
+  charts.vis=new Chart(document.getElementById('chVis'),{type:'line',
+    data:{labels:rot,datasets:[{data:serie('page_viewed'),borderColor:PH,backgroundColor:PH_W,
+      borderWidth:2,fill:true,tension:.25,pointRadius:0,pointHoverRadius:5,
+      pointHoverBackgroundColor:PH,pointHoverBorderColor:'#fff',pointHoverBorderWidth:2}]},
+    options:opcoes()});
+  charts.ckt=new Chart(document.getElementById('chCkt'),{type:'bar',
+    data:{labels:rot,datasets:[{data:serie('checkout_started'),backgroundColor:PH,
+      borderRadius:3,borderSkipped:false,maxBarThickness:16}]},options:opcoes()});
+
+  if(M){
+    const dm=M.dia.filter(noPeriodo);
+    const rm=dm.map(r=>r.d.slice(8,10)+'/'+r.d.slice(5,7));
+    const oi=opcoes(); oi.plugins.tooltip.callbacks={label:c=>din(c.parsed.y)};
+    charts.inv=new Chart(document.getElementById('chInv'),{type:'bar',
+      data:{labels:rm,datasets:[{data:dm.map(r=>r.inv),backgroundColor:BRAND,
+        borderRadius:3,borderSkipped:false,maxBarThickness:26}]},options:oi});
+    charts.clk=new Chart(document.getElementById('chClk'),{type:'bar',
+      data:{labels:rm,datasets:[{data:dm.map(r=>r.clk),backgroundColor:'#8E97E9',
+        borderRadius:3,borderSkipped:false,maxBarThickness:26}]},options:opcoes()});
+  }
+
+  /* comparativo Meta x PostHog na pagina do Booster */
+  if(M){
+    const dm=M.dia.filter(noPeriodo);
+    const rc=dm.map(r=>r.d.slice(8,10)+'/'+r.d.slice(5,7));
+    const phDia=dm.map(r=>{
+      const b=D.booster.find(x=>x.d===r.d && x.e==='page_viewed'); return b?b.p:0; });
+    const oc=opcoes();
+    oc.plugins.legend={display:true,position:'top',align:'end',
+      labels:{color:'#4B5678',boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'circle',
+              padding:16,font:{family:"'Inter',sans-serif",size:11}}};
+    oc.plugins.tooltip.displayColors=true;
+    charts.cruz=new Chart(document.getElementById('chCruz'),{type:'bar',
+      data:{labels:rc,datasets:[
+        {label:'Meta diz ter entregue',data:dm.map(r=>r.vis),backgroundColor:BRAND,
+         borderRadius:3,borderSkipped:false,maxBarThickness:22},
+        {label:'O site registrou',data:phDia,backgroundColor:PH,
+         borderRadius:3,borderSkipped:false,maxBarThickness:22}
+      ]},options:oc});
+  }
+
+  const md=dias.map(d=>D.meta.find(x=>x.d===d)||{total:0,tag:0});
+  const om=opcoes();
+  om.plugins.legend={display:true,position:'top',align:'end',
+    labels:{color:'#4B5678',boxWidth:9,boxHeight:9,usePointStyle:true,pointStyle:'circle',
+            padding:16,font:{family:"'Inter',sans-serif",size:11}}};
+  om.plugins.tooltip.displayColors=true;
+  charts.meta=new Chart(document.getElementById('chMeta'),{type:'bar',
+    data:{labels:rot,datasets:[
+      {label:'Chegaram da Meta',data:md.map(r=>r.total),backgroundColor:PH,
+       borderRadius:3,borderSkipped:false,maxBarThickness:16},
+      {label:'Com a nossa etiqueta',data:md.map(r=>r.tag),backgroundColor:'#D4A0DE',
+       borderRadius:3,borderSkipped:false,maxBarThickness:16}]},options:om});
+}
+
+/* ---------- reveal ---------- */
+function observaReveal(){
+  if(!('IntersectionObserver' in window) ||
+     window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.querySelectorAll('.reveal').forEach(e=>e.classList.add('in')); return; }
+  const io=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }}),
+    {rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.reveal').forEach(e=>io.observe(e));
+}
+
+/* ---------- controles ---------- */
+btnAplicar.onclick=()=>{
+  if(dtIni.value) ini=dtIni.value;
+  if(dtFim.value) fim=dtFim.value;
+  if(ini>fim){const x=ini; ini=fim; fim=x;}
+  dtIni.value=ini; dtFim.value=fim;
+  btnAplicar.classList.remove('pending'); render();
+};
+[dtIni,dtFim].forEach(el=>el.oninput=()=>btnAplicar.classList.add('pending'));
+mesSel.onchange=e=>{
+  const v=e.target.value;
+  if(!v){ ini=DMIN; fim=DMAX; }
+  else if(v==='__midia'){ fim=DMAX; ini=M.corte; }
+  else if(v==='__30'){ fim=DMAX; ini=todasDatas[Math.max(0,todasDatas.length-30)]; }
+  else if(v==='__7'){ fim=DMAX; ini=todasDatas[Math.max(0,todasDatas.length-7)]; }
+  else { const ds=todasDatas.filter(d=>d.startsWith(v)); ini=ds[0]; fim=ds[ds.length-1]; }
+  dtIni.value=ini; dtFim.value=fim;
+  btnAplicar.classList.remove('pending'); render();
+};
+document.querySelector('.nav .inner').onclick=e=>{
+  const b=e.target.closest('.tab'); if(!b) return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const pane=document.getElementById('p-'+b.dataset.p);
+  pane.classList.add('active');
+  pane.querySelectorAll('.reveal').forEach(x=>x.classList.add('in'));
+  Object.values(charts).forEach(c=>c.resize());
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+/* ---------- carga ---------- */
+const _v='?v='+Date.now();
+Promise.all([
+  fetch('data.json'+_v).then(r=>{ if(!r.ok) throw new Error('data.json HTTP '+r.status); return r.json(); }),
+  fetch('midia.json'+_v).then(r=>r.ok?r.json():null).catch(()=>null)
+]).then(([d,m])=>{ D=d; M=m; boot(); })
+ .catch(e=>{
+   document.querySelector('.wrap').insertAdjacentHTML('afterbegin',
+     `<div class="call bad" style="margin:40px 0"><span class="tag">Erro</span>
+      <h3>Não consegui carregar os dados</h3>
+      <p>${e.message}. Se você abriu este arquivo direto do disco, publique-o num servidor —
+      o navegador bloqueia leitura local por segurança.</p></div>`);
+ });
+</script>
+</body>
+</html>

@@ -8,10 +8,26 @@ Um arquivo só, com dicionário de idioma. O botão EN/PT no canto da navegaçã
 troca e guarda a escolha; `?lang=en` força o inglês. `en.html` é só um redirecionamento,
 para ter um link limpo de mandar para o cliente.
 
-**Ao mexer em texto:** edite `index.html` normalmente em português e acrescente
-o par em `i18n_html.py` (HTML) ou no objeto `DIC` dentro de `novo_js.js` (JavaScript),
-depois rode `python montar.py`. O script falha se algum texto ficar sem tradução —
-é de propósito, para não publicar meia dash em inglês.
+### Como mexer
+
+`index.html` é **gerado**, não editado. Nunca mexa nele direto.
+
+| Arquivo | O que é |
+|---|---|
+| `index.src.html` | a fonte, em português — estrutura e conteúdo |
+| `textos.py` | os textos fixos do HTML: `(chave, português, inglês)` |
+| `novo_js.js` | a lógica, com o dicionário `DIC` das mensagens montadas em código |
+| `montar.py` | junta os três e escreve `index.html` |
+
+```bash
+python montar.py
+```
+
+Rodar duas vezes dá o mesmo resultado. O script **falha se algum texto ficar sem
+tradução** — é de propósito: meia dash em inglês é pior que nenhuma.
+
+Mensagem que mistura texto com número vira **função** no dicionário, recebendo o
+número como argumento. Traduzir pedaço de frase não funciona, a ordem das palavras muda.
 
 Duas fontes, dois papéis, sem misturar:
 
