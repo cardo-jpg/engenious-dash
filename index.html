@@ -197,7 +197,8 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
   <div class="inner">
     <span class="mark">Engenious</span>
     <div class="tabs">
-      <button class="tab active" data-p="geral">Visão geral</button>
+      <button class="tab active" data-p="midia">Mídia</button>
+      <button class="tab" data-p="geral">Visão geral</button>
       <button class="tab" data-p="atrib">Atribuição</button>
       <button class="tab" data-p="booster">Página do Booster</button>
       <button class="tab" data-p="qual">Qualidade do dado</button>
@@ -213,8 +214,77 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
 <div class="wrap">
 
+<!-- ================= MÍDIA ================= -->
+<div class="pane active" id="p-midia">
+
+  <section class="reveal">
+    <div class="shead">
+      <span class="rn">01</span>
+      <h2 class="disp">O que a campanha entregou</h2>
+      <p>Números <b>direto do gerenciador da Meta</b>, não do site. A série começa em
+         <b id="corteTxt">19/08</b> — foi quando o gatilho de checkout mudou, e antes disso
+         nada é comparável.</p>
+    </div>
+    <div class="stats" id="statsMidia"></div>
+    <div class="stats" id="statsMidia2" style="margin-top:14px"></div>
+    <p class="note" id="midiaNote"></p>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <span class="rn">02</span>
+      <h2 class="disp">Meta contra site</h2>
+      <p>O mesmo período, medido por duas fontes que deveriam concordar.</p>
+    </div>
+    <div class="call bad" id="reconcilia"></div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <span class="rn">03</span>
+      <h2 class="disp">Investimento e cliques por dia</h2>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-hd"><h3>Investimento</h3><span class="tag" id="moedaTag">USD</span></div>
+        <div class="chart-box"><canvas id="chInv"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><h3>Cliques no link</h3><span class="tag">por dia</span></div>
+        <div class="chart-box"><canvas id="chClk"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <span class="rn">04</span>
+      <h2 class="disp">Por criativo</h2>
+      <p>Ordenado por investimento. O custo por visita é o número que separa
+         criativo que trabalha de criativo que só gasta.</p>
+    </div>
+    <div class="board"><table id="tbCri">
+      <thead><tr><th>Criativo</th><th class="n">Investido</th><th class="n">Impressões</th>
+        <th class="n">Cliques</th><th class="n">CTR</th><th class="n">CPC</th>
+        <th class="n">Visitas</th><th class="n">Custo/visita</th></tr></thead>
+      <tbody></tbody></table></div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <span class="rn">05</span>
+      <h2 class="disp">Por público</h2>
+    </div>
+    <div class="board"><table id="tbPub">
+      <thead><tr><th>Público</th><th class="n">Investido</th><th class="n">Impressões</th>
+        <th class="n">Cliques</th><th class="n">CTR</th><th class="n">CPC</th>
+        <th class="n">Visitas</th><th class="n">Custo/visita</th></tr></thead>
+      <tbody></tbody></table></div>
+  </section>
+</div>
+
 <!-- ================= GERAL ================= -->
-<div class="pane active" id="p-geral">
+<div class="pane" id="p-geral">
 
   <section class="reveal">
     <div class="shead">
@@ -386,12 +456,15 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-let D, todasDatas, DMIN, DMAX, ini, fim;
+let D, M, todasDatas, DMIN, DMAX, ini, fim;
 const BRAND='#2F3DDA', BRAND_SOFT='rgba(47,61,218,.10)', INK3='#7B86A6', LINE='#DFE5F4';
 const RAMP=['#8E97E9','#7A85E5','#616EE1','#4855DD','#2F3DDA','#1A22A6'];
 const nf = n => (n||0).toLocaleString('pt-BR');
 const pf = (a,b) => b ? (100*a/b).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%' : '—';
 const br = d => d.split('-').reverse().join('/');
+const din = v => v===null||v===undefined ? '—'
+  : '$'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const raz = (a,b) => b ? a/b : null;
 
 const dtIni=document.getElementById('dtIni'), dtFim=document.getElementById('dtFim');
 const btnAplicar=document.getElementById('btnAplicar'), mesSel=document.getElementById('mesSel');
@@ -404,7 +477,8 @@ function boot(){
   dtIni.min=dtFim.min=DMIN; dtIni.max=dtFim.max=DMAX;
 
   const meses=[...new Set(todasDatas.map(d=>d.slice(0,7)))].sort().reverse();
-  mesSel.innerHTML='<option value="__30">Últimos 30 dias</option>'
+  mesSel.innerHTML = (M&&M.corte ? `<option value="__midia">Desde ${br(M.corte)} · com mídia</option>` : '')
+    +'<option value="__30">Últimos 30 dias</option>'
     +'<option value="__7">Últimos 7 dias</option>'
     + meses.map(m=>`<option value="${m}">${nomeMes(m)}</option>`).join('')
     +`<option value="">Período inteiro (${todasDatas.length} dias)</option>`;
@@ -414,7 +488,10 @@ function boot(){
     'Atualizado em '+at.toLocaleDateString('pt-BR')+' às '+
     at.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 
-  fim=DMAX; ini=todasDatas[Math.max(0,todasDatas.length-30)];
+  fim=DMAX;
+  const temMidia = M && M.corte && M.corte<=DMAX;
+  ini = temMidia ? M.corte : todasDatas[Math.max(0,todasDatas.length-30)];
+  if(temMidia) mesSel.value='__midia';
   dtIni.value=ini; dtFim.value=fim;
   render(); observaReveal();
 }
@@ -514,7 +591,102 @@ function render(){
       .map(([pg,v])=>`<tr><td class="mono">${pg}</td><td class="n">${nf(v)}</td></tr>`).join('')
     || '<tr><td colspan="2" class="dim">Sem dado no período.</td></tr>';
 
+  renderMidia();
   desenhaGraficos();
+}
+
+/* ---------- MÍDIA (fonte: gerenciador da Meta) ---------- */
+function somaMidia(linhas){
+  const t={inv:0,imp:0,clk:0,vis:0,ckt:0,vendas:0,fat:0};
+  linhas.filter(noPeriodo).forEach(r=>{for(const k in t) t[k]+=r[k]||0;});
+  return t;
+}
+function agrupaMidia(linhas, chave){
+  const a={};
+  linhas.filter(noPeriodo).forEach(r=>{
+    const k=r[chave]||'—';
+    if(!a[k]) a[k]={inv:0,imp:0,clk:0,vis:0,ckt:0};
+    for(const c in a[k]) a[k][c]+=r[c]||0;
+  });
+  return Object.entries(a).sort((x,y)=>y[1].inv-x[1].inv);
+}
+function linhaMidia(nome,t){
+  return `<tr><td class="mono">${nome}</td>
+    <td class="n">${din(t.inv)}</td><td class="n">${nf(Math.round(t.imp))}</td>
+    <td class="n">${nf(Math.round(t.clk))}</td><td class="n">${pf(t.clk,t.imp)}</td>
+    <td class="n">${din(raz(t.inv,t.clk))}</td><td class="n">${nf(Math.round(t.vis))}</td>
+    <td class="n">${din(raz(t.inv,t.vis))}</td></tr>`;
+}
+
+function renderMidia(){
+  const vazio = !M || !M.dia.some(noPeriodo);
+  document.getElementById('moedaTag').textContent = M ? M.moeda : '';
+  if(M) document.getElementById('corteTxt').textContent = br(M.corte);
+
+  if(vazio){
+    document.getElementById('statsMidia').innerHTML =
+      `<div class="stat" style="grid-column:1/-1"><div class="k">Sem dado de mídia</div>
+       <div class="n" style="font-size:1.4rem">—</div>
+       <div class="d">A exportação da Meta começa em ${M?br(M.corte):'19/08'}.
+       Escolha um período a partir dessa data.</div></div>`;
+    document.getElementById('statsMidia2').innerHTML='';
+    document.getElementById('midiaNote').textContent='';
+    document.getElementById('reconcilia').innerHTML=
+      `<span class="tag">Sem dado</span><h3>Nada a reconciliar neste período</h3>
+       <p>A camada de mídia só existe a partir de ${M?br(M.corte):'19/08'}.</p>`;
+    document.querySelector('#tbCri tbody').innerHTML='<tr><td colspan="8" class="dim">Sem dado no período.</td></tr>';
+    document.querySelector('#tbPub tbody').innerHTML='<tr><td colspan="8" class="dim">Sem dado no período.</td></tr>';
+    return;
+  }
+
+  const t=somaMidia(M.dia);
+  const dias=M.dia.filter(noPeriodo).length;
+
+  document.getElementById('statsMidia').innerHTML=[
+    {k:'Investimento', n:din(t.inv), d:`${dias} dia${dias>1?'s':''} · ${din(t.inv/dias)}/dia`, c:'br'},
+    {k:'Impressões', n:nf(Math.round(t.imp)), d:'CPM '+din(raz(t.inv*1000,t.imp))},
+    {k:'Cliques no link', n:nf(Math.round(t.clk)), d:'CTR '+pf(t.clk,t.imp)},
+    {k:'Custo por clique', n:din(raz(t.inv,t.clk)), d:'CPC médio'}
+  ].map(s=>`<div class="stat"><div class="k">${s.k}</div>
+      <div class="n${s.c?' '+s.c:''}">${s.n}</div><div class="d">${s.d}</div></div>`).join('');
+
+  document.getElementById('statsMidia2').innerHTML=[
+    {k:'Visitas na página', n:nf(Math.round(t.vis)), d:pf(t.vis,t.clk)+' dos cliques chegaram'},
+    {k:'Custo por visita', n:din(raz(t.inv,t.vis)), d:'o que custa trazer uma pessoa'},
+    {k:'Checkouts (Meta)', n:nf(Math.round(t.ckt)), d:'atribuídos à campanha', c:t.ckt?'br':'bad'},
+    {k:'Vendas (Meta)', n:nf(Math.round(t.vendas)), d:'atribuídas à campanha', c:t.vendas?'gd':'bad'}
+  ].map(s=>`<div class="stat"><div class="k">${s.k}</div>
+      <div class="n${s.c?' '+s.c:''}">${s.n}</div><div class="d">${s.d}</div></div>`).join('');
+
+  document.getElementById('midiaNote').innerHTML =
+    `Campanha ${M.campanhas.map(c=>'<code>'+c+'</code>').join(', ')}. `
+    + `Valores em <b>${M.moeda}</b>, como vieram do gerenciador. `
+    + `Cliques e visitas são métricas diferentes: o clique é registrado pela Meta, `
+    + `a visita só conta quando a página carrega — a distância entre os dois é abandono na chegada.`;
+
+  /* --- reconciliação Meta × PostHog --- */
+  const phCkt = somaB('checkout_started');
+  const phVis = somaB('page_viewed');
+  const ok = t.ckt > 0;
+  const rec = document.getElementById('reconcilia');
+  rec.className = 'call ' + (ok ? 'gd' : 'bad');
+  rec.innerHTML = ok
+    ? `<span class="tag">Conferido</span><h3>As duas fontes concordam</h3>
+       <p>A Meta registrou <b>${nf(Math.round(t.ckt))}</b> checkouts atribuídos e o site
+       registrou <b>${nf(phCkt)}</b> na página do Booster no mesmo período.</p>`
+    : `<span class="tag">Divergência</span>
+       <h3>A Meta não vê os checkouts que o site registra</h3>
+       <p>No período, a Meta reporta <b>${nf(Math.round(t.vis))}</b> visitas na página e
+       <b>zero</b> checkouts atribuídos à campanha. O PostHog, na mesma janela, registra
+       <b>${nf(phVis)}</b> visitas e <b>${nf(phCkt)}</b> checkouts iniciados nessa mesma página.
+       Os checkouts estão acontecendo — a Meta é que não está recebendo ou não está atribuindo.
+       Com ${din(t.inv)} investidos, é a diferença entre "não funciona" e "não dá para saber".</p>`;
+
+  /* --- tabelas --- */
+  document.querySelector('#tbCri tbody').innerHTML =
+    agrupaMidia(M.criativo,'cri').map(([n,x])=>linhaMidia(n,x)).join('');
+  document.querySelector('#tbPub tbody').innerHTML =
+    agrupaMidia(M.publico,'pub').map(([n,x])=>linhaMidia(n,x)).join('');
 }
 
 function funil(id, itens, comQueda=true){
@@ -561,6 +733,20 @@ function desenhaGraficos(){
       borderRadius:3,borderSkipped:false,maxBarThickness:14}]},
     options:opcoes()});
 
+  /* midia: investimento e cliques por dia */
+  if(M){
+    const dm=M.dia.filter(noPeriodo);
+    const rm=dm.map(r=>r.d.slice(8,10)+'/'+r.d.slice(5,7));
+    const oi=opcoes();
+    oi.plugins.tooltip.callbacks={label:c=>din(c.parsed.y)};
+    charts.inv=new Chart(document.getElementById('chInv'),{type:'bar',
+      data:{labels:rm,datasets:[{data:dm.map(r=>r.inv),backgroundColor:BRAND,
+        borderRadius:3,borderSkipped:false,maxBarThickness:26}]},options:oi});
+    charts.clk=new Chart(document.getElementById('chClk'),{type:'bar',
+      data:{labels:rm,datasets:[{data:dm.map(r=>r.clk),backgroundColor:'#8E97E9',
+        borderRadius:3,borderSkipped:false,maxBarThickness:26}]},options:opcoes()});
+  }
+
   const md=dias.map(d=>D.meta.find(x=>x.d===d)||{total:0,tag:0});
   const om=opcoes();
   om.plugins.legend={display:true,position:'top',align:'end',
@@ -599,6 +785,7 @@ btnAplicar.onclick=()=>{
 mesSel.onchange=e=>{
   const v=e.target.value;
   if(!v){ ini=DMIN; fim=DMAX; }
+  else if(v==='__midia'){ fim=DMAX; ini=M.corte; }
   else if(v==='__30'){ fim=DMAX; ini=todasDatas[Math.max(0,todasDatas.length-30)]; }
   else if(v==='__7'){ fim=DMAX; ini=todasDatas[Math.max(0,todasDatas.length-7)]; }
   else { const ds=todasDatas.filter(d=>d.startsWith(v)); ini=ds[0]; fim=ds[ds.length-1]; }
@@ -618,9 +805,11 @@ document.querySelector('.nav .inner').onclick=e=>{
 };
 
 /* ---------- carga ---------- */
-fetch('data.json?v='+Date.now())
-  .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
-  .then(d=>{ D=d; boot(); })
+const _v='?v='+Date.now();
+Promise.all([
+  fetch('data.json'+_v).then(r=>{ if(!r.ok) throw new Error('data.json HTTP '+r.status); return r.json(); }),
+  fetch('midia.json'+_v).then(r=>r.ok?r.json():null).catch(()=>null)
+]).then(([d,m])=>{ D=d; M=m; boot(); })
   .catch(e=>{
     document.querySelector('.wrap').insertAdjacentHTML('afterbegin',
       `<div class="call bad" style="margin:40px 0"><span class="tag">Erro</span>
