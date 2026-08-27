@@ -13,8 +13,8 @@
   color-scheme:light;
   --ground:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F9FE; --surface-3:#EDF1FB;
   --line:#CFD8EF; --line-soft:#DFE5F4;
-  --brand:#2F3DDA; --brand-deep:#1A22A6; --brand-soft:#C3CAF7; --brand-wash:#F1F3FE;
-  --magenta:#B322D4;
+  --brand:#2F3DDA; --brand-deep:#1A22A6; --brand-soft:#8E97E9; --brand-wash:#F1F3FE;
+  --ph:#A21CAF; --ph-soft:#D4A0DE; --ph-wash:#FBF2FD;
   --ink:#111838; --ink-2:#4B5678; --ink-3:#7B86A6;
   --pass:#0B8F58; --fail:#CE2244; --warn:#9E6600;
   --pass-bg:rgba(11,143,88,.08); --fail-bg:rgba(206,34,68,.07); --warn-bg:rgba(158,102,0,.08);
@@ -34,28 +34,49 @@ body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size
 ::selection{background:var(--brand);color:#fff}
 :focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:4px}
 
+/* ---------- SELO DE FONTE ---------- */
+.src{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.6rem;
+     letter-spacing:.11em;text-transform:uppercase;font-weight:700;padding:4px 11px;
+     border-radius:20px;white-space:nowrap;vertical-align:middle}
+.src::before{content:'';width:6px;height:6px;border-radius:50%;flex:none}
+.src.meta{background:var(--brand-wash);color:var(--brand)}
+.src.meta::before{background:var(--brand)}
+.src.ph{background:var(--ph-wash);color:var(--ph)}
+.src.ph::before{background:var(--ph)}
+.src.dois{background:var(--surface-3);color:var(--ink-2)}
+.src.dois::before{background:linear-gradient(90deg,var(--brand) 50%,var(--ph) 50%)}
+
 /* ---------- HERO ---------- */
-.hero{position:relative;padding:76px 0 52px;overflow:hidden}
+.hero{position:relative;padding:72px 0 48px;overflow:hidden}
 .hero::before{content:"";position:absolute;top:-190px;right:-150px;width:560px;height:560px;
    border-radius:50%;background:radial-gradient(circle,rgba(47,61,218,.09),transparent 68%);pointer-events:none}
 .hero .eyebrow{display:inline-block;margin-bottom:20px}
 .hero h1{font-size:clamp(2.6rem,7vw,4.6rem)}
-.hero h1 .grad{display:block;background:linear-gradient(96deg,var(--brand) 8%,var(--magenta) 92%);
+.hero h1 .grad{display:block;background:linear-gradient(96deg,var(--brand) 8%,var(--ph) 92%);
    -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero .lede{max-width:60ch;margin-top:22px;font-size:1.05rem;color:var(--ink-2)}
+.hero .lede{max-width:62ch;margin-top:22px;font-size:1.05rem;color:var(--ink-2)}
 .hero .lede b{color:var(--ink);font-weight:600}
 
-.glance{display:flex;flex-wrap:wrap;margin-top:40px;border:1px solid var(--line);
+.fontes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px;max-width:900px}
+.fonte{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:var(--surface-2)}
+.fonte p{margin-top:8px;font-size:.82rem;color:var(--ink-2)}
+.fonte p b{color:var(--ink);font-weight:600}
+
+.glance{display:flex;flex-wrap:wrap;margin-top:32px;border:1px solid var(--line);
         border-radius:16px;overflow:hidden;background:var(--surface-2)}
 .glance .g{flex:1 1 160px;padding:18px 22px;border-right:1px solid var(--line-soft)}
 .glance .g:last-child{border-right:none}
-.glance .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.glance .n{font-family:var(--disp);font-weight:800;font-size:1.9rem;margin-top:5px;
+.glance .k{font-family:var(--mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;
+           color:var(--ink-3);display:flex;align-items:center;gap:6px}
+.glance .k::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--ink-3);flex:none}
+.glance .g.m .k::before{background:var(--brand)} .glance .g.p .k::before{background:var(--ph)}
+.glance .n{font-family:var(--disp);font-weight:800;font-size:1.85rem;margin-top:6px;
            font-variant-numeric:tabular-nums;line-height:1.05}
-.glance .d{font-size:.76rem;color:var(--ink-3);margin-top:2px}
+.glance .d{font-size:.75rem;color:var(--ink-3);margin-top:2px}
 .glance .n.br{color:var(--brand)} .glance .n.bad{color:var(--fail)} .glance .n.gd{color:var(--pass)}
+.glance .n.pp{color:var(--ph)}
 
-/* ---------- NAV STICKY ---------- */
+/* ---------- NAV ---------- */
 .nav{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
      border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line)}
 .nav .inner{max-width:var(--mw);margin:0 auto;padding:11px 28px;
@@ -74,7 +95,6 @@ body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size
      border:none;padding:8px 13px;cursor:pointer;transition:background .15s;outline:none}
 .period > * + *{border-left:1px solid var(--line-soft)}
 .period > *:hover{background:var(--brand-wash)}
-.period > *:focus-visible{background:var(--brand-wash);outline:none}
 .period select{font-weight:500;padding-right:8px}
 .period input[type=date]{font-family:var(--mono);font-size:.72rem;color:var(--ink-2)}
 .period input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.4;margin-left:2px}
@@ -86,13 +106,14 @@ body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size
 /* ---------- SEÇÕES ---------- */
 .pane{display:none}
 .pane.active{display:block}
-section{padding:64px 0;border-bottom:1px solid var(--line-soft)}
+section{padding:60px 0;border-bottom:1px solid var(--line-soft)}
 section:last-child{border-bottom:none;padding-bottom:40px}
-.shead{max-width:70ch;margin-bottom:32px}
-.shead .rn{font-family:var(--mono);font-size:.72rem;color:var(--brand);letter-spacing:.1em}
-.shead h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.7rem,3.6vw,2.5rem);
-          margin-top:8px;letter-spacing:-.02em;line-height:1.1}
-.shead p{margin-top:12px;font-size:.98rem;color:var(--ink-2)}
+.shead{max-width:72ch;margin-bottom:30px}
+.shead-top{display:flex;align-items:center;gap:12px;margin-bottom:9px;flex-wrap:wrap}
+.shead .rn{font-family:var(--mono);font-size:.72rem;color:var(--ink-3);letter-spacing:.1em}
+.shead h2{font-family:var(--disp);font-weight:800;font-size:clamp(1.7rem,3.6vw,2.4rem);
+          letter-spacing:-.02em;line-height:1.1}
+.shead p{margin-top:12px;font-size:.96rem;color:var(--ink-2)}
 .shead p b{color:var(--ink);font-weight:600}
 
 .reveal{opacity:0;transform:translateY(20px);
@@ -103,80 +124,81 @@ section:last-child{border-bottom:none;padding-bottom:40px}
 /* ---------- STATS ---------- */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
        border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface-2)}
+.stats + .stats{margin-top:14px}
 .stat{padding:22px 24px;border-right:1px solid var(--line-soft)}
 .stat:last-child{border-right:none}
-.stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.stat .n{font-family:var(--disp);font-weight:800;font-size:2.3rem;margin-top:8px;line-height:1;
+.stat .k{font-family:var(--mono);font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.stat .n{font-family:var(--disp);font-weight:800;font-size:2.2rem;margin-top:8px;line-height:1;
          font-variant-numeric:tabular-nums}
 .stat .d{font-size:.78rem;color:var(--ink-3);margin-top:7px}
-.stat .n.br{color:var(--brand)} .stat .n.bad{color:var(--fail)} .stat .n.gd{color:var(--pass)}
+.stat .n.br{color:var(--brand)} .stat .n.pp{color:var(--ph)}
+.stat .n.bad{color:var(--fail)} .stat .n.gd{color:var(--pass)}
 
 /* ---------- FUNIL ---------- */
 .funnel{display:flex;flex-direction:column;gap:9px}
 .fstep .lab{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
             font-size:.82rem;margin-bottom:5px}
-.fstep .lab .nmm{color:var(--ink-2)} .fstep .lab .nmm b{color:var(--ink);font-weight:600}
+.fstep .lab .nmm{color:var(--ink-2)}
 .fstep .lab .rt{font-family:var(--mono);font-size:.7rem;color:var(--ink-3);white-space:nowrap}
 .ftrack{height:32px;background:var(--surface-3);border-radius:9px;overflow:hidden}
 .fbar{height:100%;display:flex;align-items:center;padding-left:13px;color:#fff;border-radius:9px;
       font-family:var(--mono);font-weight:700;font-size:.82rem;min-width:52px;white-space:nowrap;
       transition:width .4s cubic-bezier(.2,.6,.2,1)}
 
-/* ---------- PAINEL / GRÁFICO ---------- */
-.panel{border:1px solid var(--line);border-radius:18px;background:var(--surface-2);padding:24px 26px}
-.panel-hd{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+/* ---------- PAINEL ---------- */
+.panel{border:1px solid var(--line);border-radius:18px;background:var(--surface-2);padding:22px 24px}
+.panel-hd{display:flex;justify-content:space-between;align-items:center;gap:14px;
           flex-wrap:wrap;margin-bottom:18px}
-.panel-hd h3{font-family:var(--disp);font-weight:700;font-size:1.15rem;letter-spacing:-.01em}
-.panel-hd .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
-.chart-box{position:relative;height:280px;width:100%}
+.panel-hd h3{font-family:var(--disp);font-weight:700;font-size:1.1rem;letter-spacing:-.01em}
+.chart-box{position:relative;height:270px;width:100%}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 
-/* ---------- CALLOUTS ---------- */
+/* ---------- CALLOUT ---------- */
 .call{padding:22px 26px;border-radius:16px;border:1px solid var(--line);background:var(--surface-2)}
-.call .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
-.call h3{font-family:var(--disp);font-weight:700;font-size:1.2rem;margin-top:7px;letter-spacing:-.01em}
-.call p{margin-top:9px;font-size:.94rem;color:var(--ink-2)} .call p b{color:var(--ink);font-weight:600}
+.call .tag{font-family:var(--mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700}
+.call h3{font-family:var(--disp);font-weight:700;font-size:1.18rem;margin-top:7px;letter-spacing:-.01em}
+.call p{margin-top:9px;font-size:.93rem;color:var(--ink-2)} .call p b{color:var(--ink);font-weight:600}
 .call.bad{border-color:rgba(206,34,68,.32);background:var(--fail-bg)} .call.bad .tag{color:var(--fail)}
 .call.wn{border-color:rgba(158,102,0,.32);background:var(--warn-bg)} .call.wn .tag{color:var(--warn)}
 .call.gd{border-color:rgba(11,143,88,.3);background:var(--pass-bg)} .call.gd .tag{color:var(--pass)}
 
-/* ---------- BOARD / TABELA ---------- */
+/* ---------- TABELA ---------- */
 .board{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--surface-2)}
-.board table{width:100%;border-collapse:collapse;font-size:.88rem}
+.board table{width:100%;border-collapse:collapse;font-size:.87rem}
 .board thead tr{background:var(--surface-3)}
-.board thead th{padding:12px 22px;text-align:left;font-family:var(--mono);font-size:.62rem;
+.board thead th{padding:12px 20px;text-align:left;font-family:var(--mono);font-size:.61rem;
      font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
 .board thead th.n{text-align:right}
+.board thead th.m{color:var(--brand)} .board thead th.p{color:var(--ph)}
 .board tbody tr{border-top:1px solid var(--line-soft);transition:background .15s}
 .board tbody tr:hover{background:var(--brand-wash)}
-.board td{padding:14px 22px;color:var(--ink);vertical-align:top}
+.board td{padding:13px 20px;color:var(--ink);vertical-align:top}
 .board td.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
 .board td.dim{color:var(--ink-2);font-size:.85rem}
-.board td.mono{font-family:var(--mono);font-size:.82rem}
-.st{display:inline-block;font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;
+.board td.mono{font-family:var(--mono);font-size:.81rem}
+.board td.m{color:var(--brand);font-weight:600} .board td.p{color:var(--ph);font-weight:600}
+.st{display:inline-block;font-family:var(--mono);font-size:.61rem;letter-spacing:.08em;
     text-transform:uppercase;font-weight:700;padding:5px 11px;border-radius:20px;white-space:nowrap}
 .st.bad{background:var(--fail-bg);color:var(--fail)}
 .st.wn{background:var(--warn-bg);color:var(--warn)}
 .st.gd{background:var(--pass-bg);color:var(--pass)}
 
-.note{font-size:.88rem;color:var(--ink-2);margin-top:20px;max-width:80ch}
+.note{font-size:.87rem;color:var(--ink-2);margin-top:18px;max-width:82ch}
 .note b{color:var(--ink);font-weight:600}
 code{font-family:var(--mono);font-size:.85em;background:var(--surface-3);padding:2px 7px;border-radius:5px}
 
 footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify-content:space-between;
-       gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:.68rem;color:var(--ink-3)}
+       gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:.67rem;color:var(--ink-3)}
 
-@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+@media(max-width:900px){.grid2,.fontes{grid-template-columns:1fr}}
 @media(max-width:640px){
   html{font-size:118%}
   .wrap,.nav .inner{padding-left:18px;padding-right:18px}
   .glance .g{flex:1 1 50%;border-bottom:1px solid var(--line-soft)}
-  .nav .inner{gap:10px}
-  .nav .mark{display:none}
+  .nav .inner{gap:10px} .nav .mark{display:none}
   .nav .tabs{order:2;width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px}
-  .period{margin-left:0;order:1;width:100%}
-  .period > *{flex:1;text-align:center}
-  .panel{padding:20px 18px}
+  .period{margin-left:0;order:1;width:100%} .period > *{flex:1;text-align:center}
+  .panel{padding:18px 16px}
 }
 </style>
 </head>
@@ -186,9 +208,24 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
   <div class="wrap">
     <span class="eyebrow">Cardô Marketing · Dashboard</span>
     <h1 class="disp">Funil de<span class="grad">Aquisição</span></h1>
-    <p class="lede">Comportamento no site da Engenious University, lido direto do PostHog.
-       Mostra <b>o que acontece depois do clique</b> — não o custo do clique. A camada de mídia
-       entra quando a exportação do gerenciador chegar.</p>
+    <p class="lede">Duas fontes, dois papéis. Todo número aqui carrega o selo de onde veio,
+       porque <b>elas não concordam</b> — e a discordância é o achado mais importante deste período.</p>
+
+    <div class="fontes">
+      <div class="fonte">
+        <span class="src meta">Meta</span>
+        <p>Exportação do <b>gerenciador de anúncios</b>. Manda em tudo que é campanha:
+           investimento, impressões, cliques, e o que a Meta consegue atribuir aos anúncios.
+           Começa em <b id="corteTxt">19/08</b>, quando o gatilho de checkout mudou.</p>
+      </div>
+      <div class="fonte">
+        <span class="src ph">PostHog</span>
+        <p>Instrumentação do <b>site</b>. Manda em tudo que é comportamento: quem visitou,
+           clicou, se cadastrou, comprou. Só <b>produção</b> — ambiente de teste e evento
+           de servidor ficam de fora.</p>
+      </div>
+    </div>
+
     <div class="glance" id="glance"></div>
   </div>
 </header>
@@ -198,9 +235,9 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
     <span class="mark">Engenious</span>
     <div class="tabs">
       <button class="tab active" data-p="midia">Mídia</button>
-      <button class="tab" data-p="geral">Visão geral</button>
-      <button class="tab" data-p="atrib">Atribuição</button>
-      <button class="tab" data-p="booster">Página do Booster</button>
+      <button class="tab" data-p="cruz">Meta × PostHog</button>
+      <button class="tab" data-p="site">Site</button>
+      <button class="tab" data-p="booster">Booster</button>
       <button class="tab" data-p="qual">Qualidade do dado</button>
     </div>
     <div class="period">
@@ -216,41 +253,29 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
 <!-- ================= MÍDIA ================= -->
 <div class="pane active" id="p-midia">
-
   <section class="reveal">
     <div class="shead">
-      <span class="rn">01</span>
+      <div class="shead-top"><span class="rn">01</span><span class="src meta">Fonte · Meta</span></div>
       <h2 class="disp">O que a campanha entregou</h2>
-      <p>Números <b>direto do gerenciador da Meta</b>, não do site. A série começa em
-         <b id="corteTxt">19/08</b> — foi quando o gatilho de checkout mudou, e antes disso
-         nada é comparável.</p>
+      <p>Tudo nesta aba vem <b>direto do gerenciador</b>. Nenhum número aqui passou pelo site.</p>
     </div>
     <div class="stats" id="statsMidia"></div>
-    <div class="stats" id="statsMidia2" style="margin-top:14px"></div>
+    <div class="stats" id="statsMidia2"></div>
     <p class="note" id="midiaNote"></p>
   </section>
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">02</span>
-      <h2 class="disp">Meta contra site</h2>
-      <p>O mesmo período, medido por duas fontes que deveriam concordar.</p>
-    </div>
-    <div class="call bad" id="reconcilia"></div>
-  </section>
-
-  <section class="reveal">
-    <div class="shead">
-      <span class="rn">03</span>
+      <div class="shead-top"><span class="rn">02</span><span class="src meta">Fonte · Meta</span></div>
       <h2 class="disp">Investimento e cliques por dia</h2>
     </div>
     <div class="grid2">
       <div class="panel">
-        <div class="panel-hd"><h3>Investimento</h3><span class="tag" id="moedaTag">USD</span></div>
+        <div class="panel-hd"><h3>Investimento</h3><span class="src meta" id="moedaTag">USD</span></div>
         <div class="chart-box"><canvas id="chInv"></canvas></div>
       </div>
       <div class="panel">
-        <div class="panel-hd"><h3>Cliques no link</h3><span class="tag">por dia</span></div>
+        <div class="panel-hd"><h3>Cliques no link</h3><span class="src meta">Meta</span></div>
         <div class="chart-box"><canvas id="chClk"></canvas></div>
       </div>
     </div>
@@ -258,10 +283,10 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">04</span>
+      <div class="shead-top"><span class="rn">03</span><span class="src meta">Fonte · Meta</span></div>
       <h2 class="disp">Por criativo</h2>
-      <p>Ordenado por investimento. O custo por visita é o número que separa
-         criativo que trabalha de criativo que só gasta.</p>
+      <p>Ordenado por investimento. O custo por visita separa criativo que trabalha
+         de criativo que só gasta.</p>
     </div>
     <div class="board"><table id="tbCri">
       <thead><tr><th>Criativo</th><th class="n">Investido</th><th class="n">Impressões</th>
@@ -272,7 +297,7 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">05</span>
+      <div class="shead-top"><span class="rn">04</span><span class="src meta">Fonte · Meta</span></div>
       <h2 class="disp">Por público</h2>
     </div>
     <div class="board"><table id="tbPub">
@@ -283,65 +308,39 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
   </section>
 </div>
 
-<!-- ================= GERAL ================= -->
-<div class="pane" id="p-geral">
-
+<!-- ================= CRUZAMENTO ================= -->
+<div class="pane" id="p-cruz">
   <section class="reveal">
     <div class="shead">
-      <span class="rn">01</span>
-      <h2 class="disp">Onde as pessoas param</h2>
-      <p>Cada linha é uma etapa do funil. A largura da barra é a proporção sobre o topo;
-         a taxa à direita é <b>quanto sobrevive da etapa anterior</b> — é ali que se enxerga o gargalo.</p>
+      <div class="shead-top"><span class="rn">01</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">Onde as duas fontes divergem</h2>
+      <p>A mesma jornada, medida por quem vende o clique e por quem recebe a visita.
+         Cada etapa está com a fonte que a mede. <b>Quando as duas medem, elas discordam.</b></p>
     </div>
-    <div class="funnel" id="funSite"></div>
-    <p class="note" id="siteNote"></p>
+    <div class="board"><table id="tbCruz">
+      <thead><tr><th>Etapa</th><th class="n m">Meta diz</th><th class="n p">PostHog diz</th>
+        <th class="n">Diferença</th><th>O que isso significa</th></tr></thead>
+      <tbody></tbody></table></div>
+    <p class="note" id="cruzNote"></p>
   </section>
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">02</span>
-      <h2 class="disp">Movimento no tempo</h2>
-      <p>Visitantes e checkouts vivem em escalas muito diferentes — centenas contra unidades.
-         Ficam em <b>gráficos separados</b>, cada um com seu eixo, porque juntos os checkouts sumiriam.</p>
+      <div class="shead-top"><span class="rn">02</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">O buraco na atribuição</h2>
     </div>
-    <div class="grid2">
-      <div class="panel">
-        <div class="panel-hd"><h3>Visitantes por dia</h3><span class="tag">pessoas únicas</span></div>
-        <div class="chart-box"><canvas id="chVis"></canvas></div>
-      </div>
-      <div class="panel">
-        <div class="panel-hd"><h3>Checkouts iniciados</h3><span class="tag">por dia</span></div>
-        <div class="chart-box"><canvas id="chCkt"></canvas></div>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- ================= ATRIBUIÇÃO ================= -->
-<div class="pane" id="p-atrib">
-
-  <section class="reveal">
-    <div class="shead">
-      <span class="rn">01</span>
-      <h2 class="disp">O buraco na medição</h2>
-      <p>Antes de discutir resultado, é preciso saber se o resultado é <b>visível</b>.</p>
-    </div>
-    <div class="call bad">
-      <span class="tag">Bloqueio crítico</span>
-      <h3>Nenhum visitante da Meta chega identificado</h3>
-      <p id="alertTxt"></p>
-    </div>
+    <div class="call bad" id="reconcilia"></div>
   </section>
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">02</span>
-      <h2 class="disp">Chegadas da Meta, por dia</h2>
-      <p>A barra escura é quem chegou carregando o identificador de clique da Meta.
-         A clara seria a parcela que carrega <b>a nossa etiqueta de campanha</b>.</p>
+      <div class="shead-top"><span class="rn">03</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Chegadas da Meta vistas pelo site</h2>
+      <p>Quem chegou com o identificador de clique da Meta na URL. A série clara seria
+         a parcela carregando <b>a nossa etiqueta de campanha</b>.</p>
     </div>
     <div class="panel">
-      <div class="panel-hd"><h3>Identificação de origem paga</h3><span class="tag">fbclid × utm</span></div>
+      <div class="panel-hd"><h3>fbclid × utm_source</h3><span class="src ph">PostHog</span></div>
       <div class="chart-box"><canvas id="chMeta"></canvas></div>
     </div>
     <p class="note" id="metaNote"></p>
@@ -349,9 +348,8 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">03</span>
+      <div class="shead-top"><span class="rn">04</span><span class="src ph">Fonte · PostHog</span></div>
       <h2 class="disp">De onde vem o tráfego</h2>
-      <p>Primeira origem registrada por pessoa, no período selecionado.</p>
     </div>
     <div class="board"><table id="tbOrig">
       <thead><tr><th>Origem</th><th>Meio</th><th class="n">Pessoas</th><th class="n">Participação</th></tr></thead>
@@ -360,15 +358,55 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
   </section>
 </div>
 
-<!-- ================= BOOSTER ================= -->
-<div class="pane" id="p-booster">
+<!-- ================= SITE ================= -->
+<div class="pane" id="p-site">
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">01</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Onde as pessoas param</h2>
+      <p>Site inteiro, <b>só produção</b>. Pessoas únicas por dia, somadas no período.
+         A taxa à direita é quanto sobrevive da etapa anterior.</p>
+    </div>
+    <div class="stats" id="statsSite"></div>
+    <div class="funnel" id="funSite" style="margin-top:28px"></div>
+    <p class="note" id="siteNote"></p>
+  </section>
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">01</span>
+      <div class="shead-top"><span class="rn">02</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Movimento no tempo</h2>
+      <p>Visitantes e checkouts vivem em escalas diferentes, por isso em gráficos separados.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-hd"><h3>Visitantes por dia</h3><span class="src ph">PostHog</span></div>
+        <div class="chart-box"><canvas id="chVis"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><h3>Checkouts iniciados</h3><span class="src ph">PostHog</span></div>
+        <div class="chart-box"><canvas id="chCkt"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">03</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">Páginas mais visitadas</h2>
+    </div>
+    <div class="board"><table id="tbPag">
+      <thead><tr><th>Página</th><th class="n">Pessoas</th></tr></thead><tbody></tbody></table></div>
+  </section>
+</div>
+
+<!-- ================= BOOSTER ================= -->
+<div class="pane" id="p-booster">
+  <section class="reveal">
+    <div class="shead">
+      <div class="shead-top"><span class="rn">01</span><span class="src ph">Fonte · PostHog</span></div>
       <h2 class="disp">A página que recebe a mídia</h2>
-      <p>O funil de <code>/paths/career-booster</code>, isolado do resto do site.
-         É aqui que o dinheiro cai.</p>
+      <p>O funil de <code>/paths/career-booster</code>, isolado do resto do site. É aqui que o dinheiro cai.</p>
     </div>
     <div class="stats" id="statsB"></div>
     <div class="funnel" id="funBoost" style="margin-top:28px"></div>
@@ -377,73 +415,70 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">02</span>
+      <div class="shead-top"><span class="rn">02</span><span class="src ph">Fonte · PostHog</span></div>
       <h2 class="disp">Desktop contra mobile</h2>
-      <p>Percentual de visitantes que chegam a iniciar um checkout, por tipo de aparelho.</p>
+      <p>Percentual de visitantes do site que chegam a iniciar um checkout, por tipo de aparelho.</p>
     </div>
     <div class="funnel" id="funDisp"></div>
     <p class="note" id="dispNote"></p>
-  </section>
-
-  <section class="reveal">
-    <div class="shead">
-      <span class="rn">03</span>
-      <h2 class="disp">Páginas mais visitadas</h2>
-    </div>
-    <div class="board"><table id="tbPag">
-      <thead><tr><th>Página</th><th class="n">Pessoas</th></tr></thead><tbody></tbody></table></div>
   </section>
 </div>
 
 <!-- ================= QUALIDADE ================= -->
 <div class="pane" id="p-qual">
-
   <section class="reveal">
     <div class="shead">
-      <span class="rn">01</span>
-      <h2 class="disp">O que confiar, e o que não</h2>
-      <p>Toda dash carrega premissas. Estas são as desta, para <b>ninguém decidir em cima
-         de um número que não sustenta</b>.</p>
+      <div class="shead-top"><span class="rn">01</span><span class="src ph">Fonte · PostHog</span></div>
+      <h2 class="disp">O que foi jogado fora, e por quê</h2>
+      <p>O projeto do PostHog recebe eventos de várias origens misturadas. Estes <b>não entram
+         em nenhum número desta dash</b> — mas ficam registrados, porque esconder lixo é pior
+         que mostrar.</p>
     </div>
-    <div class="board"><table>
-      <thead><tr><th>Achado</th><th>Efeito</th><th>Situação</th></tr></thead>
-      <tbody>
-        <tr><td>Anúncios sem parâmetro de URL</td>
-            <td class="dim">Nenhum tráfego pago é atribuível às campanhas</td>
-            <td><span class="st bad">Crítico</span></td></tr>
-        <tr><td class="mono">purchase_completed</td>
-            <td class="dim">Chega só via API — é o webhook do Stripe, não o navegador.
-                A geolocalização é do servidor, não do comprador</td>
-            <td><span class="st wn">Não usar país</span></td></tr>
-        <tr><td>435 compras em abril e maio no Brasil</td>
-            <td class="dim">Todas de Atibaia, sem host de origem. Carga histórica ou migração, não venda</td>
-            <td><span class="st wn">Excluir</span></td></tr>
-        <tr><td>Dispositivo ausente em boa parte dos eventos</td>
-            <td class="dim">Mobile × desktop vale como direção, não como número absoluto</td>
-            <td><span class="st wn">Parcial</span></td></tr>
-        <tr><td>Filtro de bot corrigido em 25/08</td>
-            <td class="dim">Antes e depois dessa data não são comparáveis</td>
-            <td><span class="st wn">Quebra de série</span></td></tr>
-        <tr><td>Pixel duplicado removido</td>
-            <td class="dim">Números da Meta pararam de vir dobrados — a correção <code>/2</code>
-                nas análises ficou obsoleta</td>
-            <td><span class="st gd">Resolvido</span></td></tr>
-      </tbody></table></div>
+    <div class="board"><table id="tbDescarte">
+      <thead><tr><th>O que foi descartado</th><th class="n">Volume no período</th><th>Por quê</th></tr></thead>
+      <tbody></tbody></table></div>
+    <p class="note">As compras, especificamente, vêm do evento <code>purchase_completed</code> —
+       o webhook do Stripe, disparado pelo servidor deles. Só entram as que têm
+       <code>environment = production</code> e sessão Stripe ao vivo. Tudo que é
+       <code>cs_test_</code>, <code>develop</code>, <code>local</code> ou
+       <code>posthog-dashboard-fixture</code> fica de fora.</p>
   </section>
 
   <section class="reveal">
     <div class="shead">
-      <span class="rn">02</span>
-      <h2 class="disp">O que ainda falta</h2>
+      <div class="shead-top"><span class="rn">02</span><span class="src dois">Meta × PostHog</span></div>
+      <h2 class="disp">O que confiar, e o que não</h2>
     </div>
-    <div class="call wn">
-      <span class="tag">Pendente</span>
-      <h3>Camada de mídia</h3>
-      <p>Investimento, impressões, cliques, CPC, CTR e custo por etapa entram assim que a exportação
-         do gerenciador chegar — das <b>duas contas</b>, com a data em formato de data.
-         Sem isso, esta dash mostra comportamento mas não mostra custo, e portanto
-         não calcula CAC nem retorno.</p>
-    </div>
+    <div class="board"><table>
+      <thead><tr><th>Achado</th><th>Fonte</th><th>Efeito</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Anúncios sem parâmetro de URL</td><td><span class="src meta">Meta</span></td>
+            <td class="dim">Nenhum tráfego pago é atribuível às campanhas</td>
+            <td><span class="st bad">Crítico</span></td></tr>
+        <tr><td>Meta reporta zero checkout onde o site registra checkout</td>
+            <td><span class="src dois">Ambas</span></td>
+            <td class="dim">Ou o evento não chega na Meta, ou ela não consegue atribuir</td>
+            <td><span class="st bad">Crítico</span></td></tr>
+        <tr><td>Ambiente de desenvolvimento escreve no mesmo projeto</td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">Compras de teste do Stripe apareciam como venda real</td>
+            <td><span class="st wn">Filtrado aqui</span></td></tr>
+        <tr><td>Eventos sem host, sem lib e sem geolocalização</td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">Servidor ou robô. Inflavam a contagem de visitantes em cerca de 8×</td>
+            <td><span class="st wn">Filtrado aqui</span></td></tr>
+        <tr><td>Carga histórica marcada como <code>fixture</code></td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">240 "compras" do Brasil em abril e maio que nunca existiram</td>
+            <td><span class="st wn">Filtrado aqui</span></td></tr>
+        <tr><td>Tipo de aparelho ausente em boa parte dos eventos</td>
+            <td><span class="src ph">PostHog</span></td>
+            <td class="dim">Mobile × desktop vale como direção, não como número</td>
+            <td><span class="st wn">Parcial</span></td></tr>
+        <tr><td>Pixel duplicado removido</td><td><span class="src meta">Meta</span></td>
+            <td class="dim">Números pararam de vir dobrados — a correção <code>/2</code> ficou obsoleta</td>
+            <td><span class="st gd">Resolvido</span></td></tr>
+      </tbody></table></div>
   </section>
 </div>
 
@@ -457,12 +492,13 @@ footer{border-top:1px solid var(--line);padding:26px 0 60px;display:flex;justify
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 let D, M, todasDatas, DMIN, DMAX, ini, fim;
-const BRAND='#2F3DDA', BRAND_SOFT='rgba(47,61,218,.10)', INK3='#7B86A6', LINE='#DFE5F4';
+const BRAND='#2F3DDA', BRAND_W='rgba(47,61,218,.10)', PH='#A21CAF', PH_W='rgba(162,28,175,.10)',
+      INK3='#7B86A6', LINE='#DFE5F4';
 const RAMP=['#8E97E9','#7A85E5','#616EE1','#4855DD','#2F3DDA','#1A22A6'];
 const nf = n => (n||0).toLocaleString('pt-BR');
 const pf = (a,b) => b ? (100*a/b).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%' : '—';
 const br = d => d.split('-').reverse().join('/');
-const din = v => v===null||v===undefined ? '—'
+const din = v => (v===null||v===undefined) ? '—'
   : '$'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const raz = (a,b) => b ? a/b : null;
 
@@ -471,6 +507,10 @@ const btnAplicar=document.getElementById('btnAplicar'), mesSel=document.getEleme
 const nomeMes = m => { const s=new Date(m+'-02').toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
                        return s.charAt(0).toUpperCase()+s.slice(1); };
 
+const noPeriodo = r => r.d>=ini && r.d<=fim;
+const somaEv = (arr,ev) => arr.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+(r.p||0),0);
+const somaB  = ev => D.booster.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+r.p,0);
+
 function boot(){
   todasDatas=[...new Set(D.site.map(r=>r.d))].sort();
   DMIN=todasDatas[0]; DMAX=todasDatas[todasDatas.length-1];
@@ -478,8 +518,7 @@ function boot(){
 
   const meses=[...new Set(todasDatas.map(d=>d.slice(0,7)))].sort().reverse();
   mesSel.innerHTML = (M&&M.corte ? `<option value="__midia">Desde ${br(M.corte)} · com mídia</option>` : '')
-    +'<option value="__30">Últimos 30 dias</option>'
-    +'<option value="__7">Últimos 7 dias</option>'
+    +'<option value="__30">Últimos 30 dias</option><option value="__7">Últimos 7 dias</option>'
     + meses.map(m=>`<option value="${m}">${nomeMes(m)}</option>`).join('')
     +`<option value="">Período inteiro (${todasDatas.length} dias)</option>`;
 
@@ -487,6 +526,7 @@ function boot(){
   document.getElementById('atualizado').textContent =
     'Atualizado em '+at.toLocaleDateString('pt-BR')+' às '+
     at.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(M) document.getElementById('corteTxt').textContent = br(M.corte);
 
   fim=DMAX;
   const temMidia = M && M.corte && M.corte<=DMAX;
@@ -496,47 +536,131 @@ function boot(){
   render(); observaReveal();
 }
 
-const noPeriodo = r => r.d>=ini && r.d<=fim;
-const somaEv = (arr,ev) => arr.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+(r.p||0),0);
-const somaB  = ev => D.booster.filter(r=>noPeriodo(r)&&r.e===ev).reduce((s,r)=>s+r.p,0);
+/* ---------- mídia (Meta) ---------- */
+function totMidia(){
+  const t={inv:0,imp:0,clk:0,vis:0,ckt:0,vendas:0,fat:0,dias:0};
+  if(!M) return t;
+  M.dia.filter(noPeriodo).forEach(r=>{
+    t.dias++; for(const k in t) if(k!=='dias') t[k]+=r[k]||0; });
+  return t;
+}
+function agrupaMidia(linhas, chave){
+  const a={};
+  linhas.filter(noPeriodo).forEach(r=>{
+    const k=r[chave]||'—';
+    if(!a[k]) a[k]={inv:0,imp:0,clk:0,vis:0,ckt:0};
+    for(const c in a[k]) a[k][c]+=r[c]||0;
+  });
+  return Object.entries(a).sort((x,y)=>y[1].inv-x[1].inv);
+}
+const linhaMidia = (nome,t) => `<tr><td class="mono">${nome}</td>
+  <td class="n">${din(t.inv)}</td><td class="n">${nf(Math.round(t.imp))}</td>
+  <td class="n">${nf(Math.round(t.clk))}</td><td class="n">${pf(t.clk,t.imp)}</td>
+  <td class="n">${din(raz(t.inv,t.clk))}</td><td class="n">${nf(Math.round(t.vis))}</td>
+  <td class="n">${din(raz(t.inv,t.vis))}</td></tr>`;
 
-let charts={};
-function render(){
+const cardStat = s => `<div class="stat"><div class="k">${s.k}</div>
+  <div class="n${s.c?' '+s.c:''}">${s.n}</div><div class="d">${s.d}</div></div>`;
 
-  const vis=somaEv(D.site,'page_viewed'), cta=somaEv(D.site,'cta_clicked'),
-        lead=somaEv(D.site,'lead_created'), reg=somaEv(D.site,'registration_started'),
-        ckt=somaEv(D.site,'checkout_started'), cmp=somaEv(D.site,'purchase_completed');
-  const mt=D.meta.filter(noPeriodo);
-  const mTot=mt.reduce((s,r)=>s+r.total,0), mTag=mt.reduce((s,r)=>s+r.tag,0);
+function renderMidia(){
+  const temM = M && M.dia.some(noPeriodo);
+  if(M) document.getElementById('moedaTag').textContent = M.moeda;
 
-  /* ---- faixa do topo ---- */
-  document.getElementById('glance').innerHTML=[
-    {k:'Visitantes', n:nf(vis), d:'no período selecionado'},
-    {k:'Iniciaram checkout', n:nf(ckt), d:pf(ckt,vis)+' dos visitantes', c:'br'},
-    {k:'Vindos da Meta', n:nf(mTot), d:'com identificador de clique'},
-    {k:'Identificados', n:nf(mTag), d:'com etiqueta de campanha', c:mTag?'gd':'bad'},
-    {k:'Período', n:br(ini).slice(0,5), d:'até '+br(fim).slice(0,5)}
-  ].map(g=>`<div class="g"><div class="k">${g.k}</div>
-      <div class="n${g.c?' '+g.c:''}">${g.n}</div><div class="d">${g.d}</div></div>`).join('');
+  if(!temM){
+    const aviso = `<div class="stat" style="grid-column:1/-1"><div class="k">Sem dado de mídia</div>
+      <div class="n" style="font-size:1.3rem">—</div>
+      <div class="d">A exportação da Meta começa em ${M?br(M.corte):'19/08'}.</div></div>`;
+    document.getElementById('statsMidia').innerHTML = aviso;
+    document.getElementById('statsMidia2').innerHTML = '';
+    document.getElementById('midiaNote').textContent = '';
+    document.querySelector('#tbCri tbody').innerHTML='<tr><td colspan="8" class="dim">Sem dado no período.</td></tr>';
+    document.querySelector('#tbPub tbody').innerHTML='<tr><td colspan="8" class="dim">Sem dado no período.</td></tr>';
+    return;
+  }
 
-  /* ---- funil do site ---- */
-  funil('funSite',[['Visitaram o site',vis],['Clicaram em CTA',cta],['Viraram lead',lead],
-    ['Iniciaram cadastro',reg],['Iniciaram checkout',ckt],['Compraram',cmp]].map(([r,v])=>({r,v})));
-  document.getElementById('siteNote').innerHTML =
-    `De cada 100 pessoas que abrem o site, <b>${(100*ckt/(vis||1)).toLocaleString('pt-BR',{maximumFractionDigits:1})}</b> `
-    + `chegam a iniciar um checkout. A contagem é de pessoas únicas por dia, somadas — `
-    + `quem volta em outro dia conta de novo, que é a única leitura compatível com filtro de data.`;
+  const t=totMidia();
+  document.getElementById('statsMidia').innerHTML=[
+    {k:'Investimento', n:din(t.inv), d:`${t.dias} dia${t.dias>1?'s':''} · ${din(t.inv/t.dias)}/dia`, c:'br'},
+    {k:'Impressões', n:nf(Math.round(t.imp)), d:'CPM '+din(raz(t.inv*1000,t.imp))},
+    {k:'Cliques no link', n:nf(Math.round(t.clk)), d:'CTR '+pf(t.clk,t.imp)},
+    {k:'Custo por clique', n:din(raz(t.inv,t.clk)), d:'CPC médio'}
+  ].map(cardStat).join('');
+  document.getElementById('statsMidia2').innerHTML=[
+    {k:'Visitas na página', n:nf(Math.round(t.vis)), d:pf(t.vis,t.clk)+' dos cliques chegaram'},
+    {k:'Custo por visita', n:din(raz(t.inv,t.vis)), d:'o que custa trazer uma pessoa'},
+    {k:'Checkouts (Meta)', n:nf(Math.round(t.ckt)), d:'atribuídos à campanha', c:t.ckt?'br':'bad'},
+    {k:'Vendas (Meta)', n:nf(Math.round(t.vendas)), d:'atribuídas à campanha', c:t.vendas?'gd':'bad'}
+  ].map(cardStat).join('');
+  document.getElementById('midiaNote').innerHTML =
+    `Campanha ${M.campanhas.map(c=>'<code>'+c+'</code>').join(', ')}, valores em <b>${M.moeda}</b>. `
+    + `Clique e visita são coisas diferentes: o clique é a Meta que registra, a visita só conta `
+    + `quando a página carrega — a distância entre os dois é abandono na chegada.`;
 
-  /* ---- atribuição ---- */
-  document.getElementById('alertTxt').textContent =
-    `No período selecionado, ${nf(mTot)} pessoas chegaram ao site vindas do Facebook ou Instagram. `
-    + `Destas, ${nf(mTag)} carregavam a etiqueta das nossas campanhas. `
-    + `O campo de parâmetros de URL do gerenciador está vazio — enquanto continuar assim, `
-    + `"zero checkouts" não se distingue de "não conseguimos ver os checkouts".`;
-  document.getElementById('metaNote').innerHTML = mTag===0
-    ? 'A série <b>Identificadas como nossas</b> está em zero em todo o período selecionado — por isso não aparece no gráfico.'
-    : `<b>${pf(mTag,mTot)}</b> das chegadas da Meta vieram identificadas.`;
+  document.querySelector('#tbCri tbody').innerHTML =
+    agrupaMidia(M.criativo,'cri').map(([n,x])=>linhaMidia(n,x)).join('');
+  document.querySelector('#tbPub tbody').innerHTML =
+    agrupaMidia(M.publico,'pub').map(([n,x])=>linhaMidia(n,x)).join('');
+}
 
+/* ---------- cruzamento ---------- */
+function renderCruz(){
+  const t=totMidia();
+  const bVis=somaB('page_viewed'), bCkt=somaB('checkout_started');
+  const compras=D.compra.filter(noPeriodo).reduce((s,r)=>s+r.n,0);
+  const temM = M && M.dia.some(noPeriodo);
+
+  const cel=(v,cls)=> v===null ? '<td class="n dim">não mede</td>' : `<td class="n ${cls}">${v}</td>`;
+  const dif=(a,b)=> (a===null||b===null) ? '<td class="n dim">—</td>'
+    : `<td class="n">${a===b?'igual':(b>a?'+':'−')+nf(Math.abs(b-a))}</td>`;
+
+  const linhas=[
+    {et:'Impressões', m:temM?nf(Math.round(t.imp)):null, p:null,
+     obs:'Só a Meta mede — o site não sabe quem viu o anúncio.'},
+    {et:'Cliques no anúncio', m:temM?nf(Math.round(t.clk)):null, p:null,
+     obs:'Só a Meta mede — o clique acontece dentro do app dela.'},
+    {et:'Chegada na página', mn:temM?t.vis:null, pn:bVis,
+     obs:'As duas medem, e é aqui que a conta não fecha.'},
+    {et:'Checkout iniciado', mn:temM?t.ckt:null, pn:bCkt,
+     obs:'O site registra, a Meta não recebe ou não atribui.'},
+    {et:'Compra concluída', mn:temM?t.vendas:null, pn:compras,
+     obs:'Webhook do Stripe, só produção e sessão ao vivo.'}
+  ];
+
+  document.querySelector('#tbCruz tbody').innerHTML = linhas.map(l=>{
+    const mv = l.mn!==undefined ? (l.mn===null?null:nf(Math.round(l.mn))) : l.m;
+    const pv = l.pn!==undefined ? (l.pn===null?null:nf(l.pn)) : l.p;
+    return `<tr><td>${l.et}</td>${cel(mv,'m')}${cel(pv,'p')}`
+      + (l.mn!==undefined&&l.mn!==null ? dif(l.mn,l.pn) : '<td class="n dim">—</td>')
+      + `<td class="dim">${l.obs}</td></tr>`;
+  }).join('');
+
+  document.getElementById('cruzNote').innerHTML = temM
+    ? `A Meta cobra por <b>${nf(Math.round(t.clk))} cliques</b> e diz ter entregue
+       <b>${nf(Math.round(t.vis))} visitas</b> na página. O site registra <b>${nf(bVis)} pessoas</b>
+       nessa mesma página no mesmo período. A diferença tem três explicações possíveis, e nenhuma
+       foi descartada ainda: quem sai antes do script carregar, quem recusa o consentimento,
+       e contagem mais generosa do lado da Meta. <b>Enquanto os anúncios não carregarem
+       parâmetro de URL, não dá para separar as três.</b>`
+    : 'Escolha um período a partir de 19/08 para comparar as duas fontes.';
+
+  const rec=document.getElementById('reconcilia');
+  const ok = temM && t.ckt>0;
+  rec.className='call '+(ok?'gd':'bad');
+  rec.innerHTML = !temM
+    ? `<span class="tag">Sem dado</span><h3>Nada a reconciliar neste período</h3>
+       <p>A camada de mídia só existe a partir de ${M?br(M.corte):'19/08'}.</p>`
+    : ok
+    ? `<span class="tag">Conferido</span><h3>As duas fontes concordam</h3>
+       <p>A Meta registrou <b>${nf(Math.round(t.ckt))}</b> checkouts atribuídos e o site
+       registrou <b>${nf(bCkt)}</b> na página do Booster.</p>`
+    : `<span class="tag">Divergência</span><h3>A Meta não vê os checkouts que o site registra</h3>
+       <p>No período, a Meta reporta <b>zero</b> checkouts atribuídos à campanha.
+       O PostHog registra <b>${nf(bCkt)}</b> checkouts iniciados nessa mesma página, e
+       <b>${nf(compras)}</b> compra${compras===1?'':'s'} concluída${compras===1?'':'s'} no site inteiro.
+       Os checkouts estão acontecendo — a Meta é que não está recebendo ou não está atribuindo.
+       Com ${din(t.inv)} investidos, é a diferença entre "não funciona" e "não dá para saber".</p>`;
+
+  /* origens */
   const oAgg={};
   D.origem.filter(noPeriodo).forEach(r=>{const k=r.src+'|'+r.med; oAgg[k]=(oAgg[k]||0)+r.p;});
   const oTot=Object.values(oAgg).reduce((s,v)=>s+v,0);
@@ -551,39 +675,109 @@ function render(){
     `<b>${pf(semTag,oTot)}</b> do tráfego chega sem nenhuma etiqueta de origem. `
     + `Não se resolve sozinho: depende de convenção de UTM aplicada em todo link, em todo canal.`;
 
-  /* ---- booster ---- */
+  const mt=D.meta.filter(noPeriodo);
+  const mTag=mt.reduce((s,r)=>s+r.tag,0), mTot=mt.reduce((s,r)=>s+r.total,0);
+  document.getElementById('metaNote').innerHTML = mTag===0
+    ? `<b>${nf(mTot)}</b> pessoas chegaram com identificador de clique da Meta e <b>nenhuma</b>
+       carregava a nossa etiqueta. Por isso a série clara não aparece no gráfico.`
+    : `<b>${pf(mTag,mTot)}</b> das chegadas da Meta vieram identificadas.`;
+}
+
+/* ---------- descarte ---------- */
+function renderDescarte(){
+  const por={};
+  (D.descarte||[]).filter(noPeriodo).forEach(r=>{ por[r.motivo]=(por[r.motivo]||0)+r.n; });
+  const compras={};
+  (D.compra_descartada||[]).filter(noPeriodo).forEach(r=>{ compras[r.motivo]=(compras[r.motivo]||0)+r.n; });
+
+  const explica={
+    'sem host (servidor ou robo)':'Não têm host, nem biblioteca, nem geolocalização. São requisição de servidor ou robô, não pessoa.',
+    'ambiente de desenvolvimento':'Vieram de <code>dev.university.engenious.io</code> — o ambiente de teste do time deles.',
+    'outro':'Fora do host de produção.'
+  };
+  const linhas=[
+    ...Object.entries(por).sort((a,b)=>b[1]-a[1]).map(([m,n])=>
+      `<tr><td>${m}</td><td class="n">${nf(n)} pageviews</td>
+       <td class="dim">${explica[m]||'Fora do host de produção.'}</td></tr>`),
+    ...Object.entries(compras).sort((a,b)=>b[1]-a[1]).map(([m,n])=>
+      `<tr><td>Compras de <code>${m.replace('ambiente ','')}</code></td>
+       <td class="n">${nf(n)} compra${n===1?'':'s'}</td>
+       <td class="dim">Fora de produção ou com sessão Stripe em modo de teste. Nenhuma cobrou de ninguém.</td></tr>`)
+  ];
+  document.querySelector('#tbDescarte tbody').innerHTML =
+    linhas.join('') || '<tr><td colspan="3" class="dim">Nada foi descartado neste período.</td></tr>';
+}
+
+/* ---------- render ---------- */
+let charts={};
+function render(){
+  const vis=somaEv(D.site,'page_viewed'), cta=somaEv(D.site,'cta_clicked'),
+        lead=somaEv(D.site,'lead_created'), reg=somaEv(D.site,'registration_started'),
+        ckt=somaEv(D.site,'checkout_started');
+  const compras=D.compra.filter(noPeriodo).reduce((s,r)=>s+r.n,0);
+  const valor=D.compra.filter(noPeriodo).reduce((s,r)=>s+(r.valor||0),0);
+  const t=totMidia();
+  const temM = M && M.dia.some(noPeriodo);
+
+  /* faixa do topo: metade Meta, metade PostHog */
+  document.getElementById('glance').innerHTML=[
+    {c:'m', k:'Investido', n:temM?din(t.inv):'—', d:'gerenciador da Meta', cl:'br'},
+    {c:'m', k:'Cliques', n:temM?nf(Math.round(t.clk)):'—', d:temM?'CPC '+din(raz(t.inv,t.clk)):'', cl:'br'},
+    {c:'p', k:'Visitantes no site', n:nf(vis), d:'só produção', cl:'pp'},
+    {c:'p', k:'Checkouts iniciados', n:nf(ckt), d:'registrados pelo site', cl:'pp'},
+    {c:'p', k:'Compras', n:nf(compras), d:valor?din(valor)+' em receita':'nenhuma no período',
+     cl:compras?'gd':'bad'}
+  ].map(g=>`<div class="g ${g.c}"><div class="k">${g.k}</div>
+      <div class="n ${g.cl}">${g.n}</div><div class="d">${g.d}</div></div>`).join('');
+
+  /* site */
+  document.getElementById('statsSite').innerHTML=[
+    {k:'Visitantes', n:nf(vis), d:'pessoas por dia, somadas'},
+    {k:'Cliques em CTA', n:nf(cta), d:pf(cta,vis)+' dos visitantes'},
+    {k:'Iniciaram cadastro', n:nf(reg), d:pf(reg,vis)+' dos visitantes'},
+    {k:'Iniciaram checkout', n:nf(ckt), d:pf(ckt,vis)+' dos visitantes', c:'pp'},
+    {k:'Compras', n:nf(compras), d:valor?din(valor):'—', c:compras?'gd':'bad'}
+  ].map(cardStat).join('');
+  funil('funSite',[['Visitaram o site',vis],['Clicaram em CTA',cta],['Viraram lead',lead],
+    ['Iniciaram cadastro',reg],['Iniciaram checkout',ckt],['Compraram',compras]].map(([r,v])=>({r,v})));
+  document.getElementById('siteNote').innerHTML =
+    `De cada 100 pessoas que abrem o site, <b>${(100*ckt/(vis||1)).toLocaleString('pt-BR',{maximumFractionDigits:1})}</b> `
+    + `chegam a iniciar um checkout. Números de <b>produção apenas</b>: evento de servidor, robô `
+    + `e ambiente de desenvolvimento estão fora — veja a aba Qualidade do dado.`;
+
+  /* booster */
   const bv=somaB('page_viewed'), bc=somaB('cta_clicked'),
         brg=somaB('registration_started'), bk=somaB('checkout_started');
   document.getElementById('statsB').innerHTML=[
     {k:'Visitantes na página', n:nf(bv), d:'pessoas por dia, somadas'},
     {k:'Clicaram em CTA', n:nf(bc), d:pf(bc,bv)+' dos visitantes'},
     {k:'Iniciaram cadastro', n:nf(brg), d:pf(brg,bv)+' dos visitantes'},
-    {k:'Iniciaram checkout', n:nf(bk), d:pf(bk,bv)+' dos visitantes', c:'br'}
-  ].map(s=>`<div class="stat"><div class="k">${s.k}</div>
-      <div class="n${s.c?' '+s.c:''}">${s.n}</div><div class="d">${s.d}</div></div>`).join('');
+    {k:'Iniciaram checkout', n:nf(bk), d:pf(bk,bv)+' dos visitantes', c:'pp'}
+  ].map(cardStat).join('');
   funil('funBoost',[['Visitaram a página',bv],['Clicaram em CTA',bc],
     ['Iniciaram cadastro',brg],['Iniciaram checkout',bk]].map(([r,v])=>({r,v})));
   document.getElementById('boostNote').innerHTML =
     `<b>${pf(bk,bv)}</b> dos visitantes desta página chegam a iniciar um checkout. `
-    + `A projeção do plano trabalhava com uma faixa de 2% a 15% para a página de destino.`;
+    + (temM ? `A Meta diz ter mandado <b>${nf(Math.round(t.vis))}</b> visitas para cá no mesmo período — `
+            + `compare na aba Meta × PostHog.` : '');
 
-  /* ---- dispositivo ---- */
+  /* dispositivo */
   const dAgg={};
   D.disp.filter(noPeriodo).forEach(r=>{
     if(!dAgg[r.tipo]) dAgg[r.tipo]={vis:0,ckt:0};
     dAgg[r.tipo].vis+=r.vis; dAgg[r.tipo].ckt+=r.ckt;});
-  const dIt=['Desktop','Mobile','Tablet'].filter(t=>dAgg[t]&&dAgg[t].vis).map(t=>({
-    r:t, v:100*dAgg[t].ckt/dAgg[t].vis, txt:pf(dAgg[t].ckt,dAgg[t].vis),
-    rt:`${nf(dAgg[t].ckt)} de ${nf(dAgg[t].vis)} visitantes`}));
-  funil('funDisp', dIt.length?dIt:[{r:'Sem dado de dispositivo no período',v:0,txt:'—',rt:''}], false);
+  const dIt=['Desktop','Mobile','Tablet'].filter(x=>dAgg[x]&&dAgg[x].vis).map(x=>({
+    r:x, v:100*dAgg[x].ckt/dAgg[x].vis, txt:pf(dAgg[x].ckt,dAgg[x].vis),
+    rt:`${nf(dAgg[x].ckt)} de ${nf(dAgg[x].vis)} visitantes`}));
+  funil('funDisp', dIt.length?dIt:[{r:'Sem dado de aparelho no período',v:0,txt:'—',rt:''}]);
   const dk=dAgg.Desktop, mb=dAgg.Mobile, sd=dAgg['sem dado'];
   document.getElementById('dispNote').innerHTML = (dk&&mb&&mb.vis&&dk.vis&&mb.ckt)
     ? `Desktop converte <b>${((dk.ckt/dk.vis)/(mb.ckt/mb.vis)).toLocaleString('pt-BR',{maximumFractionDigits:1})}×</b> mais que mobile. `
-      + `O tipo de aparelho só é registrado em parte dos eventos — ${nf(sd?sd.vis:0)} visitantes ficaram sem `
+      + `O aparelho só é registrado em parte dos eventos — ${nf(sd?sd.vis:0)} visitantes ficaram sem `
       + `essa informação, então leia como direção, não como número absoluto.`
-    : 'Dado de dispositivo insuficiente no período selecionado.';
+    : 'Dado de aparelho insuficiente no período selecionado.';
 
-  /* ---- páginas ---- */
+  /* páginas */
   const pAgg={};
   D.pagina.filter(noPeriodo).forEach(r=>{pAgg[r.pg]=(pAgg[r.pg]||0)+r.p;});
   document.querySelector('#tbPag tbody').innerHTML =
@@ -591,110 +785,15 @@ function render(){
       .map(([pg,v])=>`<tr><td class="mono">${pg}</td><td class="n">${nf(v)}</td></tr>`).join('')
     || '<tr><td colspan="2" class="dim">Sem dado no período.</td></tr>';
 
-  renderMidia();
-  desenhaGraficos();
+  renderMidia(); renderCruz(); renderDescarte(); desenhaGraficos();
 }
 
-/* ---------- MÍDIA (fonte: gerenciador da Meta) ---------- */
-function somaMidia(linhas){
-  const t={inv:0,imp:0,clk:0,vis:0,ckt:0,vendas:0,fat:0};
-  linhas.filter(noPeriodo).forEach(r=>{for(const k in t) t[k]+=r[k]||0;});
-  return t;
-}
-function agrupaMidia(linhas, chave){
-  const a={};
-  linhas.filter(noPeriodo).forEach(r=>{
-    const k=r[chave]||'—';
-    if(!a[k]) a[k]={inv:0,imp:0,clk:0,vis:0,ckt:0};
-    for(const c in a[k]) a[k][c]+=r[c]||0;
-  });
-  return Object.entries(a).sort((x,y)=>y[1].inv-x[1].inv);
-}
-function linhaMidia(nome,t){
-  return `<tr><td class="mono">${nome}</td>
-    <td class="n">${din(t.inv)}</td><td class="n">${nf(Math.round(t.imp))}</td>
-    <td class="n">${nf(Math.round(t.clk))}</td><td class="n">${pf(t.clk,t.imp)}</td>
-    <td class="n">${din(raz(t.inv,t.clk))}</td><td class="n">${nf(Math.round(t.vis))}</td>
-    <td class="n">${din(raz(t.inv,t.vis))}</td></tr>`;
-}
-
-function renderMidia(){
-  const vazio = !M || !M.dia.some(noPeriodo);
-  document.getElementById('moedaTag').textContent = M ? M.moeda : '';
-  if(M) document.getElementById('corteTxt').textContent = br(M.corte);
-
-  if(vazio){
-    document.getElementById('statsMidia').innerHTML =
-      `<div class="stat" style="grid-column:1/-1"><div class="k">Sem dado de mídia</div>
-       <div class="n" style="font-size:1.4rem">—</div>
-       <div class="d">A exportação da Meta começa em ${M?br(M.corte):'19/08'}.
-       Escolha um período a partir dessa data.</div></div>`;
-    document.getElementById('statsMidia2').innerHTML='';
-    document.getElementById('midiaNote').textContent='';
-    document.getElementById('reconcilia').innerHTML=
-      `<span class="tag">Sem dado</span><h3>Nada a reconciliar neste período</h3>
-       <p>A camada de mídia só existe a partir de ${M?br(M.corte):'19/08'}.</p>`;
-    document.querySelector('#tbCri tbody').innerHTML='<tr><td colspan="8" class="dim">Sem dado no período.</td></tr>';
-    document.querySelector('#tbPub tbody').innerHTML='<tr><td colspan="8" class="dim">Sem dado no período.</td></tr>';
-    return;
-  }
-
-  const t=somaMidia(M.dia);
-  const dias=M.dia.filter(noPeriodo).length;
-
-  document.getElementById('statsMidia').innerHTML=[
-    {k:'Investimento', n:din(t.inv), d:`${dias} dia${dias>1?'s':''} · ${din(t.inv/dias)}/dia`, c:'br'},
-    {k:'Impressões', n:nf(Math.round(t.imp)), d:'CPM '+din(raz(t.inv*1000,t.imp))},
-    {k:'Cliques no link', n:nf(Math.round(t.clk)), d:'CTR '+pf(t.clk,t.imp)},
-    {k:'Custo por clique', n:din(raz(t.inv,t.clk)), d:'CPC médio'}
-  ].map(s=>`<div class="stat"><div class="k">${s.k}</div>
-      <div class="n${s.c?' '+s.c:''}">${s.n}</div><div class="d">${s.d}</div></div>`).join('');
-
-  document.getElementById('statsMidia2').innerHTML=[
-    {k:'Visitas na página', n:nf(Math.round(t.vis)), d:pf(t.vis,t.clk)+' dos cliques chegaram'},
-    {k:'Custo por visita', n:din(raz(t.inv,t.vis)), d:'o que custa trazer uma pessoa'},
-    {k:'Checkouts (Meta)', n:nf(Math.round(t.ckt)), d:'atribuídos à campanha', c:t.ckt?'br':'bad'},
-    {k:'Vendas (Meta)', n:nf(Math.round(t.vendas)), d:'atribuídas à campanha', c:t.vendas?'gd':'bad'}
-  ].map(s=>`<div class="stat"><div class="k">${s.k}</div>
-      <div class="n${s.c?' '+s.c:''}">${s.n}</div><div class="d">${s.d}</div></div>`).join('');
-
-  document.getElementById('midiaNote').innerHTML =
-    `Campanha ${M.campanhas.map(c=>'<code>'+c+'</code>').join(', ')}. `
-    + `Valores em <b>${M.moeda}</b>, como vieram do gerenciador. `
-    + `Cliques e visitas são métricas diferentes: o clique é registrado pela Meta, `
-    + `a visita só conta quando a página carrega — a distância entre os dois é abandono na chegada.`;
-
-  /* --- reconciliação Meta × PostHog --- */
-  const phCkt = somaB('checkout_started');
-  const phVis = somaB('page_viewed');
-  const ok = t.ckt > 0;
-  const rec = document.getElementById('reconcilia');
-  rec.className = 'call ' + (ok ? 'gd' : 'bad');
-  rec.innerHTML = ok
-    ? `<span class="tag">Conferido</span><h3>As duas fontes concordam</h3>
-       <p>A Meta registrou <b>${nf(Math.round(t.ckt))}</b> checkouts atribuídos e o site
-       registrou <b>${nf(phCkt)}</b> na página do Booster no mesmo período.</p>`
-    : `<span class="tag">Divergência</span>
-       <h3>A Meta não vê os checkouts que o site registra</h3>
-       <p>No período, a Meta reporta <b>${nf(Math.round(t.vis))}</b> visitas na página e
-       <b>zero</b> checkouts atribuídos à campanha. O PostHog, na mesma janela, registra
-       <b>${nf(phVis)}</b> visitas e <b>${nf(phCkt)}</b> checkouts iniciados nessa mesma página.
-       Os checkouts estão acontecendo — a Meta é que não está recebendo ou não está atribuindo.
-       Com ${din(t.inv)} investidos, é a diferença entre "não funciona" e "não dá para saber".</p>`;
-
-  /* --- tabelas --- */
-  document.querySelector('#tbCri tbody').innerHTML =
-    agrupaMidia(M.criativo,'cri').map(([n,x])=>linhaMidia(n,x)).join('');
-  document.querySelector('#tbPub tbody').innerHTML =
-    agrupaMidia(M.publico,'pub').map(([n,x])=>linhaMidia(n,x)).join('');
-}
-
-function funil(id, itens, comQueda=true){
+function funil(id, itens){
   const max=Math.max(...itens.map(i=>i.v),1);
   document.getElementById(id).innerHTML=itens.map((it,i)=>{
     const prev=i>0?itens[i-1].v:null;
-    const rt=it.rt !== undefined ? it.rt
-      : (comQueda&&prev!==null ? `ficam ${pf(it.v,prev)} da etapa anterior` : 'topo do funil');
+    const rt = it.rt!==undefined ? it.rt
+      : (prev!==null ? `ficam ${pf(it.v,prev)} da etapa anterior` : 'topo do funil');
     const w=Math.max(100*it.v/max, it.v>0?6:0);
     return `<div class="fstep">
       <div class="lab"><span class="nmm">${it.r}</span><span class="rt">${rt}</span></div>
@@ -723,22 +822,18 @@ function desenhaGraficos(){
   const serie=ev=>dias.map(d=>{const r=D.site.find(x=>x.d===d&&x.e===ev); return r?(r.p||0):0;});
 
   charts.vis=new Chart(document.getElementById('chVis'),{type:'line',
-    data:{labels:rot,datasets:[{data:serie('page_viewed'),borderColor:BRAND,backgroundColor:BRAND_SOFT,
+    data:{labels:rot,datasets:[{data:serie('page_viewed'),borderColor:PH,backgroundColor:PH_W,
       borderWidth:2,fill:true,tension:.25,pointRadius:0,pointHoverRadius:5,
-      pointHoverBackgroundColor:BRAND,pointHoverBorderColor:'#fff',pointHoverBorderWidth:2}]},
+      pointHoverBackgroundColor:PH,pointHoverBorderColor:'#fff',pointHoverBorderWidth:2}]},
     options:opcoes()});
-
   charts.ckt=new Chart(document.getElementById('chCkt'),{type:'bar',
-    data:{labels:rot,datasets:[{data:serie('checkout_started'),backgroundColor:BRAND,
-      borderRadius:3,borderSkipped:false,maxBarThickness:14}]},
-    options:opcoes()});
+    data:{labels:rot,datasets:[{data:serie('checkout_started'),backgroundColor:PH,
+      borderRadius:3,borderSkipped:false,maxBarThickness:16}]},options:opcoes()});
 
-  /* midia: investimento e cliques por dia */
   if(M){
     const dm=M.dia.filter(noPeriodo);
     const rm=dm.map(r=>r.d.slice(8,10)+'/'+r.d.slice(5,7));
-    const oi=opcoes();
-    oi.plugins.tooltip.callbacks={label:c=>din(c.parsed.y)};
+    const oi=opcoes(); oi.plugins.tooltip.callbacks={label:c=>din(c.parsed.y)};
     charts.inv=new Chart(document.getElementById('chInv'),{type:'bar',
       data:{labels:rm,datasets:[{data:dm.map(r=>r.inv),backgroundColor:BRAND,
         borderRadius:3,borderSkipped:false,maxBarThickness:26}]},options:oi});
@@ -755,11 +850,10 @@ function desenhaGraficos(){
   om.plugins.tooltip.displayColors=true;
   charts.meta=new Chart(document.getElementById('chMeta'),{type:'bar',
     data:{labels:rot,datasets:[
-      {label:'Chegaram da Meta',data:md.map(r=>r.total),backgroundColor:'#1A22A6',
+      {label:'Chegaram da Meta',data:md.map(r=>r.total),backgroundColor:PH,
        borderRadius:3,borderSkipped:false,maxBarThickness:16},
-      {label:'Identificadas como nossas',data:md.map(r=>r.tag),backgroundColor:'#8E97E9',
-       borderRadius:3,borderSkipped:false,maxBarThickness:16}]},
-    options:om});
+      {label:'Com a nossa etiqueta',data:md.map(r=>r.tag),backgroundColor:'#D4A0DE',
+       borderRadius:3,borderSkipped:false,maxBarThickness:16}]},options:om});
 }
 
 /* ---------- reveal ---------- */
@@ -777,7 +871,7 @@ function observaReveal(){
 btnAplicar.onclick=()=>{
   if(dtIni.value) ini=dtIni.value;
   if(dtFim.value) fim=dtFim.value;
-  if(ini>fim){const t=ini; ini=fim; fim=t;}
+  if(ini>fim){const x=ini; ini=fim; fim=x;}
   dtIni.value=ini; dtFim.value=fim;
   btnAplicar.classList.remove('pending'); render();
 };
@@ -794,12 +888,12 @@ mesSel.onchange=e=>{
 };
 document.querySelector('.nav .inner').onclick=e=>{
   const b=e.target.closest('.tab'); if(!b) return;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
   const pane=document.getElementById('p-'+b.dataset.p);
   pane.classList.add('active');
-  pane.querySelectorAll('.reveal').forEach(e2=>e2.classList.add('in'));
+  pane.querySelectorAll('.reveal').forEach(x=>x.classList.add('in'));
   Object.values(charts).forEach(c=>c.resize());
   window.scrollTo({top:0,behavior:'smooth'});
 };
@@ -810,13 +904,13 @@ Promise.all([
   fetch('data.json'+_v).then(r=>{ if(!r.ok) throw new Error('data.json HTTP '+r.status); return r.json(); }),
   fetch('midia.json'+_v).then(r=>r.ok?r.json():null).catch(()=>null)
 ]).then(([d,m])=>{ D=d; M=m; boot(); })
-  .catch(e=>{
-    document.querySelector('.wrap').insertAdjacentHTML('afterbegin',
-      `<div class="call bad" style="margin:40px 0"><span class="tag">Erro</span>
-       <h3>Não consegui carregar os dados</h3>
-       <p>O arquivo <code>data.json</code> não respondeu (${e.message}). Se você abriu este arquivo
-       direto do disco, publique-o num servidor — o navegador bloqueia leitura local por segurança.</p></div>`);
-  });
+ .catch(e=>{
+   document.querySelector('.wrap').insertAdjacentHTML('afterbegin',
+     `<div class="call bad" style="margin:40px 0"><span class="tag">Erro</span>
+      <h3>Não consegui carregar os dados</h3>
+      <p>${e.message}. Se você abriu este arquivo direto do disco, publique-o num servidor —
+      o navegador bloqueia leitura local por segurança.</p></div>`);
+ });
 </script>
 </body>
 </html>
