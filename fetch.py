@@ -45,7 +45,13 @@ if not KEY:
     sys.exit(1)
 
 
+FALHAS = []
+
+
 def q(sql):
+    """Consulta o PostHog. Erro nao devolve lista vazia em silencio - registra a
+    falha para o script abortar sem gravar nada. Uma consulta que estoura o tempo
+    limite zerava uma serie inteira e a dash publicava o buraco como se fosse zero."""
     body = json.dumps({"query": {"kind": "HogQLQuery", "query": sql}}).encode()
     req = urllib.request.Request(
         f"{HOST}/api/projects/{PROJECT}/query/", data=body,
@@ -54,11 +60,10 @@ def q(sql):
         with urllib.request.urlopen(req, timeout=240) as r:
             d = json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
-        print("HTTP", e.code, e.read().decode()[:400], file=sys.stderr)
-        print("  na consulta:", " ".join(sql.split())[:160], file=sys.stderr)
+        FALHAS.append((e.code, e.read().decode()[:300], " ".join(sql.split())[:140]))
         return []
     if d.get("error"):
-        print("ERRO:", d["error"], file=sys.stderr)
+        FALHAS.append(("erro", str(d["error"])[:300], " ".join(sql.split())[:140]))
         return []
     return d.get("results", [])
 
@@ -88,7 +93,7 @@ o["meta"] = [{"d": str(r[0]), "total": r[1], "tag": r[2]} for r in q(f"""
          countIf(DISTINCT person_id, properties.utm_source = 'meta') AS m
   FROM events
   WHERE event = 'page_viewed' AND {JANELA} AND {SO_PROD}
-    AND properties.$current_url ILIKE '%fbclid%'
+    AND properties.fbclid IS NOT NULL
   GROUP BY d ORDER BY d LIMIT 50000""")]
 
 # ---------- dispositivo ----------
@@ -216,6 +221,18 @@ o["compra_descartada"] = [{"d": str(r[0]), "motivo": r[1], "n": r[2]} for r in q
              AND toFloat64OrNull(toString(properties.amount)) > 0
              AND NOT startsWith(coalesce(toString(properties.stripe_checkout_session_id), ''), 'cs_test_'))
   GROUP BY d, motivo ORDER BY d LIMIT 50000""")]
+
+if FALHAS:
+    print("", file=sys.stderr)
+    print(f"{len(FALHAS)} consulta(s) falharam - NAO vou gravar data.json.",
+          file=sys.stderr)
+    print("O arquivo que ja esta publicado continua valendo; melhor dado velho "
+          "que serie zerada em silencio.", file=sys.stderr)
+    print("", file=sys.stderr)
+    for cod, det, sql in FALHAS:
+        print(f"  [{cod}] {det}", file=sys.stderr)
+        print(f"        em: {sql}", file=sys.stderr)
+    sys.exit(1)
 
 o["atualizado_em"] = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
 

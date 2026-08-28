@@ -9,11 +9,12 @@ import importlib.util
 import json
 import sys
 
-BASE = r"C:/Users/eleut/AppData/Local/Temp/claude/c--Users-eleut-claudinho/31a0d411-af2b-4ecc-bf81-605d93b1f84c/scratchpad"
-ORIGEM  = BASE + "/repo-dash/index.src.html"   # fonte, em portugues
-DESTINO = BASE + "/repo-dash/index.html"       # gerado, com os dois idiomas
+import os
+BASE    = os.path.dirname(os.path.abspath(__file__))
+ORIGEM  = os.path.join(BASE, "index.src.html")   # fonte, em portugues
+DESTINO = os.path.join(BASE, "index.html")       # gerado, com os dois idiomas
 
-spec = importlib.util.spec_from_file_location("textos", BASE + "/textos.py")
+spec = importlib.util.spec_from_file_location("textos", os.path.join(BASE, "textos.py"))
 mod = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(mod)
 
@@ -52,7 +53,7 @@ if multiplos:
     for k, n in multiplos:
         print("   %-14s %dx" % (k, n))
 
-js = open(BASE + "/novo_js.js", encoding="utf-8").read()
+js = open(os.path.join(BASE, "novo_js.js"), encoding="utf-8").read()
 ini = s.rindex("<script>")
 fim = s.rindex("</script>")
 s = s[:ini] + "<script>\nconst TXT = " + json.dumps(dic, ensure_ascii=False, indent=0) + ";\n\n" \

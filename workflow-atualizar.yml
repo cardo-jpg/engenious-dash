@@ -1,0 +1,59 @@
+# Robo de atualizacao diaria.
+#
+# Este arquivo esta na raiz porque subir arquivo em .github/workflows/ exige o
+# escopo "workflow" no token do gh, que ainda nao temos. Para ativar:
+#
+#   gh auth refresh -s workflow          # abre o navegador, 20 segundos
+#   mkdir -p .github/workflows && git mv workflow-atualizar.yml .github/workflows/atualizar.yml
+#   git commit -m "ativa o robo diario" && git push
+#
+# E antes: Settings > Secrets and variables > Actions
+#   POSTHOG_API_KEY = a chave NOVA (a antiga foi exposta em conversa)
+#   PLANILHA_ID     = 1VddMyaSUayN9dhWB7yVgmWk0efDc9G-mQCFUxLv3pJU
+
+name: Atualizar dados
+
+on:
+  schedule:
+    - cron: "0 11 * * *"   # 08h de Brasilia
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  puxar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+
+      - name: Comportamento no site (PostHog)
+        env:
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
+          POSTHOG_PROJECT_ID: "34225"
+          JANELA_DIAS: "120"
+        run: python fetch.py
+
+      - name: Campanha (planilha do Meta)
+        env:
+          PLANILHA_ID: ${{ secrets.PLANILHA_ID }}
+          CORTE_MIDIA: "2026-08-19"
+          PREFIXO_CAMPANHA: "EN_"
+          MOEDA: "USD"
+        run: python fetch_midia.py
+
+      - name: Remontar a pagina
+        run: python montar.py
+
+      - name: Publicar se mudou
+        run: |
+          git config user.name  "cardo-bot"
+          git config user.email "agencia@cardomarketing.com.br"
+          git add data.json midia.json index.html
+          git diff --staged --quiet && echo "sem novidade" && exit 0
+          git commit -m "dados: $(date -u +%Y-%m-%d)"
+          git push
