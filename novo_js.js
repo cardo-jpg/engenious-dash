@@ -44,9 +44,12 @@ pt:{
   kCktMeta:'Checkouts (Meta)', kVendasMeta:'Vendas (Meta)', dAtribuidos:'atribuídos à campanha',
   dAtribuidas:'atribuídas à campanha',
   semMidiaK:'Sem dado de mídia', semMidiaD:d=>'A exportação da Meta começa em '+d+'.',
-  midiaNota:(camps,moeda)=>'Campanha '+camps+', valores em <b>'+moeda+'</b>. Clique e visita são coisas '
-    +'diferentes: o clique é a Meta que registra, a visita só conta quando a página carrega — '
-    +'a distância entre os dois é abandono na chegada.',
+  midiaNota:(camps,moeda,ini,fim,n)=>'<b>Escopo destes números:</b> campanha '+camps+', de '+ini+' a '
+    +fim+' ('+n+' '+plural(n,'dia','dias')+'), valores em '+moeda+'. É o que veio na exportação do '
+    +'gerenciador — <b>se a conta tiver outras campanhas, ou se houver uma segunda conta de anúncios, '
+    +'elas não estão aqui</b>. Este não é o investimento total da Engenious na Meta.'
+    +'<br><br>Clique e visita são coisas diferentes: o clique é a Meta que registra, a visita só conta '
+    +'quando a página carrega — a distância entre os dois é abandono na chegada.',
   /* cruzamento */
   kCliquesMeta:'Cliques · Meta', dCobrou:'a Meta cobrou por estes',
   kChegadasMeta:'Chegadas atribuídas · Meta', dEntregue:'ela diz ter entregue',
@@ -166,9 +169,12 @@ en:{
   kCktMeta:'Checkouts (Meta)', kVendasMeta:'Sales (Meta)', dAtribuidos:'attributed to the campaign',
   dAtribuidas:'attributed to the campaign',
   semMidiaK:'No media data', semMidiaD:d=>'The Meta export starts on '+d+'.',
-  midiaNota:(camps,moeda)=>'Campaign '+camps+', values in <b>'+moeda+'</b>. A click and a visit are '
-    +'different things: Meta records the click, while a visit only counts once the page loads — '
-    +'the gap between the two is people dropping off on arrival.',
+  midiaNota:(camps,moeda,ini,fim,n)=>'<b>Scope of these numbers:</b> campaign '+camps+', from '+ini
+    +' to '+fim+' ('+n+' '+plural(n,'day','days')+'), values in '+moeda+'. This is what came in the ads '
+    +'manager export — <b>if the account has other campaigns, or if there is a second ad account, they '
+    +'are not here</b>. This is not Engenious total spend on Meta.'
+    +'<br><br>A click and a visit are different things: Meta records the click, while a visit only '
+    +'counts once the page loads — the gap between the two is people dropping off on arrival.',
   kCliquesMeta:'Clicks · Meta', dCobrou:'Meta charged for these',
   kChegadasMeta:'Attributed arrivals · Meta', dEntregue:'what Meta says it delivered',
   kVisitasPh:'Page visits · PostHog', dRegistrou:'what the site recorded',
@@ -371,8 +377,10 @@ function renderMidia(){
     {k:T.kCktMeta, n:nf(Math.round(t.ckt)), d:T.dAtribuidos, c:t.ckt?'br':'bad'},
     {k:T.kVendasMeta, n:nf(Math.round(t.vendas)), d:T.dAtribuidas, c:t.vendas?'gd':'bad'}
   ].map(cardStat).join('');
+  const diasM = M.dia.filter(noPeriodo);
   document.getElementById('midiaNote').innerHTML =
-    T.midiaNota(M.campanhas.map(c=>'<code>'+c+'</code>').join(', '), M.moeda);
+    T.midiaNota(M.campanhas.map(c=>'<code>'+c+'</code>').join(', '), M.moeda,
+                br(diasM[0].d), br(diasM[diasM.length-1].d), t.dias);
 
   document.querySelector('#tbCri tbody').innerHTML =
     agrupaMidia(M.criativo,'cri').map(e=>linhaMidia(e[0],e[1])).join('');
